@@ -1,0 +1,68 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+}
+
+/* Cyan swatch */
+header {
+    padding: 1em;
+    color: white;
+    background: #00bcd4;
+}
+
+header h1 {
+    margin: 0 auto;
+}
+
+h1, h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+body > div {
+    width: 95%;
+    width: calc(100% - 2em);
+    height: 80%;
+    margin: 1em auto;
+}
+
+header h1, body > div {
+    max-width: 800px;
+}
+
+h2 {
+    float: left;
+    margin-top: 0;
+    margin-right: 1em;
+    color: #aaa;
+    cursor: pointer;
+}
+
+h2.active {
+    color: #000;
+}
+
+h2 + ul {
+    clear: left;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+#lists ul, #lists ol {
+    list-style-type: none;
+}
+
+li > div {
+    padding: .5em .75em;
+    background: #e0e0e0;
+}
+
+footer {
+    position: absolute;
+    bottom: .5em;
+    width: 100%;
+    font-size: .8125em;
+    text-align: center;
+}
