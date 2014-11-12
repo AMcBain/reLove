@@ -1,0 +1,3 @@
+[submodule "scripts/relive.js"]
+	path = scripts/relive.js
+	url = https://github.com/Gargaj/relive.js
