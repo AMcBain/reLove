@@ -59,6 +59,7 @@ console.log(stream);
                 return stream.timestamp >= date || list.children.length < 25;
             });
 
+            list.className = "loaded";
             latest = null;
         }
     };

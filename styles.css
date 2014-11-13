@@ -5,7 +5,6 @@ html, body {
     font-weight: 400;
 }
 
-/* Cyan swatch */
 header {
     padding: 1em;
     color: white;
@@ -24,7 +23,6 @@ h1, h2 {
 body > div {
     width: 95%;
     width: calc(100% - 2em);
-    height: 80%;
     margin: 1em auto;
 }
 
@@ -47,6 +45,7 @@ header h1, body > div {
 
 #lists h2.active {
     color: #000;
+    cursor: default;
 }
 
 #lists > div {
@@ -57,6 +56,58 @@ header h1, body > div {
     -webkit-transition: margin-left 1s;
     -moz-transition: margin-left 1s;
     transition: margin-left 1s;
+}
+
+#lists > div + ol:before {
+    position: absolute;
+    content: "";
+    top: 50%;
+    left: 50%;
+    width: 75px;
+    height: 15px;
+    margin-top: -7px;
+    margin-left: -37px;
+    background: -webkit-repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, #fff 5px, #fff 10px);
+    background: -moz-repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, #fff 5px, #fff 10px);
+    background: repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, #fff 5px, #fff 10px);
+    background-size: 110%;
+    -webkit-animation: move 350ms linear infinite;
+    -moz-animation: move 350ms linear infinite;
+    animation: move 350ms linear infinite;
+}
+
+@-webkit-keyframes move {
+    from {
+        background-position: 0;
+    }
+    to {
+        background-position: 10px;
+    }
+}
+
+@-moz-keyframes move {
+    from {
+        background-position: 0;
+    }
+    to {
+        background-position: 10px;
+    }
+}
+
+@keyframes move {
+    from {
+        background-position: 0;
+    }
+    to {
+        background-position: 10px;
+    }
+}
+
+#lists > div + ol.loaded:before {
+    display: none;
+    -webkit-animation-play-state: paused;
+    -moz-animation-play-state: paused;
+    animation-play-state: paused;
 }
 
 #lists ul, #lists ol {
@@ -70,11 +121,9 @@ header h1, body > div {
 
 #lists > ul, #lists > ol {
     display: inline-block;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
     width: 100%;
     vertical-align: top;
-    margin-top: 0;
+    margin: 0;
 }
 
 #lists > ul > li {
@@ -126,9 +175,7 @@ header h1, body > div {
 }
 
 footer {
-    position: absolute;
-    bottom: .5em;
-    width: 100%;
+    padding-bottom: .5em;
     font-size: .8125em;
     text-align: center;
 }
