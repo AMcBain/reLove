@@ -81,7 +81,6 @@ window.addEventListener("load", function ()
             .every(function (stream, i)
             {
                 list.appendChild(entry(stream));
-console.log(stream);
                 return stream.timestamp >= date || list.children.length < 25;
             });
 
