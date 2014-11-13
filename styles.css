@@ -177,10 +177,15 @@ header h1, body > div {
 #lists ol li {
     overflow: hidden;
     padding: .5em .75em;
+    cursor: pointer;
 }
 
 #lists ol li:nth-child(even) {
     background: #fafafa;
+}
+
+#lists ol li:hover {
+    background: #f0f0f0;
 }
 
 #lists time, #lists time + span {
