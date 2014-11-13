@@ -20,6 +20,14 @@ window.addEventListener("load", function ()
             }, []);
     };
 
+    // Display timestamp, title, host + info text, and how long the show is.
+    // timestamp  | Title
+    // showlength | host - info text
+    function entry (item)
+    {
+        // new Date().toISOString().replace("T", " ").replace(/\..+$/, "");
+    }
+
     function latestStreams ()
     {
         var date, list;
@@ -34,17 +42,17 @@ window.addEventListener("load", function ()
         {
             return b.timestamp - a.timestamp;
         })
-        .every(function (station, i)
+        .every(function (stream, i)
         {
             var entry = document.createElement("li");
-            entry.textContent = station.name;
+            entry.textContent = stream.name;
             entry.addEventListener("click", function (event)
             {
                 // TODO call player.
             });
             list.appendChild(entry);
-
-            return station.timestamp >= date || list.children.length < 25;
+console.log(stream);
+            return stream.timestamp >= date || list.children.length < 25;
         });
 
         document.getElementById("lists").appendChild(list);
@@ -68,6 +76,10 @@ window.addEventListener("load", function ()
             {
                 var entry = document.createElement("li");
                 entry.textContent = stream.name;
+                entry.addEventListener("click", function (event)
+                {
+                    // TODO call player.
+                });
                 list.appendChild(entry);
 
                 latest.push(stream);
@@ -93,17 +105,17 @@ window.addEventListener("load", function ()
 
         stations.forEach(function (station, i)
         {
-            var entry, name;
-
-            entry = document.createElement("li");
-            entry.addEventListener("click", function (event)
-            {
-                // TODO call player.
-            });
+            var name, entry;
 
             name = document.createElement("div");
+            name.addEventListener("click", function (event)
+            {
+                entry.className = (entry.className ? "" : "open");
+                entry.style.height = (entry.className ? entry.scrollHeight + "px" : "");
+            });
             name.textContent = station.name;
 
+            entry = document.createElement("li");
             entry.appendChild(name);
             list.appendChild(entry);
 

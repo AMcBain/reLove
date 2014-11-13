@@ -54,9 +54,51 @@ h2 + ul {
     list-style-type: none;
 }
 
-li > div {
+#lists > ul > li {
+    height: 2.437em;
+    overflow: hidden;
+    line-height: 1.437em;
+    border-bottom: 1px solid transparent;
+    transition-duration: 1s;
+}
+
+#lists li > div {
+    position: relative;
     padding: .5em .75em;
     background: #e0e0e0;
+    cursor: pointer;
+}
+
+#lists li > div:before, #lists li > div:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: .75em;
+    width: .937em;
+    height: 1px;
+    -webkit-transform-origin: 50% .5px;
+    -moz-transform-origin: 50% .5px;
+    transform-origin: 50% .5;
+    background: currentColor;
+    -webkit-transition-duration: 1s;
+    -moz-transition-duration: 1s;
+    transition-duration: 1s;
+}
+
+#lists li > div:before {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#lists li.open > div:before, #lists li.open > div:after {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+#lists li ol {
+    margin: .312em 0;
 }
 
 footer {
