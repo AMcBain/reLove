@@ -23,9 +23,41 @@ window.addEventListener("load", function ()
     // Display timestamp, title, host + info text, and how long the show is.
     // timestamp  | Title
     // showlength | host - info text
-    function entry (item)
+    function entry (stream)
     {
-        // new Date().toISOString().replace("T", " ").replace(/\..+$/, "");
+        var date, time, seconds, minutes, hours, length, info, title, entry;
+
+        date = new Date(stream.timestamp * 1000).toISOString();
+        time = document.createElement("time");
+        time.setAttribute("datetime", date);
+        time.textContent = date.replace("T", " ").replace(/\..+$/, "");
+
+        hours = Math.floor(stream.length / 3600);
+        minutes = Math.floor((stream.length - hours * 3600) / 60);
+        seconds = Math.floor((stream.length - hours * 3600 - minutes * 60));
+
+        length = document.createElement("span");
+        length.textContent = ((hours ? hours + "h " : "") + (minutes ? minutes + "m " : "") +
+                (seconds ? seconds + "s" : ""));
+
+        info = document.createElement("span");
+        info.textContent = stream.host + " - " + stream.infoText;
+
+        title = document.createElement("h3");
+        title.textContent = stream.name + " ";
+        title.appendChild(info);
+
+        entry = document.createElement("li");
+        entry.appendChild(time);
+        entry.appendChild(length);
+        entry.appendChild(title);
+
+        entry.addEventListener("click", function (event)
+        {
+            // TODO call player.
+        });
+
+        return entry;
     }
 
     function latestStreams ()
@@ -48,13 +80,7 @@ window.addEventListener("load", function ()
             })
             .every(function (stream, i)
             {
-                var entry = document.createElement("li");
-                entry.textContent = stream.name;
-                entry.addEventListener("click", function (event)
-                {
-                    // TODO call player.
-                });
-                list.appendChild(entry);
+                list.appendChild(entry(stream));
 console.log(stream);
                 return stream.timestamp >= date || list.children.length < 25;
             });
@@ -80,13 +106,7 @@ console.log(stream);
 
             info.streams.forEach(function (stream)
             {
-                var entry = document.createElement("li");
-                entry.textContent = stream.name;
-                entry.addEventListener("click", function (event)
-                {
-                    // TODO call player.
-                });
-                list.appendChild(entry);
+                list.appendChild(entry(stream));
 
                 if (latest)
                 {
