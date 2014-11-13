@@ -32,7 +32,12 @@ header h1, body > div {
     max-width: 800px;
 }
 
-h2 {
+#lists {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#lists h2 {
     float: left;
     margin-top: 0;
     margin-right: 1em;
@@ -40,26 +45,45 @@ h2 {
     cursor: pointer;
 }
 
-h2.active {
+#lists h2.active {
     color: #000;
 }
 
-h2 + ul {
-    clear: left;
-    margin-bottom: 0;
-    padding: 0;
+#lists > div {
+    overflow: hidden;
+}
+
+#lists > div + ol {
+    -webkit-transition: margin-left 1s;
+    -moz-transition: margin-left 1s;
+    transition: margin-left 1s;
 }
 
 #lists ul, #lists ol {
     list-style-type: none;
+    padding: 0;
+}
+
+#lists h2, #lists > ul, #lists > ol {
+    line-height: 1.437em;
+}
+
+#lists > ul, #lists > ol {
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    vertical-align: top;
+    margin-top: 0;
 }
 
 #lists > ul > li {
     height: 2.437em;
     overflow: hidden;
-    line-height: 1.437em;
     border-bottom: 1px solid transparent;
-    transition-duration: 1s;
+    -webkit-transition: height 1s;
+    -moz-transition: height 1s;
+    transition: height 1s;
 }
 
 #lists li > div {

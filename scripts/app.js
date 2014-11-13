@@ -30,32 +30,37 @@ window.addEventListener("load", function ()
 
     function latestStreams ()
     {
-        var date, list;
+        var date, list, lists;
 
-        date = new Date();
-        date = date.setMonth(date.getMonth() - 3);
-
-        list = document.createElement("ol");
-        list.setAttribute("reversed", "reversed");
-
-        latest.sort(function (a, b)
+        if (latest)
         {
-            return b.timestamp - a.timestamp;
-        })
-        .every(function (stream, i)
-        {
-            var entry = document.createElement("li");
-            entry.textContent = stream.name;
-            entry.addEventListener("click", function (event)
+            lists = document.getElementById("lists");
+
+            date = new Date();
+            date = date.setMonth(date.getMonth() - 3);
+
+            list = lists.children[1];
+            list.setAttribute("reversed", "reversed");
+
+            latest.sort(function (a, b)
             {
-                // TODO call player.
-            });
-            list.appendChild(entry);
+                return b.timestamp - a.timestamp;
+            })
+            .every(function (stream, i)
+            {
+                var entry = document.createElement("li");
+                entry.textContent = stream.name;
+                entry.addEventListener("click", function (event)
+                {
+                    // TODO call player.
+                });
+                list.appendChild(entry);
 console.log(stream);
-            return stream.timestamp >= date || list.children.length < 25;
-        });
+                return stream.timestamp >= date || list.children.length < 25;
+            });
 
-        document.getElementById("lists").appendChild(list);
+            latest = null;
+        }
     };
 
     function stationInfo (station, parent)
@@ -82,11 +87,17 @@ console.log(stream);
                 });
                 list.appendChild(entry);
 
-                latest.push(stream);
+                if (latest)
+                {
+                    latest.push(stream);
+                }
             });
 
-            clearTimeout(load);
-            load = setTimeout(latestStreams, 2000);
+            if (latest)
+            {
+                clearTimeout(load);
+                load = setTimeout(latestStreams, 2000);
+            }
 
             parent.appendChild(list);
         });
@@ -122,6 +133,22 @@ console.log(stream);
             stationInfo(station, entry);
         });
 
-        document.getElementById("lists").appendChild(list);
+        document.getElementById("lists")
+            .appendChild(document.createElement("ol"))
+            .parentNode.appendChild(list);
+    });
+
+    document.getElementById("latest").addEventListener("click", function (event)
+    {
+        event.target.className = "active";
+        event.target.nextElementSibling.className = "";
+        document.querySelector("#lists > ol").style.marginLeft = "";
+    });
+
+    document.getElementById("stations").addEventListener("click", function (event)
+    {
+        event.target.className = "active";
+        event.target.previousElementSibling.className = "";
+        document.querySelector("#lists > ol").style.marginLeft = "-100%";
     });
 });
