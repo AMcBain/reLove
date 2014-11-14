@@ -5,7 +5,7 @@
 
     Replayer.loadStream = function (station, stream, info, chat)
     {
-        console.log(info);
+        document.querySelector("#player h1").textContent = station.name + ": " + stream.name;
     };
 
     Replayer.pause = function ()
