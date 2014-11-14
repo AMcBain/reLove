@@ -251,20 +251,18 @@ section {
 
 #back {
     float: left;
-    width: 1.5em;
+    width: 1em;
     overflow: hidden;
+    margin-right: .5em;
     font-size: 1.5em;
     white-space: nowrap;
     cursor: pointer;
 }
 
 #back:before {
-    content: "\27a4";
+    content: "\3008";
     display: inline-block;
-    margin-right: 1em;
-    -webkit-transform: scale(-1, 1);
-    -moz-transform: scale(-1, 1);
-    transform: scale(-1, 1);
+    margin-right: .5em;
     margin-right: 1em;
 }
 
