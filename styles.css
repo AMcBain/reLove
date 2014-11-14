@@ -5,10 +5,25 @@ html, body {
     font-weight: 400;
 }
 
+body:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4.1255em;
+    background: #00bcd4;
+    z-index: 0;
+}
+
 header {
+    margin-bottom: 1em;
     padding: 1em;
     color: white;
-    background: #00bcd4;
+}
+
+header h1, #back {
+    line-height: 1.417em;
 }
 
 header h1 {
@@ -21,13 +36,34 @@ h1, h2 {
 }
 
 body > div {
+    position: relative;
+    z-index: 1;
     width: 95%;
     width: calc(100% - 2em);
-    margin: 1em auto;
+    overflow: hidden;
+    margin: 0 auto 1em;
+    white-space: nowrap;
 }
 
 header h1, body > div {
     max-width: 800px;
+}
+
+section, #lists > div + ol, #lists > ul > li,
+#lists li > div:before, #lists li > div:after
+{
+    transition-duration: 750ms;
+}
+
+section {
+    display: inline-block;
+    width: 100%;
+    vertical-align: top;
+    margin-right: -.25em;
+    white-space: normal;
+    -webkit-transition-property: margin-left;
+    -moz-transition-property: margin-left;
+    transition-property: margin-left;
 }
 
 #lists {
@@ -49,14 +85,12 @@ header h1, body > div {
 }
 
 #lists > div {
+    padding-left: .75em;
     overflow: hidden;
 }
 
-#lists > div + ol, #lists > ul > li, #lists li > div:before, #lists li > div:after {
-    transition-duration: 750ms;
-}
-
 #lists > div + ol {
+    position: relative;
     min-height: 23.244em;
     -webkit-transition-property: margin-left;
     -moz-transition-property: margin-left;
@@ -213,6 +247,25 @@ header h1, body > div {
 #lists h3, #lists h3 span {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#back {
+    float: left;
+    width: 1.5em;
+    overflow: hidden;
+    font-size: 1.5em;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#back:before {
+    content: "\27a4";
+    display: inline-block;
+    margin-right: 1em;
+    -webkit-transform: scale(-1, 1);
+    -moz-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+    margin-right: 1em;
 }
 
 footer {

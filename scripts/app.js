@@ -20,10 +20,7 @@ window.addEventListener("load", function ()
             }, []);
     };
 
-    // Display timestamp, title, host + info text, and how long the show is.
-    // timestamp  | Title
-    // showlength | host - info text
-    function entry (stream)
+    function entry (station, stream)
     {
         var date, time, seconds, minutes, hours, length, info, title, entry;
 
@@ -52,9 +49,30 @@ window.addEventListener("load", function ()
         entry.appendChild(length);
         entry.appendChild(title);
 
-        entry.addEventListener("click", function (event)
+        entry.addEventListener("click", function ()
         {
-            // TODO call player.
+            var info, chat, launch, requests = 1 + stream.chatAvailable;
+
+            launch = function ()
+            {
+                if (requests === 1 && (info || chat) || info && chat)
+                {
+                    Replayer.loadStream(station, stream, info, chat);
+                    document.getElementById("lists").style.marginLeft = "-100%";
+                }
+            };
+
+            Relive.loadStreamInfo(station.id, stream.id, function (_info)
+            {
+                info = _info;
+                launch();
+            });
+
+            Relive.loadStreamChat(station.id, stream.id, function (_chat)
+            {
+                chat = _chat;
+                launch();
+            });
         });
 
         return entry;
@@ -71,7 +89,7 @@ window.addEventListener("load", function ()
             date = new Date();
             date = date.setMonth(date.getMonth() - 3);
 
-            list = lists.children[1];
+            list = lists.children[2];
             list.setAttribute("reversed", "reversed");
 
             latest.sort(function (a, b)
@@ -80,7 +98,7 @@ window.addEventListener("load", function ()
             })
             .every(function (stream, i)
             {
-                list.appendChild(entry(stream));
+                list.appendChild(entry(stream._station, stream));
                 return stream.timestamp >= date || list.children.length < 25;
             });
 
@@ -93,22 +111,25 @@ window.addEventListener("load", function ()
     {
         Relive.loadStationInfo(station.id, function (info)
         {
-            var list = document.createElement("ol");
+            var list, streams;
+
+            list = document.createElement("ol");
             list.setAttribute("reversed", "reversed");
 
             // Again? :(
-            info.streams = Object.toArray(info.streams)
+            streams = Object.toArray(info.streams)
                 .sort(function (a, b)
                 {
                     return b.timestamp - a.timestamp;
                 });
 
-            info.streams.forEach(function (stream)
+            streams.forEach(function (stream)
             {
-                list.appendChild(entry(stream));
+                list.appendChild(entry(station, stream));
 
                 if (latest)
                 {
+                    stream._station = station;
                     latest.push(stream);
                 }
             });
@@ -170,5 +191,11 @@ window.addEventListener("load", function ()
         event.target.className = "active";
         event.target.previousElementSibling.className = "";
         document.querySelector("#lists > ol").style.marginLeft = "-100%";
+    });
+
+    document.getElementById("back").addEventListener("click", function (event)
+    {
+        Replayer.pause();
+        document.querySelector("#lists").style.marginLeft = "";
     });
 });
