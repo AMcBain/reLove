@@ -75,6 +75,7 @@ window.addEventListener("load", function ()
                     launch();
                 });
 
+                Replayer.clear();
                 document.getElementById("player").className = "";
             }
 

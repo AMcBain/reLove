@@ -274,6 +274,67 @@ section {
     margin-right: 1em;
 }
 
+#player > div {
+    height: calc(100% - 5.1255em);
+}
+
+/* Adjust height to account for player area. */
+.chatview {
+    height: 100%;
+    overflow: auto;
+    font-family: monospace;
+    background: #fafafa;
+}
+
+.chatview td {
+    vertical-align: top;
+}
+
+.chatview td:first-child {
+    padding-right: 1em;
+}
+
+.chatview td:nth-child(2) {
+    padding-right: .25em;
+    text-align: right;
+}
+
+/* All colors shamelessly ripped from the defaults
+   I liked in a desktop IRC client I used to use.
+   Everyone likely has opinions on their favorites
+   so these are probably going to change.
+ */
+
+.chattype0 td {
+    /* No idea. Slightly dimmed for now. */
+    color: #4c4c4c;
+}
+
+.chattype1 td:nth-child(2), .chattype2 td:nth-child(2),
+.chattype2 td:nth-child(3) span {
+    color: #3636b3;
+}
+
+.chattype3 td:nth-child(2), .chattype3 td:nth-child(3) {
+    color: #2a8c2a;
+}
+
+.chattype4 td:nth-child(2), .chattype4 td:nth-child(3),
+.chattype5 td:nth-child(2), .chattype5 td:nth-child(3)
+{
+    color: #66361f;
+}
+
+.chattype6 td:nth-child(2), .chattype7 td:nth-child(2),
+.chattype8 td:nth-child(2)
+{
+    color: #80267f;
+}
+
+.chattype9 td:nth-child(2), .chattype9 td:nth-child(3) {
+    color: #c73232;
+}
+
 footer {
     padding-bottom: .5em;
     font-size: .8125em;
