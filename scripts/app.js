@@ -60,8 +60,8 @@ window.addEventListener("load", function ()
                     {
                         Replayer.loadStream(station, stream, info, chat);
 
-                        document.body.parentNode.scrollTop = 0;
                         document.getElementById("lists").style.marginLeft = "-100%";
+                        window.scrollTo(0, 0);
                     }
                 };
 
@@ -108,6 +108,13 @@ window.addEventListener("load", function ()
 
             list.className = "loaded";
             latest = null;
+
+            // Firefox tries to restore the scroll state, which is now invalid.
+            // Unfortunately this creates a funky state where the content is at
+            // the top but the scrollbar is wherever Firefox put it. If you use
+            // the scroll wheel, the page moves down from the top. Use the
+            // scrollbar and Firefox snaps the page to its location first.
+            window.scrollTo(0, 0);
         }
     };
 
