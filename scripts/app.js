@@ -58,6 +58,8 @@ window.addEventListener("load", function ()
                 if (requests === 1 && (info || chat) || info && chat)
                 {
                     Replayer.loadStream(station, stream, info, chat);
+
+                    document.body.parentNode.scrollTop = 0;
                     document.getElementById("lists").style.marginLeft = "-100%";
                 }
             };
