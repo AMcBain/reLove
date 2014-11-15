@@ -27,7 +27,10 @@ header h1, #back {
 }
 
 header h1 {
+    overflow: hidden;
     margin: 0 auto;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 h1, h2 {
