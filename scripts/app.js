@@ -48,7 +48,7 @@ window.addEventListener("load", function ()
         {
             var info, chat, launch, requests = 1 + stream.chatAvailable;
 
-            if (station.id === Replayer.stationId && stream.id === Replayer.stationId)
+            if (station.id === Replayer.stationId && stream.id === Replayer.streamId)
             {
                 Replayer.play();
             }
