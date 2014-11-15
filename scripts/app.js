@@ -53,28 +53,35 @@ window.addEventListener("load", function ()
         {
             var info, chat, launch, requests = 1 + stream.chatAvailable;
 
-            launch = function ()
+            if (station.id === Replayer.stationId && stream.id === Replayer.stationId)
             {
-                if (requests === 1 && (info || chat) || info && chat)
+                Replayer.play();
+            }
+            else
+            {
+                launch = function ()
                 {
-                    Replayer.loadStream(station, stream, info, chat);
+                    if (requests === 1 && (info || chat) || info && chat)
+                    {
+                        Replayer.loadStream(station, stream, info, chat);
 
-                    document.body.parentNode.scrollTop = 0;
-                    document.getElementById("lists").style.marginLeft = "-100%";
-                }
-            };
+                        document.body.parentNode.scrollTop = 0;
+                        document.getElementById("lists").style.marginLeft = "-100%";
+                    }
+                };
 
-            Relive.loadStreamInfo(station.id, stream.id, function (_info)
-            {
-                info = _info;
-                launch();
-            });
+                Relive.loadStreamInfo(station.id, stream.id, function (_info)
+                {
+                    info = _info;
+                    launch();
+                });
 
-            Relive.loadStreamChat(station.id, stream.id, function (_chat)
-            {
-                chat = _chat;
-                launch();
-            });
+                Relive.loadStreamChat(station.id, stream.id, function (_chat)
+                {
+                    chat = _chat;
+                    launch();
+                });
+            }
         });
 
         return entry;
