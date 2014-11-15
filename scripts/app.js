@@ -5,11 +5,6 @@ window.addEventListener("load", function ()
 {
     var load, latest = [];
 
-    Element.prototype.text = function (text)
-    {
-        return text && (this.textContent = text) && this || this.textContent;
-    };
-
     Object.toArray = function (obj)
     {
         return Object.keys(obj)
