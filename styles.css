@@ -100,7 +100,7 @@ section {
     transition-property: margin-left;
 }
 
-#lists > div + ol:before {
+#lists > div + ol:before, #player:before {
     position: absolute;
     content: "";
     top: 50%;
@@ -145,7 +145,7 @@ section {
     }
 }
 
-#lists > div + ol.loaded:before {
+#lists > div + ol.loaded:before, #player.loaded:before {
     display: none;
     -webkit-animation-play-state: paused;
     -moz-animation-play-state: paused;
@@ -250,6 +250,11 @@ section {
 #lists h3, #lists h3 span {
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+#player {
+    position: relative;
+    height: 100vh;
 }
 
 #back {

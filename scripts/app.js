@@ -59,9 +59,7 @@ window.addEventListener("load", function ()
                     if (requests === 1 && (info || chat) || info && chat)
                     {
                         Replayer.loadStream(station, stream, info, chat);
-
-                        document.getElementById("lists").style.marginLeft = "-100%";
-                        window.scrollTo(0, 0);
+                        document.getElementById("player").className = "loaded";
                     }
                 };
 
@@ -76,7 +74,12 @@ window.addEventListener("load", function ()
                     chat = _chat;
                     launch();
                 });
+
+                document.getElementById("player").className = "";
             }
+
+            document.getElementById("lists").style.marginLeft = "-100%";
+            window.scrollTo(0, 0);
         });
 
         return entry;
