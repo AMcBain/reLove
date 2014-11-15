@@ -1,3 +1,5 @@
+"use strict";
+
 function ChatView (parent, channel, offset)
 {
     var container, table, types = {}, init;

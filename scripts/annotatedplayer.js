@@ -1,3 +1,5 @@
+"use strict";
+
 // NOTEs: turn player background a nice shade of red or something if
 // the browser says it can't play the given mime or it fails even if
 // returns "maybe" for canPlayType.
