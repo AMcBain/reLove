@@ -21,6 +21,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     // TODO IE9 support? The rest of the app should be IE9 ready.
     progress = document.createElement("progress");
     progress.value = 0;
+    progress.max = length;
     container.lastChild.appendChild(progress);
 
     if (!audio.canPlayType(mime))

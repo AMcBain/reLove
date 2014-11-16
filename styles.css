@@ -449,16 +449,18 @@ section {
 }
 
 #player .annotatedplayer progress {
+    /* Chrome doesn't take on styles for the value pseudo-element unless this is set. */
+    -webkit-appearance: none;
     position: absolute;
     top: -3px;
-    right: 0;
     left: 0;
+    width: 100%;
     height: calc(1.875em + 6px);
     background: none;
     border: none;
 }
 
-/* WebKit doesn't apply the previous, it uses these instead. */
+/* WebKit doesn't apply the previous, it uses these instead? It used to. Don't know, now. */
 ::-webkit-progress-bar {
     background: none;
     border: none;
@@ -473,12 +475,14 @@ section {
 /* IE10+'s indicator. */
 progress::-ms-fill {
     background: none;
-    border-right: 1px solid #000;
+    border-right-color: #000;
+    border-right-style: solid;
+    border-right-width: 1px;
 }
 
 /* WebKit's area indicating the progress state. */
 ::-webkit-progress-value {
-    background: none;
+    background-color: transparent;
     border-right: 1px solid #000;
 }
 
