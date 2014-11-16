@@ -11,7 +11,7 @@ window.addEventListener("load", function ()
     {
         var container, toggle, list = document.createElement("ol");
 
-        segments.forEach(function (cue)
+        segments.forEach(function (cue, i)
         {
             var time, entry;
 
@@ -22,6 +22,11 @@ window.addEventListener("load", function ()
             entry = document.createElement("li");
             entry.textContent = " " + cue.artist + " - " + cue.title;
             entry.insertBefore(time, entry.firstChild);
+
+            if (i === 0)
+            {
+                entry.className = "selected";
+            }
 
             entry.addEventListener("click", function ()
             {
