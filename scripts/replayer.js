@@ -25,7 +25,7 @@ window.addEventListener("load", function ()
 
             entry.addEventListener("click", function ()
             {
-                // TODO skip to this location. Or rather, tell player to skip there.
+                player.seek(cue.start);
             });
 
             list.appendChild(entry);
@@ -58,7 +58,7 @@ window.addEventListener("load", function ()
 
     function start ()
     {
-        var chatview;
+        var chatview, url, mime;
 
         buildCueList();
 
@@ -79,7 +79,10 @@ window.addEventListener("load", function ()
             chatview.addLine(chat[0].rows[i]);
         }
 
-        player = new AnnotatedPlayer(/* TODO correct args */);
+        url = Relive.getStreamURL(station.id, stream.id);
+        mime = Relive.getStreamMimeType(station.id, stream.id);
+
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments);
     };
 
     // I can't see reason why there needs to be more than one of these.

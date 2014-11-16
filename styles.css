@@ -158,7 +158,9 @@ section {
     padding: 0;
 }
 
-#lists h2, #lists > ul, #lists > ol, #player .segments h2 span {
+#lists h2, #lists > ul, #lists > ol, #player .segments h2 span,
+#player .annotatedplayer div:first-child
+{
     line-height: 1.437em;
 }
 
@@ -278,15 +280,18 @@ section {
 
 #player > div {
     position: relative;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
     height: calc(100% - 5.1255em);
     overflow: hidden;
+    padding-bottom: calc(3.687em + 25px);
     padding-left: 1.437em;
 }
 
 #player .segments {
     position: absolute;
     top: 0;
-    bottom: 0;
+    bottom: calc(3.687em + 25px);
     left: calc(-75% + 1.437em);
     width: 75%;
     max-width: 600px;
@@ -405,6 +410,80 @@ section {
 .chattype9 td:nth-child(2), .chattype9 td:nth-child(3) {
     color: #c73232;
 }
+
+#player .annotatedplayer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #fafafa;
+    border-top: 1px solid #ccc;
+}
+
+#player .annotatedplayer div:first-child {
+    padding: 6px;
+}
+
+#player .annotatedplayer div:last-child {
+    position: relative;
+    height: 1.875em;
+    margin: 9px;
+}
+
+#player .annotatedplayer canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #eee;
+}
+
+/* Maybe a better style could be applied because this reminds me of the loading indicator and there's nothing loading. */
+#player .annotatedplayer canvas.bad {
+    background: #e91e63;
+    background: -webkit-linear-gradient(to bottom, transparent, transparent calc(2.25em - 16px), #fafafa calc(2.25em - 16px), #fafafa calc(2.25em - 11px), transparent calc(2.25em - 11px)),
+                -webkit-repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
+    background: -moz-linear-gradient(to bottom, transparent, transparent calc(2.25em - 16px), #fafafa calc(2.25em - 16px), #fafafa calc(2.25em - 11px), transparent calc(2.25em - 11px)),
+                -moz-repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
+    background: linear-gradient(to bottom, transparent, transparent calc(2.25em - 16px), #fafafa calc(2.25em - 16px), #fafafa calc(2.25em - 11px), transparent calc(2.25em - 11px)),
+                repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
+}
+
+#player .annotatedplayer progress {
+    position: absolute;
+    top: -3px;
+    right: 0;
+    left: 0;
+    height: calc(1.875em + 6px);
+    background: none;
+    border: none;
+}
+
+/* WebKit doesn't apply the previous, it uses these instead. */
+::-webkit-progress-bar {
+    background: none;
+    border: none;
+}
+
+/* Firefox's indication of the progress state. */
+::-moz-progress-bar {
+    background: none;
+    border-right: 1px solid #000;
+}
+
+/* IE10+'s indicator. */
+progress::-ms-fill {
+    background: none;
+    border-right: 1px solid #000;
+}
+
+/* WebKit's area indicating the progress state. */
+::-webkit-progress-value {
+    background: none;
+    border-right: 1px solid #000;
+}
+
+/* Are you confused yet? I am. I wonder why something like these weren't standardized
+   before it was recommended to be implemented. Seems like a big thing to miss to me. */
 
 footer {
     padding-bottom: .5em;
