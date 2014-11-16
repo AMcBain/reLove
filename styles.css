@@ -279,6 +279,7 @@ section {
 #player > div {
     position: relative;
     height: calc(100% - 5.1255em);
+    overflow: hidden;
     padding-left: 1.437em;
 }
 
