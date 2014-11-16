@@ -19,15 +19,12 @@ function ChatView (parent, channel, offset)
 
     function timefmt (timestamp)
     {
-        var time, format = "[##:##]";
-
-        // TODO Actually generate time format: HH:MM in 24-hour time. 00:00, 13:00, etc.
-        timestamp += offset;
+        var time, date = new Date((timestamp + offset) * 1000);
 
         time = document.createElement("time");
-        time.setAttribute("datetime", new Date(timestamp * 1000).toISOString());
-        time.setAttribute("title", time.getAttribute("datetime").replace("T", " ").replace(/\..+$/, ""));
-        time.textContent = format;
+        time.setAttribute("datetime", date.toISOString());
+        time.setAttribute("title", date.toISOString().replace("T", " ").replace(/\..+$/, ""));
+        time.textContent = "[" + Time.instant(date) + "]";
 
         return time;
     }

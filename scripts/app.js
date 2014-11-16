@@ -17,20 +17,15 @@ window.addEventListener("load", function ()
 
     function entry (station, stream)
     {
-        var date, time, seconds, minutes, hours, length, info, title, entry;
+        var date, time, length, info, title, entry;
 
         date = new Date(stream.timestamp * 1000).toISOString();
         time = document.createElement("time");
         time.setAttribute("datetime", date);
         time.textContent = date.replace("T", " ").replace(/\..+$/, "");
 
-        hours = Math.floor(stream.length / 3600);
-        minutes = Math.floor((stream.length - hours * 3600) / 60);
-        seconds = Math.floor((stream.length - hours * 3600 - minutes * 60));
-
         length = document.createElement("span");
-        length.textContent = ((hours ? hours + "h " : "") + (minutes ? minutes + "m " : "") +
-                (seconds ? seconds + "s" : ""));
+        length.textContent = Time.duration(stream.length, true);
 
         info = document.createElement("span");
         info.textContent = stream.host + " - " + stream.infoText;
