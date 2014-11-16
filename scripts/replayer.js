@@ -124,7 +124,7 @@ window.addEventListener("load", function ()
             // Clear out old loaded items.
             if (parent.children.length > 1)
             {
-                parent.removeChild(player.lastElementChild);
+                parent.removeChild(parent.lastElementChild);
             }
             parent.appendChild(document.createElement("div"));
 
