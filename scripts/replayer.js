@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, parent, title, station, stream, info, chat;
+    var player, parent, title, station, stream, segments, chat;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -11,7 +11,7 @@ window.addEventListener("load", function ()
     {
         var container, toggle, list = document.createElement("ol");
 
-        info.forEach(function (cue)
+        segments.forEach(function (cue)
         {
             var time, entry;
 
@@ -102,16 +102,16 @@ window.addEventListener("load", function ()
 
             ready = function ()
             {
-                if (requests === 1 && (info || chat) || info && chat)
+                if (requests === 1 && (segments || chat) || segments && chat)
                 {
                     start();
                     parent.className = "loaded";
                 }
             };
 
-            Relive.loadStreamInfo(station.id, stream.id, function (_info)
+            Relive.loadStreamInfo(station.id, stream.id, function (_segments)
             {
-                info = _info;
+                segments = _segments;
                 ready();
             });
 
