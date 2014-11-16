@@ -396,7 +396,7 @@ section {
 }
 
 .chattype6 td:nth-child(2), .chattype7 td:nth-child(2),
-.chattype8 td:nth-child(2)
+.chattype7 td:nth-child(3), .chattype8 td:nth-child(2)
 {
     color: #80267f;
 }
