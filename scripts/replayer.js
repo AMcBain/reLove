@@ -5,7 +5,7 @@ window.addEventListener("load", function ()
     var player, parent, title, station, stream, info, chat;
 
     parent = document.getElementById("player");
-    title = parent.querySelectorAll("h1");
+    title = parent.querySelector("h1");
 
     function buildCueList ()
     {
