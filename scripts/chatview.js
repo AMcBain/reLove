@@ -36,9 +36,6 @@ function ChatView (parent, channel, offset)
         return column;
     }
 
-    // TODO Check if scrollbar is within a certain distance of the bottom and force it to be
-    // the bottom after adding a new line if the browser doesn't do this already. (This way
-    // if someone scrolled up to read stuff their place isn't lost.)
     function row (type, timestamp, user, message)
     {
         var time, row;
