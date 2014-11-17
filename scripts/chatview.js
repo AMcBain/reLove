@@ -179,4 +179,9 @@ function ChatView (parent, channel, offset)
         // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
         types[line.type](line);
     };
+
+    this.removeLine = function (index)
+    {
+        table.removeChild(table.children[index]);
+    };
 }

@@ -64,26 +64,7 @@ window.addEventListener("load", function ()
 
     function start ()
     {
-        var chatview, url, mime;
-
-        buildCueList();
-
-        // Try to find messages that indicate a change in channel (not user) modes.
-        var _chat = JSON.stringify(chat);
-        if (/"type":8,"stringCount":\d,"strings":\["[^"]+","[+-][^vob]/.test(_chat))
-        {
-            console.log(_chat);
-        }
-
-        if (chat)
-        {
-            chatview = new ChatView(parent.lastChild, chat[0].name, stream.timestamp);
-            // TODO set up listeners on the player to add stuff as it was said.
-        }
-        for (var i = 0; i < chat[0].rows.length; i++)
-        {
-            chatview.addLine(chat[0].rows[i]);
-        }
+        var chatview, url, mime, lastTime, last = 0;
 
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
@@ -94,6 +75,38 @@ window.addEventListener("load", function ()
             cues.querySelector(".selected").className = "";
             cues.children[event.detail].className = "selected";
         });
+
+        if (chat)
+        {
+            chatview = new ChatView(parent.lastChild, chat[0].name, stream.timestamp);
+
+            player.addEventListener("timeupdate", function ()
+            {
+                var i, time = this.currentTime;
+
+                // Handle seeking backwards.
+                if (lastTime > time)
+                {
+                    while (last > 0 && chat[0].rows[last].timestamp > time)
+                    {
+                        last--;
+                        chatview.removeLine(last);
+                    }
+                }
+                else
+                {
+                    while (chat[0].rows[last].timestamp <= time)
+                    {
+                        chatview.addLine(chat[0].rows[last]);
+                        last++;
+                    }
+                }
+
+                lastTime = time;
+            });
+        }
+
+        buildCueList();
     };
 
     // I can't see reason why there needs to be more than one of these.
