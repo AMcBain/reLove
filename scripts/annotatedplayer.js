@@ -6,7 +6,7 @@
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
     var container, time, title, canvas, progress, rectX, colors, tooltip, tooltime,
-            countdown, audio, segment = 0;
+            playpause, button, countdown, audio, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -16,6 +16,9 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     container.firstChild.className = "info";
     container.lastChild.className = "player";
+
+    container.firstChild.appendChild(document.createElement("div"));
+    container.firstChild.firstChild.className = "controls";
 
     time = document.createElement("span");
     time.textContent = "00:00:00";
@@ -58,6 +61,50 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     else
     {
         audio.src = url;
+
+        button = document.createElement("span");
+        button.className = "previous";
+        button.addEventListener("click", function ()
+        {
+            if (segment > 0)
+            {
+                if (audio.currentTime - segments[segment].start > 3)
+                {
+                    seek(segments[segment].start);
+                }
+                else
+                {
+                    seek(segments[segment - 1].start);
+                }
+            }
+        });
+        container.firstChild.firstChild.appendChild(button);
+
+        playpause = document.createElement("span");
+        playpause.className = "pause";
+        playpause.addEventListener("click", function ()
+        {
+            if (this.className === "play")
+            {
+                audio.play();
+            }
+            else
+            {
+                audio.pause();
+            }
+        });
+        container.firstChild.firstChild.appendChild(playpause);
+
+        button = document.createElement("span");
+        button.className = "next";
+        button.addEventListener("click", function ()
+        {
+            if (segment < segments.length - 1)
+            {
+                seek(segments[segment + 1].start);
+            }
+        });
+        container.firstChild.firstChild.appendChild(button);
 
         tooltip = document.createElement("span");
         tooltip.className = "tooltip";
@@ -148,6 +195,16 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
                     console.log("WTF");
            }
            canvas.className = "bad";
+        });
+
+        audio.addEventListener("pause", function ()
+        {
+            playpause.className = "play";
+        });
+
+        audio.addEventListener("play", function ()
+        {
+            playpause.className = "pause";
         });
 
         audio.play();
