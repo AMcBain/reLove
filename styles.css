@@ -284,14 +284,14 @@ section {
     box-sizing: border-box;
     height: calc(100% - 5.1255em);
     overflow: hidden;
-    padding-bottom: calc(3.687em + 25px);
+    padding-bottom: calc(3.687em + 19px);
     padding-left: 1.437em;
 }
 
 #player .segments {
     position: absolute;
     top: 0;
-    bottom: calc(3.687em + 25px);
+    bottom: calc(3.687em + 19px);
     left: calc(-75% + 1.437em);
     width: 75%;
     max-width: 600px;
@@ -420,11 +420,26 @@ section {
     border-top: 1px solid #ccc;
 }
 
-#player .annotatedplayer div:first-child {
+#player .annotatedplayer .info {
     padding: 6px;
+    padding-bottom: 0;
 }
 
-#player .annotatedplayer div:last-child {
+#player .annotatedplayer .info span {
+    float: left;
+    padding-right: 1em;
+}
+
+#player .annotatedplayer .info div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#player .annotatedplayer .info .controls {
+    float: right;
+}
+
+#player .annotatedplayer .player {
     position: relative;
     height: 1.875em;
     margin: 9px 6px;

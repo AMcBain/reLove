@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, parent, title, station, stream, segments, chat;
+    var player, parent, title, station, stream, segments, chat, cues;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -59,6 +59,7 @@ window.addEventListener("load", function ()
         container.appendChild(list);
 
         parent.lastChild.appendChild(container);
+        cues = list;
     }
 
     function start ()
@@ -88,6 +89,11 @@ window.addEventListener("load", function ()
         mime = Relive.getStreamMimeType(station.id, stream.id);
 
         player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments);
+        player.addEventListener("segmentupdate", function (event)
+        {
+            cues.querySelector(".selected").className = "";
+            cues.children[event.detail].className = "selected";
+        });
     };
 
     // I can't see reason why there needs to be more than one of these.

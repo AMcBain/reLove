@@ -5,7 +5,8 @@
 // returns "maybe" for canPlayType.
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
-    var container, canvas, progress, rectX, colors, tooltip, tooltime, audio = new Audio();
+    var container, time, title, canvas, progress, rectX, colors, tooltip, tooltime,
+            countdown, audio, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -13,7 +14,25 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     container.appendChild(document.createElement("div"));
     parent.appendChild(container);
 
-    container.firstChild.textContent = "00:00:00";
+    container.firstChild.className = "info";
+    container.lastChild.className = "player";
+
+    time = document.createElement("span");
+    time.textContent = "00:00:00";
+    time.addEventListener("click", function ()
+    {
+        countdown = !countdown;
+
+        if (localStorage)
+        {
+            localStorage.countdown = Number(countdown);
+        }
+    });
+    container.firstChild.appendChild(time);
+
+    title = document.createElement("div");
+    title.textContent = segments[segment].title;
+    container.firstChild.appendChild(title);
 
     canvas = document.createElement("canvas");
     container.lastChild.appendChild(canvas);
@@ -24,56 +43,56 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     progress.max = length;
     container.lastChild.appendChild(progress);
 
+    if (localStorage)
+    {
+        countdown = Number(localStorage.countdown);
+    }
+
+    audio = new Audio();
+    audio.volume = localStorage && localStorage.volume || 1;
+
     if (!audio.canPlayType(mime))
     {
         canvas.className = "bad";
     }
     else
     {
+        audio.src = url;
+
         tooltip = document.createElement("span");
         tooltip.className = "tooltip";
-        tooltip.textContent = 
         container.lastChild.appendChild(tooltip);
 
-        // ~4s
         progress.addEventListener("mousemove", function (event)
         {
-            var i, segment, x = (event.pageX - rectX), t = x / progress.clientWidth * length;
+            var x = (event.pageX - rectX), segment = getSegment(event);
 
-            // Doesn't seem to ever be enough show segments to make this search use a
-            // more intelligent search, or a skiplist at least.
-            for (i = segments.length - 1; i >= 0; i--)
+            if (segment)
             {
-                if (segments[i].start <= t)
+                tooltip.className = "tooltip";
+                tooltip.textContent = segment.artist + " - " + segment.title;
+                tooltip.style.display = "block";
+                tooltip.style.left = x + "px";
+                tooltip.style.marginLeft = -tooltip.clientWidth / 2 + "px";
+
+                if (tooltip.offsetLeft + tooltip.clientWidth > progress.clientWidth)
                 {
-                    segment = segments[i];
-                    break;
+                    tooltip.style.marginLeft = -tooltip.clientWidth + "px";
+                    tooltip.className = "tooltip right";
                 }
-            }
+                else if (tooltip.offsetLeft < 0)
+                {
+                    tooltip.style.marginLeft = 0;
+                    tooltip.className = "tooltip left";
+                }
 
-            tooltip.className = "tooltip";
-            tooltip.textContent = segment.title;
-            tooltip.style.display = "block";
-            tooltip.style.left = x + "px";
-            tooltip.style.marginLeft = -tooltip.clientWidth / 2 + "px";
-
-            if (tooltip.offsetLeft + tooltip.clientWidth > progress.clientWidth)
-            {
-                tooltip.style.marginLeft = -tooltip.clientWidth + "px";
-                tooltip.className = "tooltip right";
+                // Call in Tim Allen?
+                clearTimeout(tooltime);
+                tooltime = setTimeout(function ()
+                {
+                    tooltip.style.display = "";
+                }, 4000);
             }
-            else if (tooltip.offsetLeft < 0)
-            {
-                tooltip.style.marginLeft = 0;
-                tooltip.className = "tooltip left";
-            }
-
-            // Call in Tim Allen?
-            clearTimeout(tooltime);
-            tooltime = setTimeout(function ()
-            {
-                tooltip.style.display = "";
-            }, 4000);
         });
 
         progress.addEventListener("mouseleave", function ()
@@ -84,6 +103,65 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
                 tooltip.style.display = "";
             }, 250);
         });
+
+        progress.addEventListener("mouseup", function (event)
+        {
+            seek(Math.min(Math.max(0, (event.pageX - rectX) / progress.clientWidth * length), length));
+        });
+
+        audio.addEventListener("timeupdate", function ()
+        {
+            var t = this.currentTime;
+
+            // getSegment is potentially expensive. So, this.
+            if (segments[segment + 1] && t >= segments[segment + 1].start)
+            {
+                segment++;
+                notifySegmentListeners();
+            }
+
+            if (countdown)
+            {
+                time.textContent = "-" +  Time.duration(length - t);
+            }
+            else
+            {
+                time.textContent = Time.duration(t);
+            }
+            progress.value = t;
+        });
+
+        audio.play();
+    }
+
+    function getSegment (time)
+    {
+        var i;
+
+        if (time.pageX)
+        {
+            time = (time.pageX - rectX) / progress.clientWidth * length;
+        }
+
+        // Shows don't ever seem to have enough segments to need to making
+        // a search use more intelligent methods, or at least a skiplist.
+        for (i = segments.length - 1; i >= 0; i--)
+        {
+            if (segments[i].start <= time)
+            {
+                return segments[i];
+            }
+        }
+        return null;
+    }
+
+    function notifySegmentListeners()
+    {
+        title.textContent = segments[segment].title;
+
+        audio.dispatchEvent(new CustomEvent("segmentupdate", {
+            detail: segment
+        }));
     }
 
     this.addEventListener = function (event, callback)
@@ -101,10 +179,26 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         audio.pause();
     };
 
-    this.seek = function (to)
+    function seek (to)
     {
         audio.currentTime = to;
-    };
+
+        // getSegment doesn't give the index of the match.
+        segments.every(function (seg, i)
+        {
+            if (seg.start <= to && (i === segments.length - 1 || to < segments[i + 1].start))
+            {
+                if (i !== segment)
+                {
+                    segment = i;
+                    notifySegmentListeners();
+                }
+                return false;
+            }
+            return true;
+        });
+    }
+    this.seek = seek;
 
     function offset (time, width)
     {
