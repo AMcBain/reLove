@@ -195,7 +195,6 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     this.pause = function ()
     {
-    console.log("pause");
         audio.pause();
     };
 
