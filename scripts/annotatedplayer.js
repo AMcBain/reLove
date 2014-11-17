@@ -5,8 +5,8 @@
 // returns "maybe" for canPlayType.
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
-    var container, time, title, canvas, progress, rectX, colors, tooltip, tooltime,
-            playpause, button, countdown, audio, segment = 0;
+    var container, time, title, canvas, progress, progX, colors, tooltip, tooltime,
+            playpause, button, volume, volX, countdown, audio, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -106,13 +106,28 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         });
         container.firstChild.firstChild.appendChild(button);
 
+        button = document.createElement("span");
+        button.className = "sound";
+        container.firstChild.firstChild.appendChild(button);
+
+        // Could be a meter tag, except IE doesn't support those. At all.
+        volume = document.createElement("span");
+        volume.className = "volume";
+        volume.appendChild(document.createElement("span"));
+        volume.addEventListener("mouseup", function (event)
+        {
+            audio.volume = Math.min(Math.max(0, (event.pageX - volX) / this.clientWidth), 1);
+        });
+        volume.firstChild.style.width = "100%";
+        container.firstChild.firstChild.appendChild(volume);
+
         tooltip = document.createElement("span");
         tooltip.className = "tooltip";
         container.lastChild.appendChild(tooltip);
 
         progress.addEventListener("mousemove", function (event)
         {
-            var x = (event.pageX - rectX), segment = getSegment(event);
+            var x = (event.pageX - progX), segment = getSegment(event);
 
             if (segment)
             {
@@ -153,7 +168,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
         progress.addEventListener("mouseup", function (event)
         {
-            seek(Math.min(Math.max(0, (event.pageX - rectX) / progress.clientWidth * length), length));
+            seek(Math.min(Math.max(0, (event.pageX - progX) / progress.clientWidth * length), length));
         });
 
         audio.addEventListener("timeupdate", function ()
@@ -207,6 +222,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             playpause.className = "pause";
         });
 
+        audio.addEventListener("volumechange", function ()
+        {
+            volume.firstChild.style.width = audio.volume * volume.clientWidth + "px";
+        });
+
         audio.play();
     }
 
@@ -216,7 +236,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
         if (time.pageX)
         {
-            time = (time.pageX - rectX) / progress.clientWidth * length;
+            time = (time.pageX - progX) / progress.clientWidth * length;
         }
 
         // Shows don't ever seem to have enough segments to need to making
@@ -290,9 +310,25 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     colors[Relive.TRACKTYPE_JINGLE] = "#8a9add";
     colors[Relive.TRACKTYPE_NARRATION] = "#8659b3";
 
+    function calculateOffsetLeft (element, ignore2)
+    {
+        var x = 0;
+
+        do
+        {
+            // Skip the elements that cause the wonky offsets we don't want.
+            if ("offsetLeft" in element && element !== parent.parentNode && element !== ignore2)
+            {
+                x += element.offsetLeft;
+            }
+        } while ((element = element.parentNode) && element.parentNode !== null);
+
+        return x;
+    }
+
     this.redraw = function ()
     {
-        var context, width, height, element;
+        var context, width, height;
 
         if (!canvas.className)
         {
@@ -343,20 +379,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             });
         }
 
-        rectX = 0;
-        element = progress;
-
         // progress.getBoundingClientRect().x would be easier but as this view is off screen when this is first
         // calculated it gets values that don't match what it would be when it is in view. They also seem to be
         // off by some small incalculable value? This works in all cases.
-        do
-        {
-            // Skip the parent view element.
-            if ("offsetLeft" in element && element !== parent.parentNode)
-            {
-                rectX += element.offsetLeft;
-            }
-        } while ((element = element.parentNode) && element.parentNode !== null);
+        progX = calculateOffsetLeft(progress);
+        volX = calculateOffsetLeft(volume, volume.parentNode);
     };
 
     this.redraw();

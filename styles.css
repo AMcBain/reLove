@@ -441,7 +441,6 @@ section {
 
 #player .annotatedplayer .info .controls > span {
     display: inline-block;
-    position: relative;
     width: 1.437em;
     height: 1.437em;
     overflow: hidden;
@@ -458,7 +457,9 @@ section {
     height: 0;
 }
 
-#player .annotatedplayer .info .controls .previous:after {
+#player .annotatedplayer .info .controls .previous:after,
+#player .annotatedplayer .info .controls .sound:after
+{
     content: "";
     border-top: .39em solid transparent;
     border-bottom: .39em solid transparent;
@@ -495,9 +496,32 @@ section {
     margin-left: .18em;
 }
 
-#player .annotatedplayer .info .controls .next:after {
+#player .annotatedplayer .info .controls .sound:before {
     content: "";
+    width: .2em;
+    height: .3375em;
+    vertical-align: .195em;
+    margin-right: -.2em;
+    background: #a7a7a7;
+}
 
+#player .annotatedplayer .info .controls .sound:after {
+    border-right-color: #a7a7a7;
+}
+
+#player .annotatedplayer .info .controls .volume {
+    position: relative;
+    width: 4.311em;
+    height: .78em;
+    vertical-align: .3em;
+}
+
+#player .annotatedplayer .info .controls .volume span {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background: #a7a7a7;
 }
 
 #player .annotatedplayer .player {
