@@ -147,7 +147,7 @@ function ChatView (parent, channel, offset)
     {
         if (line.strings.length > 2)
         {
-            rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + line.strings[1]);
+            rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + line.strings[2]);
         }
         else
         {
