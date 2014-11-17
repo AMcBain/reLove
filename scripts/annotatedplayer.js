@@ -5,7 +5,7 @@
 // returns "maybe" for canPlayType.
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
-    var container, canvas, progress, colors, audio = new Audio();
+    var container, canvas, progress, rectX, colors, tooltip, tooltime, audio = new Audio();
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -27,6 +27,63 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     if (!audio.canPlayType(mime))
     {
         canvas.className = "bad";
+    }
+    else
+    {
+        tooltip = document.createElement("span");
+        tooltip.className = "tooltip";
+        tooltip.textContent = 
+        container.lastChild.appendChild(tooltip);
+
+        // ~4s
+        progress.addEventListener("mousemove", function (event)
+        {
+            var i, segment, x = (event.pageX - rectX), t = x / progress.clientWidth * length;
+
+            // Doesn't seem to ever be enough show segments to make this search use a
+            // more intelligent search, or a skiplist at least.
+            for (i = segments.length - 1; i >= 0; i--)
+            {
+                if (segments[i].start <= t)
+                {
+                    segment = segments[i];
+                    break;
+                }
+            }
+
+            tooltip.className = "tooltip";
+            tooltip.textContent = segment.title;
+            tooltip.style.display = "block";
+            tooltip.style.left = x + "px";
+            tooltip.style.marginLeft = -tooltip.clientWidth / 2 + "px";
+
+            if (tooltip.offsetLeft + tooltip.clientWidth > progress.clientWidth)
+            {
+                tooltip.style.marginLeft = -tooltip.clientWidth + "px";
+                tooltip.className = "tooltip right";
+            }
+            else if (tooltip.offsetLeft < 0)
+            {
+                tooltip.style.marginLeft = 0;
+                tooltip.className = "tooltip left";
+            }
+
+            // Call in Tim Allen?
+            clearTimeout(tooltime);
+            tooltime = setTimeout(function ()
+            {
+                tooltip.style.display = "";
+            }, 4000);
+        });
+
+        progress.addEventListener("mouseleave", function ()
+        {
+            clearTimeout(tooltime);
+            tooltime = setTimeout(function ()
+            {
+                tooltip.style.display = "";
+            }, 250);
+        });
     }
 
     this.addEventListener = function (event, callback)
@@ -65,7 +122,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     this.redraw = function ()
     {
-        var context, width, height;
+        var context, width, height, element;
 
         if (!canvas.className)
         {
@@ -115,6 +172,21 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
                 }
             });
         }
+
+        rectX = 0;
+        element = progress;
+
+        // progress.getBoundingClientRect().x would be easier but as this view is off screen when this is first
+        // calculated it gets values that don't match what it would be when it is in view. They also seem to be
+        // off by some small incalculable value? This works in all cases.
+        do
+        {
+            // Skip the parent view element.
+            if ("offsetLeft" in element && element !== parent.parentNode)
+            {
+                rectX += element.offsetLeft;
+            }
+        } while ((element = element.parentNode) && element.parentNode !== null);
     };
 
     this.redraw();

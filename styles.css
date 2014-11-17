@@ -427,7 +427,43 @@ section {
 #player .annotatedplayer div:last-child {
     position: relative;
     height: 1.875em;
-    margin: 9px;
+    margin: 9px 6px;
+}
+
+#player .annotatedplayer .tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    margin-bottom: 5px;
+    padding: 0 .375em;
+    font-size: .8em;
+    white-space: nowrap;
+    color: white;
+    background: black;
+}
+
+#player .annotatedplayer .tooltip:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #000;
+    border-left: 5px solid transparent;
+}
+
+#player .annotatedplayer .tooltip.left:after {
+    left: 0;
+    margin-left: 0;
+    border-left: none;
+}
+
+#player .annotatedplayer .tooltip.right:after {
+    right: 0;
+    left: auto;
+    margin-left: 0;
+    border-right: none;
 }
 
 #player .annotatedplayer canvas {
