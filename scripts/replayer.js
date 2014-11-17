@@ -148,6 +148,7 @@ window.addEventListener("load", function ()
 
             parent.className = "";
             title.textContent = station.name + ": " + stream.name;
+            document.title = title.textContent;
         }
     };
 

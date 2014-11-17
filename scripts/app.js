@@ -176,5 +176,6 @@ window.addEventListener("load", function ()
     {
         Replayer.pause();
         document.querySelector("#lists").style.marginLeft = "";
+        document.title = "reLive.web";
     });
 });
