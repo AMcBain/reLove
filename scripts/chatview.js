@@ -92,29 +92,21 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    // {"timestamp":39,"type":1,"stringCount":2,"strings":["the_Ye-Ti","huhwat"]},
-    // {"timestamp":57,"type":1,"stringCount":2,"strings":["MrT","yi8ha"]},
-    // {"timestamp":63,"type":1,"stringCount":2,"strings":["phobium","hepp hepp!"]},
-    // {"timestamp":66,"type":1,"stringCount":2,"strings":["MrT","so is it live or a recoring ?"]},
     types[Relive.CHATTYPE_MESSAGE] = function (line)
     {
         row(line.type, line.timestamp, line.strings[0], line.strings[1]);
     };
 
-    // {"timestamp":6418,"type":2,"stringCount":2,"strings":["SceneSat","spots that SceneCAT simply loooooves Waldemar Doppelzimmer - Bier und Demos! Ah, l'amour!"]}
     types[Relive.CHATTYPE_ME] = function (line)
     {
         rowspc(line.type, line.timestamp, line.strings[0], line.strings[1]);
     };
 
-    // {"timestamp":1908,"type":3,"stringCount":1,"strings":["ZaphodB_"]}
     types[Relive.CHATTYPE_JOIN] = function (line)
     {
         rowstar(line, line.strings[0] + " has joined " + channel);
     };
 
-    // {"timestamp":8547,"type":4,"stringCount":2,"strings":["Dumper","Time for a dump."]},
-    // {"timestamp":11487,"type":4,"stringCount":1,"strings":["[EviL]"]}
     types[Relive.CHATTYPE_LEAVE] = function (line)
     {
         var msg = line.strings[0] + " has left " + channel;
@@ -129,7 +121,6 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    // {"timestamp":9461,"type":5,"stringCount":2,"strings":["SaphirJD","Read error: Connection reset by peer"]}
     types[Relive.CHATTYPE_QUIT] = function (line)
     {
         var msg = line.strings[0] + " has quit";
@@ -144,13 +135,11 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    // {"timestamp":11112,"type":6,"stringCount":2,"strings":["crazzter","ZiGGi"]}
     types[Relive.CHATTYPE_NICK] = function (line)
     {
         rowstar(line, line.strings[0] + " is now known as " + line.strings[1]);
     };
 
-    // {"timestamp":23659,"type":7,"stringCount":2,"strings":["SceneSat","Next show: Soothing Sounds with Steph with Steph - Mon, November 17th, 20:00 CET | Previous shows: http://scenesat.com/archive or http://scenesat.com/relive"]}
     types[Relive.CHATTYPE_TOPIC] = function (line)
     {
         rowstar(line, line.strings[0] + " has set the topic to: " + line.strings[1]);
@@ -171,8 +160,6 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    // first is kicker, second is person being kicked.
-    // {"timestamp":13639,"type":9,"stringCount":3,"strings":["dotwaffle","Sofa9176","no reason"]}
     types[Relive.CHATTYPE_KICK] = function (line)
     {
         var msg = line.strings[0] + " has kicked " + line.strings[1] + " from " + channel;
