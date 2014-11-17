@@ -131,6 +131,25 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             progress.value = t;
         });
 
+        audio.addEventListener("error", function (error)
+        {
+            switch (error.target.error.code)
+            {
+                case MediaError.MEDIA_ERR_NETWORK:
+                    console.log("Network Error");
+                    break;
+                case MediaError.MEDIA_ERR_DECODE:
+                    console.log("Audio Decoding Error");
+                    break;
+                case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                    console.log("Audio Format Error");
+                    break;
+                default:
+                    console.log("WTF");
+           }
+           canvas.className = "bad";
+        });
+
         audio.play();
     }
 
@@ -176,6 +195,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     this.pause = function ()
     {
+    console.log("pause");
         audio.pause();
     };
 
