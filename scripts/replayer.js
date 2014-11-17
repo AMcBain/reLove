@@ -114,9 +114,13 @@ window.addEventListener("load", function ()
             station = _station;
             stream = _stream;
 
+            // Clear out old data to prevent spawning a player twice.
+            segments = null;
+            chat = null;
+
             ready = function ()
             {
-                if (requests === 1 && (segments || chat) || segments && chat)
+                if (requests === 1 && (segments || chat) || (segments && chat))
                 {
                     start();
                     parent.className = "loaded";
