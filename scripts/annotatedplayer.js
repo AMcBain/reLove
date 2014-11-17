@@ -56,6 +56,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     if (!audio.canPlayType(mime))
     {
+        title.textContent = "Unable to play. This browser does not support the stream's media type."
         canvas.className = "bad";
     }
     else
