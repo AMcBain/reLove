@@ -82,7 +82,7 @@ window.addEventListener("load", function ()
 
             player.addEventListener("timeupdate", function ()
             {
-                var i, time = this.currentTime;
+                var i, time = Math.floor(this.currentTime);
 
                 // Handle seeking backwards.
                 if (lastTime > time)

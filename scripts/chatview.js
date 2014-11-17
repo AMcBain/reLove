@@ -178,6 +178,11 @@ function ChatView (parent, channel, offset)
     {
         // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
         types[line.type](line);
+
+        if (table.children.length && container.scrollTopMax - container.scrollTop <= 34)
+        {
+            container.scrollTop = container.scrollTopMax;
+        }
     };
 
     this.removeLine = function (index)
