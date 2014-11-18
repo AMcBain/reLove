@@ -433,6 +433,7 @@ section {
 #player .annotatedplayer .info div {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #player .annotatedplayer .info .controls {
