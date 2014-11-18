@@ -52,7 +52,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     }
 
     audio = new Audio();
-    audio.volume = localStorage && localStorage.volume || 1;
+    audio.volume = localStorage && Number(localStorage.volume) || 1;
 
     if (!audio.canPlayType(mime))
     {
@@ -226,6 +226,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         audio.addEventListener("volumechange", function ()
         {
             volume.firstChild.style.width = audio.volume * volume.clientWidth + "px";
+
+            if (localStorage)
+            {
+                localStorage.volume = audio.volume;
+            }
         });
 
         audio.play();
