@@ -259,7 +259,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     function notifySegmentListeners()
     {
-        title.textContent = segments[segment].author + " - " + segments[segment].title;
+        title.textContent = segments[segment].artist + " - " + segments[segment].title;
 
         audio.dispatchEvent(new CustomEvent("segmentupdate", {
             detail: segment
