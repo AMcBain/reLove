@@ -97,7 +97,7 @@ window.addEventListener("load", function ()
                 }
                 else
                 {
-                    while (chat[0].rows[last].timestamp <= time)
+                    while (last < chat[0].rows.length && chat[0].rows[last].timestamp <= time)
                     {
                         chatview.addLine(chat[0].rows[last]);
                         last++;
