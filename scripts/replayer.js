@@ -74,6 +74,8 @@ window.addEventListener("load", function ()
         {
             cues.querySelector(".selected").className = "";
             cues.children[event.detail].className = "selected";
+
+            //Notifications.post(title.textContent, segments[event.detail].artist + " - " + segments[event.detail].title);
         });
 
         if (chat)
