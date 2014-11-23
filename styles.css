@@ -16,9 +16,124 @@ body:before {
     z-index: 0;
 }
 
+#menu {
+    position: absolute;
+    top: 1.00025em;
+    right: .5em;
+    z-index: 1;
+}
+
+#menu > span {
+    display: block;
+    position: relative;
+    width: 1.3846em;
+    height: 1.125em;
+    margin-right: .5em;
+    margin-top: .5em;
+    overflow: hidden;
+    font-weight: bold;
+    line-height: 1em;
+    text-indent: 100%;
+    white-space: nowrap;
+    color: white;
+    cursor: pointer;
+}
+
+#menu > span:before, #menu > span:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: 1.3846em;
+    height: .1730em;
+}
+
+#menu > span:before {
+    top: 0;
+    border-top: .25961em solid #fff;
+    border-bottom: .25961em solid #fff;
+}
+
+#menu > span:after {
+    bottom: 0;
+    height: .25961em;
+    background: #fff;
+}
+
+#menu ul {
+    display: none;
+    float: right;
+    margin: 0;
+    padding: 0;
+    padding-top: .5em;
+    padding-bottom: .125em;
+}
+
+#menu li {
+    list-style-type: none;
+    padding: .25em .5em;
+}
+
+#menu li.section {
+    margin-top: 1px solid #f0f0f0;
+}
+
+#menu.open {
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .16);
+}
+
+#menu.open:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 2.125em;
+    background: #000;
+}
+
+#menu.open > span {
+    width: auto;
+    padding-right: 1.8846em;
+    padding-left: .5em;
+    text-indent: 0;
+}
+
+#menu.open ul {
+    display: block;
+}
+
+#menu input[type="checkbox"] {
+    visibility: hidden;
+    position: absolute;
+}
+
+#menu label {
+    cursor: pointer;
+}
+
+#menu label:before {
+    content: "\00A0";
+    display: inline-block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: .75em;
+    width: .75em;
+    margin-right: .275em;
+    font-size: 1.2em;
+    line-height: .4em;
+    text-shadow: 1px 1px 0 #fff;
+    border: 1px solid #000;
+}
+
+#menu input[type="checkbox"]:checked + label:before {
+    content: "\2713";
+}
+
 header {
     margin-bottom: 1em;
     padding: 1em;
+    padding-right: 3.3846em;
     color: white;
 }
 

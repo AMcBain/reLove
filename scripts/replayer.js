@@ -2,10 +2,11 @@
 
 window.addEventListener("load", function ()
 {
-    var player, parent, title, station, stream, segments, chat, cues;
+    var player, parent, title, notify, station, stream, segments, chat, cues;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
+    notify = document.getElementById("notify-segment-changes");
 
     function buildCueList ()
     {
@@ -75,7 +76,10 @@ window.addEventListener("load", function ()
             cues.querySelector(".selected").className = "";
             cues.children[event.detail].className = "selected";
 
-            //Notifications.post(title.textContent, segments[event.detail].artist + " - " + segments[event.detail].title);
+            if (notify.checked)
+            {
+                Notifications.post(title.textContent, segments[event.detail].artist + " - " + segments[event.detail].title);
+            }
         });
 
         if (chat)

@@ -172,6 +172,29 @@ window.addEventListener("load", function ()
         document.querySelector("#lists > ol").style.marginLeft = "-100%";
     });
 
+    document.querySelector("#menu > span").addEventListener("click", function (event)
+    {
+        event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
+    });
+
+    (function ()
+    {
+        var setting = document.getElementById("notify-segment-changes");
+
+        if (localStorage)
+        {
+            setting.checked = (localStorage.notifySegmentChanges === "true");
+        }
+
+        setting.addEventListener("change", function (event)
+        {
+            if (localStorage)
+            {
+                localStorage.notifySegmentChanges = setting.checked;
+            }
+        });
+    }());
+
     document.getElementById("back").addEventListener("click", function (event)
     {
         Replayer.pause();

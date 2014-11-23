@@ -9,11 +9,21 @@
         <script src="scripts/time.js"></script>
         <script src="scripts/chatview.js"></script>
         <script src="scripts/annotatedplayer.js"></script>
+        <script src="scripts/notifications.js"></script>
         <script src="scripts/replayer.js"></script>
         <script src="scripts/app.js"></script>
     </head>
     <body>
         <div>
+            <div id="menu">
+                <span>Menu</span>
+                <ul>
+                    <li>
+                        <input type="checkbox" id="notify-segment-changes">
+                        <label for="notify-segment-changes">notify segment changes</label>
+                    </li>
+                </ul>
+            </div>
             <section id="lists">
                 <header>
                     <h1>reLive</h1>
