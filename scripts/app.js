@@ -3,7 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [];
+    var load, latest = [], title = document.title;
 
     Object.toArray = function (obj)
     {
@@ -176,6 +176,6 @@ window.addEventListener("load", function ()
     {
         Replayer.pause();
         document.querySelector("#lists").style.marginLeft = "";
-        document.title = "reLive.web";
+        document.title = title;
     });
 });
