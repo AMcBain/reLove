@@ -172,28 +172,42 @@ window.addEventListener("load", function ()
         document.querySelector("#lists > ol").style.marginLeft = "-100%";
     });
 
-    document.querySelector("#menu > span").addEventListener("click", function (event)
+    if (Notifications.supported)
     {
-        event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
-    });
-
-    (function ()
-    {
-        var setting = document.getElementById("notify-segment-changes");
-
-        if (localStorage)
+        document.querySelector("#menu > span").addEventListener("click", function (event)
         {
-            setting.checked = (localStorage.notifySegmentChanges === "true");
-        }
+            event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
+        });
 
-        setting.addEventListener("change", function (event)
+        (function ()
         {
+            var setting = document.getElementById("notify-segment-changes");
+
             if (localStorage)
             {
-                localStorage.notifySegmentChanges = setting.checked;
+                setting.checked = (localStorage.notifySegmentChanges === "true");
             }
+
+            setting.addEventListener("change", function (event)
+            {
+                if (localStorage)
+                {
+                    localStorage.notifySegmentChanges = setting.checked;
+                }
+            });
+        }());
+    }
+    else
+    {
+        document.getElementById("menu").style.display = "none";
+
+        // No point reserving space for something which isn't shown. Also,
+        // NodeList doesn't have nice utility properties like Array. Sadly.
+        Array.prototype.forEach.call(document.querySelectorAll("header"), function (header)
+        {
+            header.style.paddingRight = "1em";
         });
-    }());
+    }
 
     document.getElementById("back").addEventListener("click", function (event)
     {
