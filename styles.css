@@ -121,7 +121,7 @@ body:before {
     width: .75em;
     margin-right: .275em;
     font-size: 1.2em;
-    line-height: .4em;
+    line-height: .375em;
     text-shadow: 1px 1px 0 #fff;
     border: 1px solid #000;
 }
