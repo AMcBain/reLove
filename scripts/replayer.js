@@ -93,6 +93,10 @@ window.addEventListener("load", function ()
                 // Handle seeking backwards.
                 if (lastTime > time)
                 {
+                    if (last === chat[0].rows.length)
+                    {
+                        last--;
+                    }
                     while (last > 0 && chat[0].rows[last].timestamp > time)
                     {
                         last--;
