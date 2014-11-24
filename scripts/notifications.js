@@ -43,12 +43,22 @@
     {
         post = function (title, text)
         {
+            var msg;
+
             if (sendNotifications())
             {
-                new Notification(title, {
+                msg = new Notification(title, {
                     body: text,
                     icon: Notifications.icon
                 });
+
+                // Currently Firefox auto-closes messages after a very short period of time, but
+                // this isn't specified as default in the spec and Chrome leaves them open until
+                // a user closes them. 10s should be long enough to find and read?
+                setTimeout(function ()
+                {
+                    msg.close();
+                }, 10000);
             }
         };
 
