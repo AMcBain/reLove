@@ -632,6 +632,21 @@ section {
     vertical-align: .3em;
 }
 
+/* http://browserstrangeness.bitbucket.org/css_hacks.html#webkit | Safari 6.1+ */
+@media screen and (min-color-index: 0) and (-webkit-min-device-pixel-ratio: 0) {
+    @media {
+        #player .annotatedplayer .info .controls .volume {
+            vertical-align: baseline;
+        }
+    }
+    /* but not Chrome */
+    @media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: .001dpcm) {
+        #player .annotatedplayer .info .controls .volume {
+            vertical-align: .3em;
+        }
+    }
+}
+
 #player .annotatedplayer .info .controls .volume span {
     position: absolute;
     top: 0;
