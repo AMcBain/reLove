@@ -404,9 +404,10 @@ section {
 #player .segments {
     position: absolute;
     top: 0;
-    left: calc(-75% + 1.437em);
+    left: -75%;
     width: 75%;
     max-width: 600px;
+    margin-left: 1.437em;
     background: white;
 }
 
@@ -417,6 +418,7 @@ section {
 
 #player .segments.open {
     left: 0;
+    margin-left: 0;
 }
 
 #player .segments h2 {
