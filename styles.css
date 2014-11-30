@@ -406,10 +406,11 @@ section {
 #player .segments {
     position: absolute;
     top: 0;
-    bottom: calc(3.687em + 19px);
+    bottom: 3.687em;
     left: calc(-75% + 1.437em);
     width: 75%;
     max-width: 600px;
+    margin-bottom: 19px;
     background: white;
 }
 
