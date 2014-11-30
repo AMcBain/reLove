@@ -717,6 +717,9 @@ section {
 /* Maybe a better style could be applied because this reminds me of the loading indicator and there's nothing loading. */
 #player .annotatedplayer canvas.bad {
     background: #e91e63;
+    background: -webkit-repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
+    background: -moz-repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
+    background: repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
     background: -webkit-linear-gradient(to bottom, transparent, transparent calc(2.25em - 16px), #fafafa calc(2.25em - 16px), #fafafa calc(2.25em - 11px), transparent calc(2.25em - 11px)),
                 -webkit-repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
     background: -moz-linear-gradient(to bottom, transparent, transparent calc(2.25em - 16px), #fafafa calc(2.25em - 16px), #fafafa calc(2.25em - 11px), transparent calc(2.25em - 11px)),
