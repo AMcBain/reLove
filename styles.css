@@ -394,24 +394,25 @@ section {
 }
 
 #player > div {
-    position: relative;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    height: calc(100% - 5.1255em);
+    position: absolute;
+    top: 5.1255em;
+    bottom: 0;
+    width: 100%;
     overflow: hidden;
-    padding-bottom: calc(3.687em + 19px);
-    padding-left: 1.437em;
 }
 
 #player .segments {
     position: absolute;
     top: 0;
-    bottom: 3.687em;
     left: calc(-75% + 1.437em);
     width: 75%;
     max-width: 600px;
-    margin-bottom: 19px;
     background: white;
+}
+
+#player .segments, .chatview {
+    bottom: 3.687em;
+    margin-bottom: 19px;
 }
 
 #player .segments.open {
@@ -472,10 +473,16 @@ section {
 
 /* Adjust height to account for player area. */
 .chatview {
-    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 1.437em;
     overflow: auto;
-    font-family: monospace;
     background: #fafafa;
+}
+
+.chatview table {
+    font-family: monospace;
 }
 
 .chatview td {
