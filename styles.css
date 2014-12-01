@@ -569,10 +569,15 @@ section {
     display: inline-block;
     width: 1.437em;
     height: 1.437em;
-    overflow: hidden;
     text-align: center;
-    white-space: nowrap;
     cursor: pointer;
+}
+
+#player .annotatedplayer .info .controls > span,
+#player .annotatedplayer .progress span
+{
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 #player .annotatedplayer .info .controls > span:before,
@@ -665,6 +670,12 @@ section {
     background: #a7a7a7;
 }
 
+#player .annotatedplayer .info .controls .volume span,
+#player .annotatedplayer .progress span
+{
+    text-indent: 100%;
+}
+
 #player .annotatedplayer .player {
     position: relative;
     height: 1.875em;
@@ -728,46 +739,25 @@ section {
                 repeating-linear-gradient(105deg, #e91e63, #e91e63 5px, transparent 5px, transparent 10px);
 }
 
-#player .annotatedplayer progress {
-    /* Chrome doesn't take on styles for the value pseudo-element unless this is set. */
-    -webkit-appearance: none;
+#player .annotatedplayer .progress {
     position: absolute;
-    top: -3px;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(1.875em + 6px);
-    background: none;
-    border: none;
+    height: 1.875em;
 }
 
-/* WebKit doesn't apply the previous, it uses these instead? It used to. Don't know, now. */
-::-webkit-progress-bar {
-    background: none;
-    border: none;
+#player .annotatedplayer .progress, #player .annotatedplayer .progress span {
+    margin-top: -3px;
+    padding: 3px 0;
 }
 
-/* Firefox's indication of the progress state. */
-::-moz-progress-bar {
-    background: none;
+#player .annotatedplayer .progress span {
+    display: block;
+    width: 0;
+    height: 100%;
     border-right: 1px solid #000;
 }
-
-/* IE10+'s indicator. */
-progress::-ms-fill {
-    background: none;
-    border-right-color: #000;
-    border-right-style: solid;
-    border-right-width: 1px;
-}
-
-/* WebKit's area indicating the progress state. */
-::-webkit-progress-value {
-    background-color: transparent;
-    border-right: 1px solid #000;
-}
-
-/* Are you confused yet? I am. I wonder why something like these weren't standardized
-   before it was recommended to be implemented. Seems like a big thing to miss to me. */
 
 footer {
     padding-bottom: .5em;

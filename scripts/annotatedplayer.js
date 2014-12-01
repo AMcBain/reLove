@@ -40,10 +40,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     canvas = document.createElement("canvas");
     container.lastChild.appendChild(canvas);
 
-    // TODO IE9 support? The rest of the app should be IE9 ready.
-    progress = document.createElement("progress");
-    progress.value = 0;
-    progress.max = length;
+    // Could be a progress tag, but support came late in IE and other browsers.
+    progress = document.createElement("span");
+    progress.className = "progress";
+    progress.appendChild(document.createElement("span"));
+    progress.firstChild.innerHTML = "Progress: 0%";
     container.lastChild.appendChild(progress);
 
     if (localStorage)
@@ -119,6 +120,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         {
             audio.volume = Math.min(Math.max(0, (event.pageX - volX) / this.clientWidth), 1);
         });
+        volume.firstChild.innerHTML = "Volume: 100%";
         volume.firstChild.style.width = "100%";
         container.firstChild.firstChild.appendChild(volume);
 
@@ -191,7 +193,9 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             {
                 time.textContent = Time.duration(t);
             }
-            progress.value = t;
+
+            progress.firstChild.innerHTML = "Progress: " + Math.round(t / length * 100) + "%";
+            progress.firstChild.style.width = t / length * progress.clientWidth + "px";
         });
 
         audio.addEventListener("error", function (error)
@@ -225,6 +229,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
         audio.addEventListener("volumechange", function ()
         {
+            volume.firstChild.innerHTML = "Volume: " + Math.floor(audio.volume * 100) + "%";
             volume.firstChild.style.width = audio.volume * volume.clientWidth + "px";
 
             if (localStorage)
