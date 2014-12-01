@@ -57,7 +57,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
     if (!audio.canPlayType(mime))
     {
-        title.textContent = "Unable to play. This browser does not support the stream's media type."
+        title.textContent = "Unable to play. This browser does not support the stream's media type.";
         canvas.className = "bad";
     }
     else
@@ -203,16 +203,16 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             switch (error.target.error.code)
             {
                 case MediaError.MEDIA_ERR_NETWORK:
-                    console.log("Network Error");
+                    title.textContent = "Unable to play. There was a network error.";
                     break;
                 case MediaError.MEDIA_ERR_DECODE:
-                    console.log("Audio Decoding Error");
+                    title.textContent = "Unable to play. There was an error trying to decode the stream.";
                     break;
                 case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                    console.log("Audio Format Error");
+                    title.textContent = "Unable to play. This browser does not support the stream's media type.";
                     break;
                 default:
-                    console.log("WTF");
+                    title.textContent = "WTF! Unknown error.";
            }
            canvas.className = "bad";
         });
