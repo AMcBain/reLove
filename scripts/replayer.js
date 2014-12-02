@@ -2,11 +2,25 @@
 
 window.addEventListener("load", function ()
 {
-    var player, parent, title, notify, station, stream, segments, chat, cues;
+    var player, parent, title, notify, station, stream, segments, chat, cues, resize;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
     notify = document.getElementById("notify-segment-changes");
+
+    window.addEventListener("resize", function ()
+    {
+        if (player)
+        {
+            // Some browsers send events for every step if you resize by dragging.
+            // Some send a single event when the resize has finished. Normalizing.
+            clearTimeout(resize);
+            resize = setTimeout(function ()
+            {
+                player.redraw();
+            }, 250);
+        }
+    });
 
     function buildCueList ()
     {
