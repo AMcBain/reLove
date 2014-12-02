@@ -6,7 +6,7 @@
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
     var container, time, title, canvas, progress, progX, colors, tooltip, tooltime,
-            playpause, button, volume, volX, countdown, audio, segment = 0;
+            playpause, button, volume, volX, countdown, audio, ieDispatch, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -262,13 +262,34 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         return null;
     }
 
+    // Every browser but IE allows use of the CustomEvent constructor and deprecated
+    // the other ways of creating custom events. So if creation fails, fall back.
+    try
+    {
+        new CustomEvent("test");
+    }
+    catch (e)
+    {
+        ieDispatch = true;
+    }
+
     function notifySegmentListeners()
     {
+        var event;
         title.textContent = segments[segment].artist + " - " + segments[segment].title;
 
-        audio.dispatchEvent(new CustomEvent("segmentupdate", {
-            detail: segment
-        }));
+        if (ieDispatch)
+        {
+            event = document.createEvent("CustomEvent");
+            event.initCustomEvent("segmentupdate", false, false, segment);
+        }
+        else
+        {
+            event = new CustomEvent("segmentupdate", {
+                detail: segment
+            });
+        }
+        audio.dispatchEvent(event);
     }
 
     this.addEventListener = function (event, callback)
