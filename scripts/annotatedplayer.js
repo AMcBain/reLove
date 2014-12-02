@@ -171,7 +171,10 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
 
         progress.addEventListener("mouseup", function (event)
         {
-            seek(Math.min(Math.max(0, (event.pageX - progX) / progress.clientWidth * length), length));
+            if (!event.ctrlKey && event.which !== 3)
+            {
+                seek(Math.min(Math.max(0, (event.pageX - progX) / progress.clientWidth * length), length));
+            }
         });
 
         audio.addEventListener("timeupdate", function ()
