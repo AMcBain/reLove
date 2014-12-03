@@ -5,8 +5,8 @@
 // returns "maybe" for canPlayType.
 function AnnotatedPlayer (parent, url, mime, length, segments)
 {
-    var container, time, title, canvas, progress, progX, colors, tooltip, tooltime,
-            playpause, button, volume, volX, countdown, audio, ieDispatch, segment = 0;
+    var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime,
+            playpause, button, volume, volX, countdown, audio, menuX, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -46,6 +46,17 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     progress.appendChild(document.createElement("span"));
     progress.firstChild.innerHTML = "Progress: 0%";
     container.lastChild.appendChild(progress);
+
+    if (Copy.contextMenuSupported)
+    {
+        progress.setAttribute("contextmenu", "annotatedplayer-menu");
+
+        container.lastChild.insertBefore(Copy.createMenu("annotatedplayer-menu",
+                "Copy this stream location to clipboard", function ()
+        {
+            document.dispatchEvent(Events.create("copytimeurl", menuX / progress.clientWidth * length));
+        }), canvas);
+    }
 
     if (localStorage)
     {
@@ -175,6 +186,10 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
             {
                 seek(Math.min(Math.max(0, (event.pageX - progX) / progress.clientWidth * length), length));
             }
+            else
+            {
+                menuX = event.pageX - progX;
+            }
         });
 
         audio.addEventListener("timeupdate", function ()
@@ -265,39 +280,32 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
         return null;
     }
 
-    // Every browser but IE allows use of the CustomEvent constructor and deprecated
-    // the other ways of creating custom events. So if creation fails, fall back.
-    try
+    this.getSegment = function ()
     {
-        new CustomEvent("test");
-    }
-    catch (e)
-    {
-        ieDispatch = true;
-    }
+        return getSegment(audio.currentTime);
+    };
 
     function notifySegmentListeners()
     {
         var event;
         title.textContent = segments[segment].artist + " - " + segments[segment].title;
 
-        if (ieDispatch)
-        {
-            event = document.createEvent("CustomEvent");
-            event.initCustomEvent("segmentupdate", false, false, segment);
-        }
-        else
-        {
-            event = new CustomEvent("segmentupdate", {
-                detail: segment
-            });
-        }
-        audio.dispatchEvent(event);
+        audio.dispatchEvent(Events.create("segmentupdate", segment));
     }
 
     this.addEventListener = function (event, callback)
     {
         audio.addEventListener(event, callback);
+    };
+
+    this.removeEventListener = function (event, callback)
+    {
+        audio.removeEventListener(event, callback);
+    };
+
+    this.getCurrentTime = function ()
+    {
+        return audio.currentTime;
     };
 
     this.play = function ()

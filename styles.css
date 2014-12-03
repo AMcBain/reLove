@@ -73,8 +73,20 @@ body:before {
     padding: .25em .5em;
 }
 
+#menu li:first-child ~ li {
+    cursor: pointer;
+}
+
+#menu li:first-child ~ li:hover {
+    background: #f0f0f0;
+}
+
 #menu li.section {
-    margin-top: 1px solid #f0f0f0;
+    border-top: 1px solid #f0f0f0;
+}
+
+#menu li[disabled] {
+    display: none;
 }
 
 #menu.open {
@@ -274,7 +286,7 @@ section {
 }
 
 #lists h2, #lists > ul, #lists > ol, #player .segments h2 span,
-#player .annotatedplayer div:first-child
+#player .annotatedplayer div:first-child, .overlay
 {
     line-height: 1.437em;
 }
@@ -757,6 +769,59 @@ section {
     width: 0;
     height: 100%;
     border-right: 1px solid #000;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background: rgba(0, 0, 0, .8);
+}
+
+.overlay .dialog {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+.overlay .dialog > div {
+    position: relative;
+    left: -50%;
+    top: -50%;
+    width: 350px;
+    padding: .5em .65em;
+    padding-right: 1.975em;
+    background: #fff;
+}
+
+.overlay span {
+    display: block;
+    float: right;
+    overflow: hidden;
+    margin-bottom: .25em;
+    line-height: .6em;
+    text-indent: 100%;
+}
+
+.overlay span:after {
+    content: "\2715";
+    position: absolute;
+    right: .65em;
+    text-indent: 0;
+    cursor: pointer;
+}
+
+.overlay input {
+    display: block;
+    clear: right;
+    -moz-box-sizing: border-box;
+    border-sizing: border-box;
+    width: 100%;
+    height: 1.6em;
 }
 
 footer {

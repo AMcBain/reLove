@@ -8,8 +8,10 @@
         <script src="scripts/relive.js/relive.js"></script>
         <script src="scripts/time.js"></script>
         <script src="scripts/chatview.js"></script>
+        <script src="scripts/events.js"></script>
         <script src="scripts/annotatedplayer.js"></script>
         <script src="scripts/notifications.js"></script>
+        <script src="scripts/copy.js"></script>
         <script src="scripts/replayer.js"></script>
         <script src="scripts/app.js"></script>
     </head>
@@ -21,6 +23,15 @@
                     <li>
                         <input type="checkbox" id="notify-segment-changes">
                         <label for="notify-segment-changes">notify segment changes</label>
+                    </li>
+                    <li class="section group-stream" data-event="copystreamurl" disabled>
+                        Copy stream URL to clipboard
+                    </li>
+                    <li class="group-stream" data-event="copysegmenturl" disabled>
+                        Copy segment URL to clipboard
+                    </li>
+                    <li class="group-stream" data-event="copytimeurl" disabled>
+                        Copy current location to clipboard
                     </li>
                 </ul>
             </div>

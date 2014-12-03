@@ -3,7 +3,8 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [], title = document.title;
+    var load, latest = [], title = document.title, start = 0,
+            streamMenuItems = Array.prototype.slice.call(document.querySelectorAll("#menu .group-stream"), 0);
 
     Object.toArray = function (obj)
     {
@@ -35,13 +36,19 @@ window.addEventListener("load", function ()
         title.appendChild(info);
 
         entry = document.createElement("li");
+        entry.setAttribute("data-id", stream.id);
         entry.appendChild(time);
         entry.appendChild(length);
         entry.appendChild(title);
 
         entry.addEventListener("click", function ()
         {
-            Replayer.loadStream(station, stream);
+            Replayer.loadStream(station, stream, start);
+
+            streamMenuItems.forEach(function (item)
+            {
+                item.removeAttribute("disabled");
+            });
 
             document.getElementById("lists").style.marginLeft = "-100%";
             window.scrollTo(0, 0);
@@ -52,7 +59,7 @@ window.addEventListener("load", function ()
 
     function latestStreams ()
     {
-        var date, list, lists;
+        var date, list, lists, bits;
 
         if (latest)
         {
@@ -83,6 +90,24 @@ window.addEventListener("load", function ()
             // the scroll wheel, the page moves down from the top. Use the
             // scrollbar and Firefox snaps the page to its location first.
             window.scrollTo(0, 0);
+
+            // Detect a URL with #stream-0-0 or #track-0-0-0
+            if (/^#(?:stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+            {
+                bits = location.hash.split("-");
+                start = Relive.fromBase62(bits[3]);
+
+                try
+                {
+                    bits[1] = Relive.fromBase62(bits[1]);
+                    bits[2] = Relive.fromBase62(bits[2]);
+                    document.querySelector("[data-id='" + bits[1] + "'] [data-id='" + bits[2] + "']").click();
+                }
+                catch (e)
+                {
+                    console.log("There is no stream ", bits[1], " segment ", bits[2] || "0", " only Zuul.");
+                }
+            }
         }
     };
 
@@ -147,6 +172,7 @@ window.addEventListener("load", function ()
             name.textContent = station.name;
 
             entry = document.createElement("li");
+            entry.setAttribute("data-id", station.id);
             entry.appendChild(name);
             list.appendChild(entry);
 
@@ -212,7 +238,28 @@ window.addEventListener("load", function ()
     document.getElementById("back").addEventListener("click", function (event)
     {
         Replayer.pause();
+        start = 0;
+
+        streamMenuItems.forEach(function (item)
+        {
+            item.setAttribute("disabled", "disabled");
+        });
+
         document.querySelector("#lists").style.marginLeft = "";
         document.title = title;
+        location.hash = "";
+    });
+
+    streamMenuItems.forEach(function (item)
+    {
+        if (Copy.forceFallback)
+        {
+            item.innerHTML = item.innerHTML.replace(/\s+$/, "") + "...";
+        }
+        item.addEventListener("click", function (event)
+        {
+            document.dispatchEvent(Events.create(event.target.getAttribute("data-event")));
+            document.getElementById("menu").className = "";
+        });
     });
 });

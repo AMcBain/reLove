@@ -24,7 +24,7 @@ window.addEventListener("load", function ()
 
     function buildCueList ()
     {
-        var container, toggle, list = document.createElement("ol");
+        var container, toggle, segment, list = document.createElement("ol");
 
         segments.forEach(function (cue, i)
         {
@@ -35,6 +35,7 @@ window.addEventListener("load", function ()
             time.textContent = Time.duration(cue.start);
 
             entry = document.createElement("li");
+            entry.setAttribute("data-index", i);
             entry.textContent = " " + cue.artist + " - " + cue.title;
             entry.insertBefore(time, entry.firstChild);
 
@@ -73,13 +74,28 @@ window.addEventListener("load", function ()
         container.appendChild(toggle);
         container.appendChild(list);
 
+        if (Copy.contextMenuSupported)
+        {
+            list.setAttribute("contextmenu", "segments-menu");
+            list.addEventListener("contextmenu", function (event)
+            {
+                segment = segments[event.target.getAttribute("data-index")];
+            });
+
+            container.appendChild(Copy.createMenu("segments-menu",
+                    "Copy segment location to clipboard", function ()
+            {
+                copytimeurl(segment.start);
+            }));
+        }
+
         parent.lastChild.appendChild(container);
         cues = list;
     }
 
-    function start ()
+    function start (at)
     {
-        var chatview, url, mime, lastTime, last = 0;
+        var chatview, url, mime, once, lastTime, last = 0;
 
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
@@ -94,6 +110,10 @@ window.addEventListener("load", function ()
             {
                 Notifications.post(title.textContent, segments[event.detail].artist + " - " + segments[event.detail].title);
             }
+        });
+        player.addEventListener("pause", function ()
+        {
+            location.hash = gentimehash();
         });
 
         if (chat)
@@ -131,12 +151,22 @@ window.addEventListener("load", function ()
         }
 
         buildCueList();
+
+        if (at)
+        {
+            once = function ()
+            {
+                player.removeEventListener("canplay", once);
+                player.seek(at);
+            };
+            player.addEventListener("canplay", once);
+        }
     };
 
     // I can't see reason why there needs to be more than one of these.
     window.Replayer = {};
 
-    Replayer.loadStream = function (_station, _stream)
+    Replayer.loadStream = function (_station, _stream, _start)
     {
         var ready, requests;
 
@@ -159,7 +189,7 @@ window.addEventListener("load", function ()
             {
                 if (requests === 1 && (segments || chat) || (segments && chat))
                 {
-                    start();
+                    start(_start);
                     parent.className = "loaded";
                 }
             };
@@ -204,4 +234,50 @@ window.addEventListener("load", function ()
             player.pause();
         }
     };
+
+    // Handle events for app menu items relating to the replayer view.
+    document.addEventListener("copystreamurl", function ()
+    {
+        var url = location.href, q = url.indexOf("?");
+
+        if (q !== -1)
+        {
+            url = url.substring(0, q);
+        }
+
+        Copy.toClipboard(url + "#stream-" + Relive.toBase62(station.id) + "-" +
+                Relive.toBase62(stream.id));
+    });
+
+    function gentimehash (time)
+    {
+        if (isNaN(time))
+        {
+            time = Math.floor(player.getCurrentTime());
+        }
+
+        return "track-" + Relive.toBase62(station.id) + "-" + Relive.toBase62(stream.id) + "-" + Relive.toBase62(time);
+    }
+
+    function copytimeurl (time)
+    {
+        var url = location.href, h = url.indexOf("#");
+
+        if (h !== -1)
+        {
+            url = url.substring(0, h);
+        }
+
+        Copy.toClipboard(url + "#" + gentimehash(time));
+    }
+
+    document.addEventListener("copysegmenturl", function ()
+    {
+        copytimeurl(player.getSegment().start);
+    });
+
+    document.addEventListener("copytimeurl", function (event)
+    {
+        copytimeurl(Math.floor(parseInt(event.detail)));
+    });
 });
