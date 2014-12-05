@@ -113,7 +113,16 @@ window.addEventListener("load", function ()
         });
         player.addEventListener("pause", function ()
         {
-            location.hash = gentimehash();
+            if (history.replaceState)
+            {
+                history.replaceState({
+                    name: "stream"
+                }, "", "#" + gentimehash());
+            }
+            else
+            {
+                location.hash = gentimehash();
+            }
         });
 
         if (chat)
@@ -216,6 +225,20 @@ window.addEventListener("load", function ()
             parent.className = "";
             title.textContent = station.name + ": " + stream.name;
             document.title = title.textContent;
+
+            if (!_start)
+            {
+                if (history.pushState)
+                {
+                    history.pushState({
+                        name: "stream"
+                    }, "", "#" + genstreamhash());
+                }
+                else
+                {
+                    location.hash = genstreamhash();
+                }
+            }
         }
     };
 
@@ -236,6 +259,11 @@ window.addEventListener("load", function ()
     };
 
     // Handle events for app menu items relating to the replayer view.
+    function genstreamhash ()
+    {
+        return "stream-" + Relive.toBase62(station.id) + "-" + Relive.toBase62(stream.id)
+    }
+
     document.addEventListener("copystreamurl", function ()
     {
         var url = location.href, q = url.indexOf("?");
@@ -245,8 +273,7 @@ window.addEventListener("load", function ()
             url = url.substring(0, q);
         }
 
-        Copy.toClipboard(url + "#stream-" + Relive.toBase62(station.id) + "-" +
-                Relive.toBase62(stream.id));
+        Copy.toClipboard(url + "#" + genstreamhash());
     });
 
     function gentimehash (time)

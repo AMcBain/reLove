@@ -3,7 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [], title = document.title, start = 0,
+    var load, latest = [], title = document.title, start = 0, actions,
             streamMenuItems = Array.prototype.slice.call(document.querySelectorAll("#menu .group-stream"), 0);
 
     Object.toArray = function (obj)
@@ -15,6 +15,66 @@ window.addEventListener("load", function ()
                 return list;
             }, []);
     };
+
+    actions = {
+        stream: function ()
+        {
+            var bits, stream, segment;
+
+            // Detect a URL with #stream-0-0 or #track-0-0-0
+            if (/^#(?:stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+            {
+                bits = location.hash.split("-");
+                start = Relive.fromBase62(bits[3] || "");
+
+                try
+                {
+                    stream = Relive.fromBase62(bits[1]);
+                    segment = Relive.fromBase62(bits[2]);
+                    document.querySelector("[data-id='" + stream + "'] [data-id='" + segment + "']").click();
+                }
+                catch (e)
+                {
+                    console.log("There is no stream ", stream, " segment ", segment || "0", " only Zuul.");
+                }
+            }
+        },
+        latest: function ()
+        {
+            var element = document.getElementById("latest");
+            element.className = "active";
+            element.nextElementSibling.className = "";
+
+            document.title = title;
+            document.querySelector("#lists").style.marginLeft = "";
+            document.querySelector("#lists > ol").style.marginLeft = "";
+
+            streamMenuItems.forEach(function (item)
+            {
+                item.setAttribute("disabled", "disabled");
+            });
+
+            Replayer.pause();
+        },
+        stations: function ()
+        {
+            var element = document.getElementById("stations");
+            element.className = "active";
+            element.previousElementSibling.className = "";
+
+            document.title = title;
+            document.querySelector("#lists").style.marginLeft = "";
+            document.querySelector("#lists > ol").style.marginLeft = "-100%";
+
+            streamMenuItems.forEach(function (item)
+            {
+                item.setAttribute("disabled", "disabled");
+            });
+
+            Replayer.pause();
+        }
+    };
+    actions[null] = actions.latest;
 
     function entry (station, stream)
     {
@@ -59,7 +119,7 @@ window.addEventListener("load", function ()
 
     function latestStreams ()
     {
-        var date, list, lists, bits;
+        var date, list, lists;
 
         if (latest)
         {
@@ -91,23 +151,11 @@ window.addEventListener("load", function ()
             // scrollbar and Firefox snaps the page to its location first.
             window.scrollTo(0, 0);
 
-            // Detect a URL with #stream-0-0 or #track-0-0-0
-            if (/^#(?:stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+            if (history.state && history.state.name === "stations")
             {
-                bits = location.hash.split("-");
-                start = Relive.fromBase62(bits[3]);
-
-                try
-                {
-                    bits[1] = Relive.fromBase62(bits[1]);
-                    bits[2] = Relive.fromBase62(bits[2]);
-                    document.querySelector("[data-id='" + bits[1] + "'] [data-id='" + bits[2] + "']").click();
-                }
-                catch (e)
-                {
-                    console.log("There is no stream ", bits[1], " segment ", bits[2] || "0", " only Zuul.");
-                }
+                actions.stations();
             }
+            actions.stream();
         }
     };
 
@@ -184,18 +232,28 @@ window.addEventListener("load", function ()
             .parentNode.appendChild(list);
     });
 
-    document.getElementById("latest").addEventListener("click", function (event)
+    document.getElementById("latest").addEventListener("click", function ()
     {
-        event.target.className = "active";
-        event.target.nextElementSibling.className = "";
-        document.querySelector("#lists > ol").style.marginLeft = "";
+        actions.latest();
+
+        if (history.pushState)
+        {
+            history.pushState({
+                name: "active"
+            }, "");
+        }
     });
 
-    document.getElementById("stations").addEventListener("click", function (event)
+    document.getElementById("stations").addEventListener("click", function ()
     {
-        event.target.className = "active";
-        event.target.previousElementSibling.className = "";
-        document.querySelector("#lists > ol").style.marginLeft = "-100%";
+        actions.stations();
+
+        if (history.pushState)
+        {
+            history.pushState({
+                name: "stations"
+            }, "");
+        }
     });
 
     if (Notifications.supported)
@@ -249,6 +307,14 @@ window.addEventListener("load", function ()
         document.title = title;
         location.hash = "";
     });
+
+    if (history.pushState)
+    {
+        window.addEventListener("popstate", function (event)
+        {
+            actions[history.state && history.state.name]();
+        });
+    }
 
     streamMenuItems.forEach(function (item)
     {
