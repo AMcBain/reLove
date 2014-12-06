@@ -85,7 +85,7 @@ body:before {
     border-top: 1px solid #f0f0f0;
 }
 
-#menu li[disabled] {
+#menu li[data-disabled] {
     display: none;
 }
 

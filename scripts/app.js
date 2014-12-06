@@ -51,7 +51,7 @@ window.addEventListener("load", function ()
 
             streamMenuItems.forEach(function (item)
             {
-                item.setAttribute("disabled", "disabled");
+                item.setAttribute("data-disabled", "disabled");
             });
 
             Replayer.pause();
@@ -68,7 +68,7 @@ window.addEventListener("load", function ()
 
             streamMenuItems.forEach(function (item)
             {
-                item.setAttribute("disabled", "disabled");
+                item.setAttribute("data-disabled", "disabled");
             });
 
             Replayer.pause();
@@ -107,7 +107,7 @@ window.addEventListener("load", function ()
 
             streamMenuItems.forEach(function (item)
             {
-                item.removeAttribute("disabled");
+                item.removeAttribute("data-disabled");
             });
 
             document.getElementById("lists").style.marginLeft = "-100%";
@@ -300,7 +300,7 @@ window.addEventListener("load", function ()
 
         streamMenuItems.forEach(function (item)
         {
-            item.setAttribute("disabled", "disabled");
+            item.setAttribute("data-disabled", "disabled");
         });
 
         document.querySelector("#lists").style.marginLeft = "";
