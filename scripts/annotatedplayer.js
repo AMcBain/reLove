@@ -344,7 +344,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     // Narration could have a different color from talk, but the effect
     // is similar for both: "blah blah blah, play more music!"
     colors = {};
-    colors[Relive.TRACKTYPE_DEFAULT] = "a7a7a7";
+    colors[Relive.TRACKTYPE_DEFAULT] = "#a7a7a7";
     colors[Relive.TRACKTYPE_MUSIC] = "#a7a7a7";
     colors[Relive.TRACKTYPE_TALK] = "#8659b3";
     colors[Relive.TRACKTYPE_JINGLE] = "#8a9add";
