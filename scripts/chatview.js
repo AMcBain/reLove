@@ -2,7 +2,7 @@
 
 function ChatView (parent, channel, offset)
 {
-    var container, table, types = {}, init;
+    var container, table, types = {}, init, fix, styles;
 
     container = document.createElement("div");
     container.className = "chatview";
@@ -34,6 +34,32 @@ function ChatView (parent, channel, offset)
         var column = document.createElement("td");
         column.textContent = value;
         return column;
+    }
+
+    function fixrows ()
+    {
+        // Only bother if someone pasted a wonky line worth fixing.
+        if (styles || container.scrollWidth !== container.clientWidth)
+        {
+            if (!styles)
+            {
+                styles = document.querySelector("chatview-styles");
+
+                if (!styles)
+                {
+                    styles = document.createElement("style");
+                    styles.id = "chatview-styles";
+                    document.head.appendChild(styles);
+                }
+
+                styles.sheet.insertRule(".chatview td:last-child { word-wrap:break-word }", 0);
+                styles = styles.sheet.cssRules[styles.sheet.cssRules.length - 1];
+            }
+
+            // 10 is a magic number. It's how much it was off by and it seems to work in Firefox and IE.
+            styles.style.maxWidth = container.clientWidth - table.firstChild.children[0].offsetWidth
+                    - table.firstChild.children[1].offsetWidth - 10 + "px";
+        }
     }
 
     function row (type, timestamp, user, message)
@@ -177,6 +203,9 @@ function ChatView (parent, channel, offset)
 
         // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
         types[line.type](line);
+
+        clearTimeout(fix);
+        fix = setTimeout(fixrows, 1);
 
         if (scroll)
         {
