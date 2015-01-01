@@ -16,6 +16,12 @@ window.addEventListener("load", function ()
             }, []);
     };
 
+    function pause ()
+    {
+        Replayer.pause();
+        document.body.style.overflow = "";
+    }
+
     actions = {
         stream: function ()
         {
@@ -54,7 +60,7 @@ window.addEventListener("load", function ()
                 item.setAttribute("data-disabled", "disabled");
             });
 
-            Replayer.pause();
+            pause();
         },
         stations: function ()
         {
@@ -71,7 +77,7 @@ window.addEventListener("load", function ()
                 item.setAttribute("data-disabled", "disabled");
             });
 
-            Replayer.pause();
+            pause();
         }
     };
     actions[null] = actions.latest;
@@ -103,6 +109,7 @@ window.addEventListener("load", function ()
 
         entry.addEventListener("click", function ()
         {
+            document.body.style.overflow = "hidden";
             Replayer.loadStream(station, stream, start);
 
             streamMenuItems.forEach(function (item)
@@ -295,7 +302,7 @@ window.addEventListener("load", function ()
 
     document.getElementById("back").addEventListener("click", function (event)
     {
-        Replayer.pause();
+        pause();
         start = 0;
 
         streamMenuItems.forEach(function (item)
