@@ -173,14 +173,14 @@ function ChatView (parent, channel, offset)
 
     this.addLine = function (line)
     {
-        var scroll = table.children.length && container.scrollTopMax - container.scrollTop <= 34;
+        var scroll = table.children.length && container.scrollHeight - container.clientHeight - container.scrollTop <= 34;
 
         // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
         types[line.type](line);
 
         if (scroll)
         {
-            container.scrollTop = container.scrollTopMax;
+            container.scrollTop = container.scrollHeight - container.clientHeight;
         }
     };
 
