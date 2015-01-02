@@ -310,10 +310,13 @@ window.addEventListener("load", function ()
     // It is here for compatibility with the desktop client.
     Events.keydown(window, 118, function ()
     {
-        document.querySelector("#lists > ol").style.marginLeft = "-100%";
-        document.getElementById("latest").className = "";
-        document.getElementById("stations").className = "active";
-        document.getElementById("back").click();
+        if (document.querySelector("#lists").style.marginLeft || document.querySelector("#stations.active") === null)
+        {
+            document.querySelector("#lists > ol").style.marginLeft = "-100%";
+            document.getElementById("latest").className = "";
+            document.getElementById("stations").className = "active";
+            document.getElementById("back").click();
+        }
     });
 
     document.getElementById("back").addEventListener("click", function (event)
