@@ -3,7 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [], title = document.title, start = 0, actions,
+    var load, latest = [], title = document.title, start, actions,
             streamMenuItems = Array.prototype.slice.call(document.querySelectorAll("#menu .group-stream"), 0);
 
     Object.toArray = function (obj)
@@ -239,27 +239,33 @@ window.addEventListener("load", function ()
             .parentNode.appendChild(list);
     });
 
-    document.getElementById("latest").addEventListener("click", function ()
+    document.getElementById("latest").addEventListener("click", function (event)
     {
-        actions.latest();
-
-        if (history.pushState)
+        if (event.target.className !== "active")
         {
-            history.pushState({
-                name: "active"
-            }, "");
+            actions.latest();
+
+            if (history.pushState)
+            {
+                history.pushState({
+                    name: "latest"
+                }, "");
+            }
         }
     });
 
-    document.getElementById("stations").addEventListener("click", function ()
+    document.getElementById("stations").addEventListener("click", function (event)
     {
-        actions.stations();
-
-        if (history.pushState)
+        if (event.target.className !== "active")
         {
-            history.pushState({
-                name: "stations"
-            }, "");
+            actions.stations();
+
+            if (history.pushState)
+            {
+                history.pushState({
+                    name: "stations"
+                }, "");
+            }
         }
     });
 
@@ -300,19 +306,44 @@ window.addEventListener("load", function ()
         });
     }
 
+    // This will break the shortcut to turn on "caret browsing" in Firefox.
+    // It is here for compatibility with the desktop client.
+    Events.keydown(window, 118, function ()
+    {
+        document.querySelector("#lists > ol").style.marginLeft = "-100%";
+        document.getElementById("latest").className = "";
+        document.getElementById("stations").className = "active";
+        document.getElementById("back").click();
+    });
+
     document.getElementById("back").addEventListener("click", function (event)
     {
         pause();
-        start = 0;
+        start = null;
 
         streamMenuItems.forEach(function (item)
         {
             item.setAttribute("data-disabled", "disabled");
         });
 
-        document.querySelector("#lists").style.marginLeft = "";
-        document.title = title;
-        location.hash = "";
+        // Pausing is asynchronous and may do a history replacement which would happen after
+        // the push state below if the action wasn't placed at the end of the event queue.
+        setTimeout(function ()
+        {
+            if (history.pushState)
+            {
+                history.pushState({
+                    name: document.querySelector("#latest.active,#stations.active").id
+                }, "");
+            }
+            else
+            {
+                location.hash = "";
+            }
+
+            document.querySelector("#lists").style.marginLeft = "";
+            document.title = title;
+        }, 1);
     });
 
     if (history.pushState)

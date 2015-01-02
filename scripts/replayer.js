@@ -27,6 +27,11 @@ window.addEventListener("load", function ()
         }
     });
 
+    Events.keydown(window, 119, function ()
+    {
+        parent.querySelector(".segments h2").click();
+    });
+
     function buildCueList ()
     {
         var container, toggle, segment, list = document.createElement("ol");
@@ -181,12 +186,28 @@ window.addEventListener("load", function ()
     // I can't see reason why there needs to be more than one of these.
     window.Replayer = {};
 
+    function archive ()
+    {
+        if (history.pushState)
+        {
+            history.pushState({
+                name: "stream"
+            }, "", "#" + genstreamhash());
+        }
+        else
+        {
+            location.hash = genstreamhash();
+        }
+    }
+
     Replayer.loadStream = function (_station, _stream, _start)
     {
         var ready, requests;
 
         if (station && _station.id === station.id && stream && _stream.id === stream.id)
         {
+            archive();
+            document.title = title.textContent;
             Replayer.play();
         }
         else
@@ -232,18 +253,9 @@ window.addEventListener("load", function ()
             title.textContent = station.name + ": " + stream.name;
             document.title = title.textContent;
 
-            if (!_start)
+            if (isNaN(Number(_start)))
             {
-                if (history.pushState)
-                {
-                    history.pushState({
-                        name: "stream"
-                    }, "", "#" + genstreamhash());
-                }
-                else
-                {
-                    location.hash = genstreamhash();
-                }
+                archive();
             }
         }
     };

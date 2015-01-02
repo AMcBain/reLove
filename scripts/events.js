@@ -24,3 +24,31 @@ catch (e)
         return event;
     };
 }
+
+Events.keydown = function (element)
+{
+    var i, triggered = {}, keys = {}, listener = arguments[arguments.length - 1];
+
+    for (i = 1; i < arguments.length - 1; i++)
+    {
+        keys[arguments[i]] = true;
+    }
+
+    element.addEventListener("keydown", function (event)
+    {
+        if (keys[event.keyCode] && !triggered[event.keyCode])
+        {
+            event.preventDefault();
+            triggered[event.keyCode] = true;
+            listener.call(element, event);
+        }
+    });
+
+    element.addEventListener("keyup", function (event)
+    {
+        if (keys[event.keyCode])
+        {
+            delete triggered[event.keyCode];
+        }
+    });
+};
