@@ -33,6 +33,7 @@ Features not supported from reLive v.19:
 
 Features not supported from reLiveQt:
 
+* Searching for stations or streams.
 * Showing the website URL for stations.
 * Changing the base URL used to fetch data.*
 * "Default Station", or a way to automatically open to a specific station.
