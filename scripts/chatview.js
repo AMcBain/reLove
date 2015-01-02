@@ -36,32 +36,6 @@ function ChatView (parent, channel, offset)
         return column;
     }
 
-    function fixrows ()
-    {
-        // Only bother if someone pasted a wonky line worth fixing.
-        if (styles || container.scrollWidth !== container.clientWidth)
-        {
-            if (!styles)
-            {
-                styles = document.querySelector("chatview-styles");
-
-                if (!styles)
-                {
-                    styles = document.createElement("style");
-                    styles.id = "chatview-styles";
-                    document.head.appendChild(styles);
-                }
-
-                styles.sheet.insertRule(".chatview td:last-child { word-wrap:break-word }", 0);
-                styles = styles.sheet.cssRules[styles.sheet.cssRules.length - 1];
-            }
-
-            // 10 is a magic number. It's how much it was off by and it seems to work in Firefox and IE.
-            styles.style.maxWidth = container.clientWidth - table.firstChild.children[0].offsetWidth
-                    - table.firstChild.children[1].offsetWidth - 10 + "px";
-        }
-    }
-
     function row (type, timestamp, user, message)
     {
         var time, row;
@@ -197,24 +171,67 @@ function ChatView (parent, channel, offset)
         }
     };
 
+    function autoscroll ()
+    {
+        return table.children.length && container.scrollHeight - container.clientHeight - container.scrollTop <= 34;
+    }
+
+    function scrollToBottom ()
+    {
+        container.scrollTop = container.scrollHeight - container.clientHeight;
+    }
+
     this.addLine = function (line)
     {
-        var scroll = table.children.length && container.scrollHeight - container.clientHeight - container.scrollTop <= 34;
+        var scroll = autoscroll();
 
         // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
         types[line.type](line);
 
         clearTimeout(fix);
-        fix = setTimeout(fixrows, 1);
+        fix = setTimeout(this.resize, 1);
 
         if (scroll)
         {
-            container.scrollTop = container.scrollHeight - container.clientHeight;
+            scrollToBottom();
         }
     };
 
     this.removeLine = function (index)
     {
         table.removeChild(table.children[index]);
+    };
+
+    this.resize = function ()
+    {
+        var scroll = autoscroll();
+
+        // Only bother if someone pasted a wonky line worth fixing.
+        if (styles || container.scrollWidth !== container.clientWidth)
+        {
+            if (!styles)
+            {
+                styles = document.querySelector("chatview-styles");
+
+                if (!styles)
+                {
+                    styles = document.createElement("style");
+                    styles.id = "chatview-styles";
+                    document.head.appendChild(styles);
+                }
+
+                styles.sheet.insertRule(".chatview td:last-child { word-wrap:break-word }", 0);
+                styles = styles.sheet.cssRules[styles.sheet.cssRules.length - 1];
+            }
+
+            // 10 is a magic number. It's how much it was off by and it seems to work in Firefox and IE.
+            styles.style.maxWidth = container.clientWidth - table.firstChild.children[0].offsetWidth
+                    - table.firstChild.children[1].offsetWidth - 10 + "px";
+        }
+
+        if (scroll)
+        {
+            scrollToBottom();
+        }
     };
 }

@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, parent, title, notify, station, stream, segments, chat, cues, resize;
+    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -18,6 +18,11 @@ window.addEventListener("load", function ()
             resize = setTimeout(function ()
             {
                 player.redraw();
+
+                if (chatview)
+                {
+                    chatview.resize();
+                }
             }, 250);
         }
     });
@@ -95,7 +100,7 @@ window.addEventListener("load", function ()
 
     function start (at)
     {
-        var chatview, url, mime, once, lastTime, last = 0;
+        var url, mime, once, lastTime, last = 0;
 
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
@@ -124,6 +129,7 @@ window.addEventListener("load", function ()
                 location.hash = gentimehash();
             }
         });
+        chatview = null;
 
         if (chat)
         {
