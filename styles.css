@@ -89,6 +89,10 @@ body:before {
     display: none;
 }
 
+#menu li:first-child[data-disabled] + .section {
+    border-top: none;
+}
+
 #menu.open {
     background: #fff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, .16);

@@ -22,6 +22,22 @@ window.addEventListener("load", function ()
         document.body.style.overflow = "";
     }
 
+    function menu (full)
+    {
+        streamMenuItems.forEach(function (item)
+        {
+            if (full)
+            {
+                item.removeAttribute("data-disabled");
+            }
+            else
+            {
+                item.setAttribute("data-disabled", "disabled");
+            }
+        });
+        document.getElementById("menu").style.display = (Notifications.supported || full ? "" : "none");
+    }
+
     actions = {
         stream: function ()
         {
@@ -55,11 +71,7 @@ window.addEventListener("load", function ()
             document.querySelector("#lists").style.marginLeft = "";
             document.querySelector("#lists > ol").style.marginLeft = "";
 
-            streamMenuItems.forEach(function (item)
-            {
-                item.setAttribute("data-disabled", "disabled");
-            });
-
+            menu(false);
             pause();
         },
         stations: function ()
@@ -72,11 +84,7 @@ window.addEventListener("load", function ()
             document.querySelector("#lists").style.marginLeft = "";
             document.querySelector("#lists > ol").style.marginLeft = "-100%";
 
-            streamMenuItems.forEach(function (item)
-            {
-                item.setAttribute("data-disabled", "disabled");
-            });
-
+            menu(false);
             pause();
         }
     };
@@ -112,11 +120,7 @@ window.addEventListener("load", function ()
             document.body.style.overflow = "hidden";
             Replayer.loadStream(station, stream, start);
 
-            streamMenuItems.forEach(function (item)
-            {
-                item.removeAttribute("data-disabled");
-            });
-
+            menu(true);
             document.getElementById("lists").style.marginLeft = "-100%";
             window.scrollTo(0, 0);
         });
@@ -269,13 +273,13 @@ window.addEventListener("load", function ()
         }
     });
 
+    document.querySelector("#menu > span").addEventListener("click", function (event)
+    {
+        event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
+    });
+
     if (Notifications.supported)
     {
-        document.querySelector("#menu > span").addEventListener("click", function (event)
-        {
-            event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
-        });
-
         (function ()
         {
             var setting = document.getElementById("notify-segment-changes");
@@ -296,14 +300,11 @@ window.addEventListener("load", function ()
     }
     else
     {
+        // If no notification support, hide the menu by default and remove the only dependent option.
+        // The menu will be unhidden on the replayer screen to allow access to the remaining features.
         document.getElementById("menu").style.display = "none";
-
-        // No point reserving space for something which isn't shown. Also,
-        // NodeList doesn't have nice utility properties like Array. Sadly.
-        Array.prototype.forEach.call(document.querySelectorAll("header"), function (header)
-        {
-            header.style.paddingRight = "1em";
-        });
+        document.getElementById("notify-segment-changes").parentNode.setAttribute("data-disabled", "disabled");
+        document.querySelector("#lists header").style.paddingRight = "1em";
     }
 
     // This will break the shortcut to turn on "caret browsing" in Firefox.
@@ -328,10 +329,7 @@ window.addEventListener("load", function ()
         pause();
         start = null;
 
-        streamMenuItems.forEach(function (item)
-        {
-            item.setAttribute("data-disabled", "disabled");
-        });
+        menu(false);
 
         // Pausing is asynchronous and may do a history replacement which would happen after
         // the push state below if the action wasn't placed at the end of the event queue.
