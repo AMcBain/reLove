@@ -308,14 +308,18 @@ window.addEventListener("load", function ()
 
     // This will break the shortcut to turn on "caret browsing" in Firefox.
     // It is here for compatibility with the desktop client.
-    Events.keydown(window, 118, function ()
+    Events.keydown(window, 118, 120, function (event)
     {
-        if (document.querySelector("#lists").style.marginLeft || document.querySelector("#stations.active") === null)
+        if (event.keyCode === 118 && (document.querySelector("#lists").style.marginLeft || document.querySelector("#stations.active") === null))
         {
             document.querySelector("#lists > ol").style.marginLeft = "-100%";
             document.getElementById("latest").className = "";
             document.getElementById("stations").className = "active";
             document.getElementById("back").click();
+        }
+        else if (event.keyCode === 120)
+        {
+            document.querySelector("#menu > span").click();
         }
     });
 
