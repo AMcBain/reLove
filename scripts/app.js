@@ -174,7 +174,19 @@ window.addEventListener("load", function ()
     {
         Relive.loadStationInfo(station.id, function (info)
         {
-            var list, streams;
+            var url, list, streams;
+
+            if (station.websiteURL)
+            {
+                url = document.createElement("a");
+                url.href = station.websiteURL;
+                url.textContent = station.websiteURL;
+                url.addEventListener("click", function (event)
+                {
+                    event.stopPropagation();
+                });
+                parent.firstChild.appendChild(url);
+            }
 
             list = document.createElement("ol");
             list.setAttribute("reversed", "reversed");

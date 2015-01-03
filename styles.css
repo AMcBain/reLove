@@ -313,6 +313,7 @@ section {
 
 #lists li > div {
     position: relative;
+    z-index: 0;
     padding: .5em .75em;
     background: #e0e0e0;
     cursor: pointer;
@@ -341,6 +342,52 @@ section {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     transform: rotate(180deg);
+}
+
+#lists li > div:hover a {
+    display: inline-block;
+}
+
+#lists a {
+    display: none;
+    position: relative;
+    left: 6px;
+    left: .35rem;
+    width: 12px;
+    height: 2px;
+    vertical-align: -10px;
+    vertical-align: -.325rem;
+    margin: 3px 4px;
+    font-size: 0;
+    white-space: nowrap;
+    color: #00acc1;
+    background: currentColor;
+    border: 1px solid #e0e0e0;
+}
+
+/* IE10 and 11 seem to be backwards. */
+_:-ms-input-placeholder, :root #lists a {
+    vertical-align: 6px;
+    vertical-align: .33rem;
+}
+
+#lists a:before, #lists a:after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    z-index: -1;
+    width: 5px;
+    height: 4px;
+    border: 2px solid currentColor;
+    border-radius: 1px;
+}
+
+#lists a:before {
+    left: -4px;
+}
+
+#lists a:after {
+    right: -4px;
 }
 
 #lists li ol {
