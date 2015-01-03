@@ -44,7 +44,7 @@ window.addEventListener("load", function ()
             var bits, stream, segment;
 
             // Detect a URL with #stream-0-0 or #track-0-0-0
-            if (/^#(?:stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+            if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
             {
                 bits = location.hash.split("-");
                 start = Relive.fromBase62(bits[3] || "");
@@ -52,8 +52,19 @@ window.addEventListener("load", function ()
                 try
                 {
                     stream = Relive.fromBase62(bits[1]);
-                    segment = Relive.fromBase62(bits[2]);
-                    document.querySelector("[data-id='" + stream + "'] [data-id='" + segment + "']").click();
+
+                    if (bits[0] === "#station")
+                    {
+                        segment = document.querySelector("ul [data-id='" + stream + "'] > div");
+                        segment.scrollIntoView();
+                        segment.click();
+                        actions.stations();
+                    }
+                    else
+                    {
+                        segment = Relive.fromBase62(bits[2]);
+                        document.querySelector("[data-id='" + stream + "'] [data-id='" + segment + "']").click();
+                    }
                 }
                 catch (e)
                 {

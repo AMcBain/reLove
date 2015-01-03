@@ -35,7 +35,6 @@ Features not supported from reLiveQt:
 
 * Searching for stations or streams.
 * Changing the base URL used to fetch data.*
-* "Default Station", or a way to automatically open to a specific station.
 * The entire Audio tab under Preferences. Such playback options must be configured with your OS or browser as appropriate.*
 * The entire Chat tab under Preferences. Changing the colors in the chat log can be done with a custom user stylesheet for those inclined
 to write CSS. Those who are not can get one from those who are.*
