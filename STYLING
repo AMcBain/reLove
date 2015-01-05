@@ -1,0 +1,88 @@
+This is a document to aid in restyling the IRC chat log markup. The defaults are
+light and fit the project itself but the author of this project understands many
+people prefer their chat views to look different.
+
+Firstly, it is recommended to get a user styles add-on for your browser such as
+Stylish, if you do not already have one:
+https://addons.mozilla.org/en-US/firefox/addon/stylish/
+https://chrome.google.com/webstore/detail/stylish/fjnbnpbmkenffdnngjfgmeleoegfcffe
+Such an add-on will make it easy to add your own user styles.
+
+Secondly, to ensure the user styles only apply to the site where this project is
+deployed, you should check out the Stylish wiki (
+https://github.com/JasonBarnabe/stylish/wiki/Applying-styles-to-specific-sites )
+for details on doing so as it differs by browser.
+
+Finally, the following are selector hints for styles used by various parts of
+the default chat log view and their purposes. If you don't wish to go through
+all of that, you might try finding someone who did and ask them to share their
+stylesheet with you.
+
+.chatview {
+    /* The container element. This is where the background color is. */
+}
+
+/*
+   The following are all the event types. A table is used to display the log and
+   for each line the first column is always the time, the second column is a
+   nickname or '*', and the last the event contents. Each type section will
+   indicate what is special about them, if anything. Each column is selected by
+   way of '.chattype2:nth-child(2)' or '.chattype2:nth-child(3)'. Plan to start
+   there if you want your selectors to win the specificity battle. Selectors can
+   be shared if you intend several types to look similarly, they're just broken
+   out below for ease of documentation.
+   ex: .chattype4 td:nth-child(3), .chattype5 td:nth-child(3) { /* Styles. */ }
+*/
+
+.chattype0 {
+    /* Event with an unknown type. Haven't seen any logs with this event before.
+       The default styles use a low-contrast color relative to the background
+       for the entire row. */
+}
+
+.chattype1 {
+    /* Standard message. (<Nickname> blah blah) */
+}
+
+
+.chattype2 {
+    /* Action message. The first column contains a '*' instead of a nickname.
+      The nickname in the third column is wrapped in a span.
+      (* Nickname waves their hand) */
+}
+
+.chattype3 {
+    /* Join event. The first column contains a '*' instead of a nickname.
+       (* Nickname joins #channel) */
+}
+
+.chattype4 {
+    /* Leave event. The first column contains a '*' instead of a nickname.
+       May include the reason for leaving. (* Nickname has left #channel) */
+}
+
+.chattype5 {
+    /* Quit event. The first column contains a '*' instead of a nickname.
+       May include the reason for quitting. (* Nickname has quit (blah)) */
+}
+
+.chattype6 {
+    /* Nickname rename event. The first column contains a '*' instead of a
+       nickname. (* Nickname is now known as Newname) */
+}
+
+.chattype7 {
+    /* Topic change event. The first column contains a '*' instead of a
+       nickname. (* Nickname has set the topic to: blah blah) */
+}
+
+.chattype8 {
+    /* User or channel mode change event. The first column contains a '*'
+       instead of a nickname. (* Nickname has set mode +v on Othername) */
+}
+
+.chattype9 {
+    /* Kick event. The first column contains a '*' instead of a nickname.
+       May include the reason for the kick.
+       (* Nickname has kicked Othername from #channel (blah blah)) */
+}

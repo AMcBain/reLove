@@ -37,7 +37,7 @@ Features not supported from reLiveQt:
 * Changing the base URL used to fetch data.*
 * The entire Audio tab under Preferences. Such playback options must be configured with your OS or browser as appropriate.*
 * The entire Chat tab under Preferences. Changing the colors in the chat log can be done with a custom user stylesheet for those inclined
-to write CSS. Those who are not can get one from those who are.*
+to write CSS. Those who are not can get one from those who are.* See [the styling documentation](https://github.com/AMcBain/reLove/blob/master/STYLING).
 
 \* It is unlikely these features will ever be supported. Use the workarounds next to each such feature above, if listed.
 
