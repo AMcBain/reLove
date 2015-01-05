@@ -1,6 +1,6 @@
 (function ()
 {
-    var post;
+    var post, tag = "notifications" + (Math.random() * 42);
 
     // TODO use real reLive icon.
     window.Notifications = {
@@ -48,6 +48,7 @@
             if (sendNotifications())
             {
                 msg = new Notification(title, {
+                    tag: tag,
                     body: text,
                     icon: Notifications.icon
                 });
