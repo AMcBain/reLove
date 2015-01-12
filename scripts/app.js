@@ -197,7 +197,7 @@ window.addEventListener("load", function ()
             }
 
             parent.appendChild(list);
-        }, error);
+        }, App.error);
     };
 
     Relive.loadStations(function (stations)
@@ -234,7 +234,7 @@ window.addEventListener("load", function ()
         document.getElementById("lists")
             .appendChild(document.createElement("ol"))
             .parentNode.appendChild(list);
-    }, error);
+    }, App.error);
 
     document.getElementById("latest").addEventListener("click", function (event)
     {
