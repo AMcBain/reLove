@@ -257,6 +257,7 @@ section {
 }
 
 .embedded #lists ol {
+    min-height: calc(100vh - 7.1255em);
     padding-bottom: 1em;
 }
 
