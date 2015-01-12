@@ -240,11 +240,31 @@ window.addEventListener("load", function ()
             {
                 segments = _segments;
                 ready();
+            }, function ()
+            {
+                // Use the values from the stream, and trick the annotated player to drawing
+                // a light colored bar across instead of a darker one by having two segments.
+                segments = [ {
+                    title: stream.name,
+                    artist: stream.host,
+                    start: 0,
+                    type: Relive.TRACKTYPE_JINGLE
+                }, {
+                    title: stream.name,
+                    artist: stream.host,
+                    start: 1,
+                    type: Relive.TRACKTYPE_MUSIC
+                } ];
+                ready();
             });
 
             Relive.loadStreamChat(station.id, stream.id, function (_chat)
             {
                 chat = _chat;
+                ready();
+            }, function ()
+            {
+                requests--;
                 ready();
             });
 
