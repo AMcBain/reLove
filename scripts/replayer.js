@@ -85,7 +85,7 @@ window.addEventListener("load", function ()
         container.appendChild(toggle);
         container.appendChild(list);
 
-        if (Copy.contextMenuSupported)
+        if (Copy.contextMenuSupported && !embedded)
         {
             list.setAttribute("contextmenu", "segments-menu");
             list.addEventListener("contextmenu", function (event)
@@ -111,7 +111,7 @@ window.addEventListener("load", function ()
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
 
-        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments);
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, embedded);
         player.addEventListener("segmentupdate", function (event)
         {
             cues.querySelector(".selected").className = "";

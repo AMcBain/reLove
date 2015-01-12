@@ -1,6 +1,6 @@
 "use strict";
 
-function AnnotatedPlayer (parent, url, mime, length, segments)
+function AnnotatedPlayer (parent, url, mime, length, segments, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime,
             playpause, button, volume, volX, countdown, audio, menuX, segment = 0;
@@ -44,7 +44,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments)
     progress.firstChild.innerHTML = "Progress: 0%";
     container.lastChild.appendChild(progress);
 
-    if (Copy.contextMenuSupported)
+    if (Copy.contextMenuSupported && !embedded)
     {
         progress.setAttribute("contextmenu", "annotatedplayer-menu");
 

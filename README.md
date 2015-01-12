@@ -71,11 +71,11 @@ Internet access to be able to talk to the reLive website is required.
 
 **Embedding**
 
-reLove is amenable to certain kinds of embedding inside an iframe. Just reference the the embed.html file with a hash corresponding to a
+reLove is amenable to certain kinds of embedding inside an iframe. Just reference the embed.html file with a hash corresponding to a
 reLive-format value for a station (`#station-1`) or a stream (`#stream-1-9c`). These can be gotten by visiting the regular version and
 borrowing the same parts from the URL that appear when a stream is opened. Certain features will be unavailable in the embedded version
-as they do not make much sense. Notably the ability to get URLs to streams through the UI has been disabled as this app does not yet
-generate true reLive URIs and so any URL generated would be relative to the page the iframe is viewing.
+as they do not make much sense in an iframe. Notably the ability to get URLs to streams through the UI has been disabled as this app does
+not yet generate true reLive URIs and so any URL generated would be relative to the page the iframe is viewing.
 
     <iframe src="embed.html#station-1">
         Your browser is too old to display this content.
