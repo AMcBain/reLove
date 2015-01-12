@@ -2,8 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize,
-            embedded = document.body.className.indexOf("embedded") !== -1;
+    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -85,7 +84,7 @@ window.addEventListener("load", function ()
         container.appendChild(toggle);
         container.appendChild(list);
 
-        if (Copy.contextMenuSupported && !embedded)
+        if (Copy.contextMenuSupported && !App.embedded)
         {
             list.setAttribute("contextmenu", "segments-menu");
             list.addEventListener("contextmenu", function (event)
@@ -111,7 +110,7 @@ window.addEventListener("load", function ()
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
 
-        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, embedded);
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, App.embedded);
         player.addEventListener("segmentupdate", function (event)
         {
             cues.querySelector(".selected").className = "";
@@ -124,7 +123,7 @@ window.addEventListener("load", function ()
         });
         player.addEventListener("pause", function ()
         {
-            if (!embedded)
+            if (!App.embedded)
             {
                 if (history.replaceState)
                 {
@@ -192,7 +191,7 @@ window.addEventListener("load", function ()
 
     function archive ()
     {
-        if (!embedded)
+        if (!App.embedded)
         {
             if (history.pushState)
             {

@@ -26,66 +26,6 @@ window.addEventListener("load", function ()
         document.getElementById("menu").style.display = (Notifications.supported || full ? "" : "none");
     }
 
-    function entry (station, stream)
-    {
-        var date, time, length, info, title, entry;
-
-        date = new Date(stream.timestamp * 1000).toISOString();
-        time = document.createElement("time");
-        time.setAttribute("datetime", date);
-        time.textContent = date.replace("T", " ").replace(/\..+$/, "");
-
-        length = document.createElement("span");
-        length.textContent = Time.duration(stream.length, true);
-
-        info = document.createElement("span");
-        info.textContent = stream.host + " - " + stream.infoText;
-
-        title = document.createElement("h3");
-        title.textContent = stream.name + " ";
-        title.appendChild(info);
-
-        entry = document.createElement("li");
-        entry.setAttribute("data-id", stream.id);
-        entry.appendChild(time);
-        entry.appendChild(length);
-        entry.appendChild(title);
-
-        entry.addEventListener("click", function ()
-        {
-            document.body.style.overflow = "hidden";
-            Replayer.loadStream(station, stream, 0);
-
-            menu(true);
-            document.getElementById("lists").style.marginLeft = "-100%";
-            window.scrollTo(0, 0);
-        });
-
-        return entry;
-    }
-
-    function error (message)
-    {
-        var error;
-
-        error = document.createElement("p");
-        error.className = "error";
-        error.textContent = message;
-        lists.appendChild(error);
-        error.style.marginTop = -error.offsetHeight / 2 + "px";
-        error.style.marginLeft = -error.offsetWidth / 2 + "px";
-
-        if (list)
-        {
-            list.className = "loaded";
-        }
-        document.getElementById("player").className = "loaded";
-
-        lists.parentNode.className = "error";
-    }
-
-    // relive:track-1-9c-L #track-1-9c-1P
-
     // Detect a URL with #station-0 or #stream-0-0
     if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
     {
@@ -124,7 +64,10 @@ window.addEventListener("load", function ()
 
                     streams.forEach(function (stream)
                     {
-                        list.appendChild(entry(station, stream));
+                        list.appendChild(App.entry(station, stream, function ()
+                        {
+                            Replayer.loadStream(station, stream, 0);
+                        }));
                     });
 
                     list.className = "loaded";
@@ -136,7 +79,7 @@ window.addEventListener("load", function ()
                         menu(false);
                         lists.style.marginLeft = "";
                     });
-                }, error);
+                }, App.error);
             }
             else if (station)
             {
@@ -150,19 +93,19 @@ window.addEventListener("load", function ()
                     }
                     else
                     {
-                        error("Invalid stream ID.");
+                        App.error("Invalid stream ID.");
                     }
-                }, error);
+                }, App.error);
             }
             else
             {
-                error("Invalid station ID.");
+                App.error("Invalid station ID.");
             }
         });
     }
     else
     {
-        error("No station or stream specified.");
+        App.error("No station or stream specified.");
     }
 
     document.querySelector("#menu > span").addEventListener("click", function (event)

@@ -103,40 +103,10 @@ window.addEventListener("load", function ()
 
     function entry (station, stream)
     {
-        var date, time, length, info, title, entry;
-
-        date = new Date(stream.timestamp * 1000).toISOString();
-        time = document.createElement("time");
-        time.setAttribute("datetime", date);
-        time.textContent = date.replace("T", " ").replace(/\..+$/, "");
-
-        length = document.createElement("span");
-        length.textContent = Time.duration(stream.length, true);
-
-        info = document.createElement("span");
-        info.textContent = stream.host + " - " + stream.infoText;
-
-        title = document.createElement("h3");
-        title.textContent = stream.name + " ";
-        title.appendChild(info);
-
-        entry = document.createElement("li");
-        entry.setAttribute("data-id", stream.id);
-        entry.appendChild(time);
-        entry.appendChild(length);
-        entry.appendChild(title);
-
-        entry.addEventListener("click", function ()
+        return App.entry(station, stream, menu, function ()
         {
-            document.body.style.overflow = "hidden";
             Replayer.loadStream(station, stream, start);
-
-            menu(true);
-            document.getElementById("lists").style.marginLeft = "-100%";
-            window.scrollTo(0, 0);
         });
-
-        return entry;
     }
 
     function latestStreams ()
@@ -227,7 +197,7 @@ window.addEventListener("load", function ()
             }
 
             parent.appendChild(list);
-        });
+        }, error);
     };
 
     Relive.loadStations(function (stations)
@@ -264,7 +234,7 @@ window.addEventListener("load", function ()
         document.getElementById("lists")
             .appendChild(document.createElement("ol"))
             .parentNode.appendChild(list);
-    });
+    }, error);
 
     document.getElementById("latest").addEventListener("click", function (event)
     {
