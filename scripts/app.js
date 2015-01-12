@@ -41,7 +41,7 @@ window.addEventListener("load", function ()
     actions = {
         stream: function ()
         {
-            var bits, stream, segment;
+            var bits, station, stream;
 
             // Detect a URL with #stream-0-0 or #track-0-0-0
             if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
@@ -51,24 +51,24 @@ window.addEventListener("load", function ()
 
                 try
                 {
-                    stream = Relive.fromBase62(bits[1]);
+                    station = Relive.fromBase62(bits[1]);
 
                     if (bits[0] === "#station")
                     {
-                        segment = document.querySelector("ul [data-id='" + stream + "'] > div");
-                        segment.scrollIntoView();
-                        segment.click();
+                        station = document.querySelector("ul [data-id='" + station + "'] > div");
+                        station.scrollIntoView();
+                        station.click();
                         actions.stations();
                     }
                     else
                     {
-                        segment = Relive.fromBase62(bits[2]);
-                        document.querySelector("[data-id='" + stream + "'] [data-id='" + segment + "']").click();
+                        stream = Relive.fromBase62(bits[2]);
+                        document.querySelector("[data-id='" + station + "'] [data-id='" + stream + "']").click();
                     }
                 }
                 catch (e)
                 {
-                    console.log("There is no stream ", stream, " segment ", segment || "0", " only Zuul.");
+                    console.log("There is no station ", station, stream ? " stream " + stream : "", " only Zuul.");
                 }
             }
         },
