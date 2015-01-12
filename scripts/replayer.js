@@ -2,7 +2,8 @@
 
 window.addEventListener("load", function ()
 {
-    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize;
+    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize,
+            embedded = document.body.className.indexOf("embedded") !== -1;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -123,15 +124,18 @@ window.addEventListener("load", function ()
         });
         player.addEventListener("pause", function ()
         {
-            if (history.replaceState)
+            if (!embedded)
             {
-                history.replaceState({
-                    name: "stream"
-                }, "", "#" + gentimehash());
-            }
-            else
-            {
-                location.hash = gentimehash();
+                if (history.replaceState)
+                {
+                    history.replaceState({
+                        name: "stream"
+                    }, "", "#" + gentimehash());
+                }
+                else
+                {
+                    location.hash = gentimehash();
+                }
             }
         });
         chatview = null;
@@ -188,15 +192,18 @@ window.addEventListener("load", function ()
 
     function archive ()
     {
-        if (history.pushState)
+        if (!embedded)
         {
-            history.pushState({
-                name: "stream"
-            }, "", "#" + genstreamhash());
-        }
-        else
-        {
-            location.hash = genstreamhash();
+            if (history.pushState)
+            {
+                history.pushState({
+                    name: "stream"
+                }, "", "#" + genstreamhash());
+            }
+            else
+            {
+                location.hash = genstreamhash();
+            }
         }
     }
 

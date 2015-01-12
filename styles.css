@@ -179,6 +179,30 @@ body > div {
     white-space: nowrap;
 }
 
+body.embedded > div {
+    margin-bottom: 0;
+}
+
+p.error {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    max-width: 95%;
+    margin: 0;
+    padding: 2vh 0 4vh;
+    font-size: 8.7vh;
+    font-weight: bold;
+    text-align: center;
+    white-space: normal;
+    color: white;
+    background: #e53935;
+    border-radius: 7px;
+    -webkit-transform: rotate(-2.5deg);
+    -moz-transform: rotate(-2.5deg);
+    transform: rotate(-2.5deg);
+}
+
 header h1, body > div {
     max-width: 800px;
 }
@@ -224,7 +248,7 @@ section {
     overflow: hidden;
 }
 
-#lists > div + ol {
+#lists ol {
     position: relative;
     min-height: 23.244em;
     -webkit-transition-property: margin-left;
@@ -232,7 +256,11 @@ section {
     transition-property: margin-left;
 }
 
-#lists > div + ol:before, #player:before {
+.embedded #lists ol {
+    padding-bottom: 1em;
+}
+
+#lists ol:before, #player:before {
     position: absolute;
     content: "";
     top: 50%;
@@ -277,7 +305,7 @@ section {
     }
 }
 
-#lists > div + ol.loaded:before, #player.loaded:before {
+#lists ol.loaded:before, #player.loaded:before {
     display: none;
     -webkit-animation-play-state: paused;
     -moz-animation-play-state: paused;
