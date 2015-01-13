@@ -110,7 +110,7 @@ window.addEventListener("load", function ()
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
 
-        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, App.embedded);
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, Replayer.autoplay, App.embedded);
         player.addEventListener("segmentupdate", function (event)
         {
             cues.querySelector(".selected").className = "";
@@ -187,7 +187,9 @@ window.addEventListener("load", function ()
     };
 
     // I can't see reason why there needs to be more than one of these.
-    window.Replayer = {};
+    window.Replayer = {
+        autoplay: true
+    };
 
     function archive ()
     {

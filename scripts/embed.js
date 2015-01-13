@@ -41,6 +41,8 @@ window.addEventListener("load", function ()
         }
         else
         {
+            Replayer.autoplay = false;
+
             document.getElementById("back").style.display = "none";
             lists.style.transition = "none";
             lists.style.marginLeft = "-100%";

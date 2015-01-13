@@ -1,6 +1,6 @@
 "use strict";
 
-function AnnotatedPlayer (parent, url, mime, length, segments, embedded)
+function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime,
             playpause, button, volume, volX, countdown, audio, menuX, segment = 0;
@@ -253,7 +253,14 @@ function AnnotatedPlayer (parent, url, mime, length, segments, embedded)
             }
         });
 
-        audio.play();
+        if (typeof autoplay === "undefined" || autoplay)
+        {
+            audio.play();
+        }
+        else
+        {
+            playpause.className = "play";
+        }
     }
 
     function getSegment (time)
