@@ -21,11 +21,6 @@ window.addEventListener("load", function ()
         document.body.style.overflow = "";
     }
 
-    function menu (full)
-    {
-        document.getElementById("menu").style.display = (Notifications.supported || full ? "" : "none");
-    }
-
     // Detect a URL with #station-0 or #stream-0-0
     if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
     {
@@ -78,7 +73,7 @@ window.addEventListener("load", function ()
                     document.getElementById("back").addEventListener("click", function (event)
                     {
                         pause();
-                        menu(false);
+                        App.menu(false);
                         lists.style.marginLeft = "";
                     });
                 }, App.error);
@@ -109,43 +104,4 @@ window.addEventListener("load", function ()
     {
         App.error("No station or stream specified.");
     }
-
-    document.querySelector("#menu > span").addEventListener("click", function (event)
-    {
-        event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
-    });
-
-    if (Notifications.supported)
-    {
-        (function ()
-        {
-            var setting = document.getElementById("notify-segment-changes");
-
-            if (localStorage)
-            {
-                setting.checked = (localStorage.notifySegmentChanges === "true");
-            }
-
-            setting.addEventListener("change", function (event)
-            {
-                if (localStorage)
-                {
-                    localStorage.notifySegmentChanges = setting.checked;
-                }
-            });
-        }());
-    }
-    else
-    {
-        // If no notification support, hide the menu by default and remove the only dependent option.
-        // The menu will be unhidden on the replayer screen to allow access to the remaining features.
-        document.getElementById("menu").style.display = "none";
-        document.getElementById("notify-segment-changes").parentNode.setAttribute("data-disabled", "disabled");
-        document.querySelector("#lists header").style.paddingRight = "1em";
-    }
-
-    Events.keydown(window, 120, function (event)
-    {
-        document.querySelector("#menu > span").click();
-    });
 });

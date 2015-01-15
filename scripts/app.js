@@ -3,8 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [], title = document.title, start, actions,
-            streamMenuItems = Array.prototype.slice.call(document.querySelectorAll("#menu .group-stream"), 0);
+    var load, latest = [], title = document.title, start, actions;
 
     Object.toArray = function (obj)
     {
@@ -20,22 +19,6 @@ window.addEventListener("load", function ()
     {
         Replayer.pause();
         document.body.style.overflow = "";
-    }
-
-    function menu (full)
-    {
-        streamMenuItems.forEach(function (item)
-        {
-            if (full)
-            {
-                item.removeAttribute("data-disabled");
-            }
-            else
-            {
-                item.setAttribute("data-disabled", "disabled");
-            }
-        });
-        document.getElementById("menu").style.display = (Notifications.supported || full ? "" : "none");
     }
 
     actions = {
@@ -82,7 +65,7 @@ window.addEventListener("load", function ()
             document.querySelector("#lists").style.marginLeft = "";
             document.querySelector("#lists > ol").style.marginLeft = "";
 
-            menu(false);
+            App.menu(false);
             pause();
         },
         stations: function ()
@@ -95,7 +78,7 @@ window.addEventListener("load", function ()
             document.querySelector("#lists").style.marginLeft = "";
             document.querySelector("#lists > ol").style.marginLeft = "-100%";
 
-            menu(false);
+            App.menu(false);
             pause();
         }
     };
@@ -103,7 +86,7 @@ window.addEventListener("load", function ()
 
     function entry (station, stream)
     {
-        return App.entry(station, stream, menu, function ()
+        return App.entry(station, stream, function ()
         {
             Replayer.loadStream(station, stream, start);
         });
@@ -266,54 +249,16 @@ window.addEventListener("load", function ()
         }
     });
 
-    document.querySelector("#menu > span").addEventListener("click", function (event)
-    {
-        event.target.parentNode.className = (event.target.parentNode.className ? "" : "open");
-    });
-
-    if (Notifications.supported)
-    {
-        (function ()
-        {
-            var setting = document.getElementById("notify-segment-changes");
-
-            if (localStorage)
-            {
-                setting.checked = (localStorage.notifySegmentChanges === "true");
-            }
-
-            setting.addEventListener("change", function (event)
-            {
-                if (localStorage)
-                {
-                    localStorage.notifySegmentChanges = setting.checked;
-                }
-            });
-        }());
-    }
-    else
-    {
-        // If no notification support, hide the menu by default and remove the only dependent option.
-        // The menu will be unhidden on the replayer screen to allow access to the remaining features.
-        document.getElementById("menu").style.display = "none";
-        document.getElementById("notify-segment-changes").parentNode.setAttribute("data-disabled", "disabled");
-        document.querySelector("#lists header").style.paddingRight = "1em";
-    }
-
     // This will break the shortcut to turn on "caret browsing" in Firefox.
     // It is here for compatibility with the desktop client.
-    Events.keydown(window, 118, 120, function (event)
+    Events.keydown(window, 118, function (event)
     {
-        if (event.keyCode === 118 && (document.querySelector("#lists").style.marginLeft || document.querySelector("#stations.active") === null))
+        if (document.querySelector("#lists").style.marginLeft || document.querySelector("#stations.active") === null)
         {
             document.querySelector("#lists > ol").style.marginLeft = "-100%";
             document.getElementById("latest").className = "";
             document.getElementById("stations").className = "active";
             document.getElementById("back").click();
-        }
-        else if (event.keyCode === 120)
-        {
-            document.querySelector("#menu > span").click();
         }
     });
 
@@ -322,7 +267,7 @@ window.addEventListener("load", function ()
         pause();
         start = null;
 
-        menu(false);
+        App.menu(false);
 
         // Pausing is asynchronous and may do a history replacement which would happen after
         // the push state below if the action wasn't placed at the end of the event queue.
@@ -351,17 +296,4 @@ window.addEventListener("load", function ()
             actions[history.state && history.state.name]();
         });
     }
-
-    streamMenuItems.forEach(function (item)
-    {
-        if (Copy.forceFallback)
-        {
-            item.innerHTML = item.innerHTML.replace(/\s+$/, "") + "...";
-        }
-        item.addEventListener("click", function (event)
-        {
-            document.dispatchEvent(Events.create(event.target.getAttribute("data-event")));
-            document.getElementById("menu").className = "";
-        });
-    });
 });
