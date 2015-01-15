@@ -208,7 +208,7 @@ header h1, body > div {
 }
 
 @media (max-width: 800px) {
-    header h1, body > div {
+    body > div {
         width: 100%;
     }
 }
