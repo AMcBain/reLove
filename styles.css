@@ -207,6 +207,12 @@ header h1, body > div {
     max-width: 800px;
 }
 
+@media (max-width: 800px) {
+    header h1, body > div {
+        width: 100%;
+    }
+}
+
 section, #lists > div + ol, #lists > ul > li,
 #lists li > div:before, #lists li > div:after,
 #player .segments
@@ -491,6 +497,24 @@ _:-ms-input-placeholder, :root #lists a {
     bottom: 0;
     width: 100%;
     overflow: hidden;
+}
+
+@media (max-height: 9.3125em) {
+    body.embedded:before {
+        content: none;
+    }
+
+    .embedded #menu {
+        display: none;
+    }
+
+    .embedded header {
+        display: none;
+    }
+
+    .embedded #player > div {
+        top: 0;
+    }
 }
 
 #player .segments {
@@ -850,6 +874,16 @@ _:-ms-input-placeholder, :root #lists a {
     width: 0;
     height: 100%;
     border-right: 1px solid #000;
+}
+
+@media (max-height: 299px) {
+    .embedded #player .segments, .embedded .chatview {
+        display: none;
+    }
+
+    .embedded #player .annotatedplayer {
+        border-top: none;
+    }
 }
 
 .overlay {

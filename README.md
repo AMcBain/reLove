@@ -81,8 +81,11 @@ not yet generate true reLive URIs and so any URL generated would be relative to 
         Your browser is too old to display this content.
     </iframe>
 
-The minimum recommended size of the iframe is a width of 500px and a height of 300px. Anything below that will be incredibly cramped
-and likely impossible to use.
+The minimum recommended size of the iframe for the full experience is a width of 500px and a height of 300px. As this app does not set
+its own base font size this recommended height is approximate, based on desktop browser values. Below this height the app will assume it
+is being used for an embedded stream, hiding the segment list and chat log followed by the headers if made smaller still. This allows for
+a rather compact display of the current track, controls, and progress area for a stream. However due to the lack of a header at such
+small heights users will be unable to return to the stream list when starting from an embedded station.
 
 
 License
