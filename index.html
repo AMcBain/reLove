@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>reLove by AMcBain</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>reLove</h1>
+        <p>web-based client for reLive</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/AMcBain/reLove" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/AMcBain/reLove/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/AMcBain/reLove/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h3>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h3>
+
+<p>reLove is a project for talking with <a href="http://relive.nu/">http://relive.nu/</a> and playing back shows listed there. It is mostly feature compatible with the two reLive desktop clients and also offers embedded options for single station or show views.</p>
+
+<h3>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing</h3>
+
+<p><strong>1a. From ZIP or TAR</strong></p>
+
+<p>Just use the links at the top of the page and unpack the archive into the desired directory.</p>
+
+<p><strong>1b. From Git</strong></p>
+
+<p>If you already have Git or can get it, this is the easiest way to get this project and keep it updated.</p>
+
+<pre><code>$ cd deployment_parent_directory
+$ git clone --recursive https://github.com/AMcBain/reLove.git
+</code></pre>
+
+<p><em>If you're planning to deploy directly to a server this way, make sure your server is configured to block the .git directory and descendants (404 or 403, etc).</em></p>
+
+<p><strong>2. Using</strong></p>
+
+<p>Desktop-local users can just double-click the index.html file in the deployment directory to run this project in a browser.</p>
+
+<p>If deployed on a server, point your browser to where it was deployed. If that directory is not web accessible you will need to configure your web server. (Google is your friend.)</p>
+
+<p><strong>2a. Embedding</strong></p>
+
+<p>This project supports embedding with iframes. This makes it easier to show a single station on a page or include a single show in a blog post. As with step two embedding requires this project be web accessible.</p>
+
+<p>Styles for the following examples including the recommended minimum sizes.</p>
+
+<pre><code>iframe.relive.station, iframe.relive.stream {
+    width: 500px;
+    height: 300px;
+}
+
+iframe.relive.stream.player {
+    height: 77px;
+}
+</code></pre>
+
+<p>Single station view. Lists all the shows for the given station and allows users to listen to them.</p>
+
+<pre><code>&lt;iframe class="relive station" src="/path/to/deploy/directory/embed.html#station-1"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<p>Single show view. Restricts the view to only the given show.</p>
+
+<pre><code>&lt;iframe class="relive stream" src="/path/to/deploy/directory/embed.html#stream-1-9c"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<p>If you don't want the segments list or chat log just make the iframe 77px tall, or add the 'player' class in conjunction with the previous styles, and those parts will be hidden.</p>
+
+<p><em>These height values are approximate based on the usual default font size for desktop browsers you may need to experiment to get values which work for you.</em></p>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/AMcBain">AMcBain</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
