@@ -1,3 +1,5 @@
+Less technical: http://amcbain.github.io/reLove/
+
 reLove
 ======
 
