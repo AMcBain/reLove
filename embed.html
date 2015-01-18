@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>reLove by AMcBain</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <link rel="stylesheet" href="stylesheets/relive.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <script src="javascripts/relive.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>reLove</h1>
+        <p>web-based client for reLive</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/AMcBain/reLove" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/AMcBain/reLove/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/AMcBain/reLove/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p><a href="index.html">Go back</a> to the project home.</p>
+
+<h3>
+<a id="embedding" class="anchor" href="#embedding" aria-hidden="true"><span class="octicon octicon-link"></span></a>Embedding Examples</h3>
+
+<p><strong>Styles</strong></p>
+
+<pre><code>iframe.relive.station, iframe.relive.stream {
+    width: 500px;
+    height: 300px;
+    border: 1px solid lightgray;
+}
+
+iframe.relive.stream.player.banner {
+    height: 159px;
+}
+
+iframe.relive.stream.player {
+    height: 77px;
+}
+</code></pre>
+
+<p><em>These height values are approximate based on the usual default font size for desktop browsers. A <a href="javascripts/relive.js">small script</a> can be used to calculate the height of the player-only versions dynamically.</em></p>
+
+<p><strong>1a. Station view</strong></p>
+
+<p>To get a station ID, visit a show with this project or get a URL from one of the reLive apps. The first number will always be the station ID.</p>
+
+<pre><code>&lt;iframe class="relive station" src="/path/to/deploy/dir/embed.html#station-1"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<iframe class="relive station" src="reLove/embed.html#station-1">
+    Your browser does not support iframes.
+</iframe>
+
+<p><strong>1b. Stream (show) view</strong></p>
+
+<p>To get a show+stream ID, visit a show with this project or get a URL from a reLive app. The first number will always be the station ID and the second number will always be the stream ID.</p>
+
+<pre><code>&lt;iframe class="relive stream" src="/path/to/deploy/dir/embed.html#stream-1-9c"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<iframe class="relive stream" src="reLove/embed.html#stream-1-9c">
+    Your browser does not support iframes.
+</iframe>
+
+<p><strong>1c. Player and banner view</strong></p>
+
+<p>This uses the same ID as 1b, but with the shorter height the segment list and chat log are hidden leaving the header and the player.</p>
+
+<pre><code>&lt;iframe class="relive stream player banner" src="/path/to/deploy/dir/embed.html#stream-1-9c"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<iframe class="relive stream player banner" src="reLove/embed.html#stream-1-9c">
+    Your browser does not support iframes.
+</iframe>
+
+<p><strong>1d. Player only view</strong></p>
+
+<p>This uses the same ID as 1b, but with the shorter height the header, segment list, and chat log are hidden leaving only the player itself.</p>
+
+<pre><code>&lt;iframe class="relive stream player" src="/path/to/deploy/dir/embed.html#stream-1-9c"&gt;
+    Your browser does not support iframes.
+&lt;/iframe&gt;
+</code></pre>
+
+<iframe class="relive stream player" src="reLove/embed.html#stream-1-9c">
+    Your browser does not support iframes.
+</iframe>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/AMcBain">AMcBain</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>

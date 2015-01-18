@@ -69,37 +69,7 @@ $ git clone --recursive https://github.com/AMcBain/reLove.git
 
 <p><strong>2a. Embedding</strong></p>
 
-<p>This project supports embedding with iframes. This makes it easier to show a single station on a page or include a single show in a blog post. As with step two embedding requires this project be web accessible.</p>
-
-<p>Styles for the following examples including the recommended minimum sizes.</p>
-
-<pre><code>iframe.relive.station, iframe.relive.stream {
-    width: 500px;
-    height: 300px;
-}
-
-iframe.relive.stream.player {
-    height: 77px;
-}
-</code></pre>
-
-<p>Single station view. Lists all the shows for the given station and allows users to listen to them.</p>
-
-<pre><code>&lt;iframe class="relive station" src="/path/to/deploy/directory/embed.html#station-1"&gt;
-    Your browser does not support iframes.
-&lt;/iframe&gt;
-</code></pre>
-
-<p>Single show view. Restricts the view to only the given show.</p>
-
-<pre><code>&lt;iframe class="relive stream" src="/path/to/deploy/directory/embed.html#stream-1-9c"&gt;
-    Your browser does not support iframes.
-&lt;/iframe&gt;
-</code></pre>
-
-<p>If you don't want the segments list or chat log just make the iframe 77px tall, or add the 'player' class in conjunction with the previous styles, and those parts will be hidden.</p>
-
-<p><em>These height values are approximate based on the usual default font size for desktop browsers you may need to experiment to get values which work for you.</em></p>
+<p>This project supports embedding with iframes. This makes it easier to show a single station on a page or include a single show in a blog post. As with step two embedding requires this project be web accessible. View <a href="embed.html">embedding examples</a>.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/AMcBain">AMcBain</a></p>

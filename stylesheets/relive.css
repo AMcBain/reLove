@@ -1,0 +1,21 @@
+iframe.relive.station, iframe.relive.stream {
+    width: 500px;
+    height: 300px;
+    border: 1px solid lightgray;
+}
+
+iframe.relive.stream.player.banner {
+    height: 159px;
+}
+
+iframe.relive.stream.player {
+    height: 77px;
+}
+
+/* For anyone who inspects this for some reason,
+   the following selectors are just tweaks to
+   the github.io styles and not intended to be
+   used by actual deployments of this project. */
+iframe + p {
+    margin-top: 18px;
+}
