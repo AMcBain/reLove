@@ -267,7 +267,7 @@ section {
     padding-bottom: 1em;
 }
 
-#lists ol:before, #player:before {
+#lists > ol:before, #player:before {
     position: absolute;
     content: "";
     top: 50%;
@@ -312,7 +312,7 @@ section {
     }
 }
 
-#lists ol.loaded:before, #player.loaded:before {
+#lists > ol.loaded:before, #player.loaded:before {
     display: none;
     -webkit-animation-play-state: paused;
     -moz-animation-play-state: paused;
