@@ -3,7 +3,7 @@
 function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime,
-            playpause, button, volume, volX, countdown, audio, menuX, segment = 0;
+            playpause, button, volume, volX, countdown, audio, menuX, buffered, segment = 0;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -253,6 +253,18 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
             }
         });
 
+        audio.addEventListener("progress", function ()
+        {
+            // The buffered segments don't overlap and will combine when they meet,
+            // so if everything is buffered there's only one segment from 0 to end.
+            if (audio.buffered.length === 1 && audio.buffered.start(0) === 0)
+            {
+                // Show lengths tend to be longer than the actual length by a bit.
+                buffered = Math.ceil(audio.buffered.end(0)) >= length - 1;
+            }
+            redraw(true);
+        });
+
         if (typeof autoplay === "undefined" || autoplay)
         {
             audio.play();
@@ -373,9 +385,9 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         return x;
     }
 
-    this.redraw = function ()
+    function redraw (buffering)
     {
-        var context, width, height;
+        var context, width, height, i;
 
         if (!canvas.className)
         {
@@ -424,18 +436,41 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
                     context.restore();
                 }
             });
+
+            if (!buffered && audio && audio.buffered && audio.buffered.length)
+            {
+                context.save();
+                context.strokeStyle = "rgba(0, 0, 0, .25)";
+                context.beginPath();
+
+                // Strange object, this audio.buffered ...
+                for (i = 0; i < audio.buffered.length; i++)
+                {
+                    context.moveTo(offset(audio.buffered.start(i), width), height);
+                    context.lineTo(offset(audio.buffered.end(i), width), height);
+                }
+
+                context.moveTo(audio.buffered.start(0), height);
+                context.closePath();
+                context.stroke();
+                context.restore();
+            }
         }
 
-        // progress.getBoundingClientRect().x would be easier but as this view is off screen when this is first
-        // calculated it gets values that don't match what it would be when it is in view. They also seem to be
-        // off by some small incalculable value? This works in all cases.
-        progX = calculateOffsetLeft(progress);
-
-        if (volume)
+        if (!buffering)
         {
-            volX = calculateOffsetLeft(volume, volume.parentNode);
+            // progress.getBoundingClientRect().x would be easier but as this view is off screen when this is first
+            // calculated it gets values that don't match what it would be when it is in view. They also seem to be
+            // off by some small incalculable value? This works in all cases.
+            progX = calculateOffsetLeft(progress);
+
+            if (volume)
+            {
+                volX = calculateOffsetLeft(volume, volume.parentNode);
+            }
         }
     };
+    this.redraw = redraw;
 
-    this.redraw();
+    redraw();
 }
