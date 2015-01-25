@@ -44,7 +44,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
     progress.firstChild.innerHTML = "Progress: 0%";
     container.lastChild.appendChild(progress);
 
-    if (Copy.contextMenuSupported && !embedded)
+    if (!embedded && Copy.contextMenuSupported)
     {
         progress.setAttribute("contextmenu", "annotatedplayer-menu");
 
@@ -430,7 +430,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         // calculated it gets values that don't match what it would be when it is in view. They also seem to be
         // off by some small incalculable value? This works in all cases.
         progX = calculateOffsetLeft(progress);
-        volX = calculateOffsetLeft(volume, volume.parentNode);
+
+        if (volume)
+        {
+            volX = calculateOffsetLeft(volume, volume.parentNode);
+        }
     };
 
     this.redraw();
