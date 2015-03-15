@@ -27,6 +27,14 @@ window.addEventListener("load", function ()
         }
     });
 
+    window.addEventListener("beforeunload", function ()
+    {
+        if (player)
+        {
+            player.unload();
+        }
+    });
+
     Events.keydown(window, 119, function ()
     {
         parent.querySelector(".segments h2").click();

@@ -2,8 +2,8 @@
 
 function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedded)
 {
-    var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime,
-            playpause, button, volume, volX, countdown, audio, menuX, buffered, segment = 0;
+    var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime, playpause,
+            button, volume, volX, countdown, audio, menuX, buffered, segment = 0, unloading;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -215,21 +215,24 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
 
         audio.addEventListener("error", function (error)
         {
-            switch (error.target.error.code)
+            if (!unloading)
             {
-                case MediaError.MEDIA_ERR_NETWORK:
-                    title.textContent = "Unable to play. There was a network error.";
-                    break;
-                case MediaError.MEDIA_ERR_DECODE:
-                    title.textContent = "Unable to play. There was an error trying to decode the stream.";
-                    break;
-                case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
-                    title.textContent = "Unable to play. This browser does not support the stream's media type.";
-                    break;
-                default:
-                    title.textContent = "WTF! Unknown error.";
-           }
-           canvas.className = "bad";
+                switch (error.target.error.code)
+                {
+                    case MediaError.MEDIA_ERR_NETWORK:
+                        title.textContent = "Unable to play. There was a network error.";
+                        break;
+                    case MediaError.MEDIA_ERR_DECODE:
+                        title.textContent = "Unable to play. There was an error trying to decode the stream.";
+                        break;
+                    case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        title.textContent = "Unable to play. This browser does not support the stream's media type.";
+                        break;
+                    default:
+                        title.textContent = "WTF! Unknown error.";
+                }
+                canvas.className = "bad";
+            }
         });
 
         audio.addEventListener("pause", function ()
@@ -471,6 +474,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         }
     };
     this.redraw = redraw;
+
+    this.unload = function ()
+    {
+        unloading = true;
+    };
 
     redraw();
 }
