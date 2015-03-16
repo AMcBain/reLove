@@ -105,6 +105,7 @@ App.entry = function (station, stream, callback)
 
     entry.addEventListener("click", function ()
     {
+        document.body.parentNode.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
         callback(station, stream);
