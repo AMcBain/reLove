@@ -3,7 +3,7 @@
 function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime, playpause,
-            button, volume, volX, countdown, audio, menuX, buffered, segment = 0, unloading;
+            button, volume, volX, countdown, audio, menuX, buffered, segment = 0, unloading, buffering;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -209,6 +209,12 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
                 time.textContent = Time.duration(t);
             }
 
+            if (buffering)
+            {
+                clearTimeout(buffering);
+                container.lastChild.className = "player";
+            }
+
             progress.firstChild.innerHTML = "Progress: " + Math.round(t / length * 100) + "%";
             progress.firstChild.style.width = t / length * progress.clientWidth + "px";
         });
@@ -340,6 +346,12 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
     function seek (to)
     {
         audio.currentTime = to;
+
+        clearTimeout(buffering);
+        buffering = setTimeout(function ()
+        {
+            container.lastChild.className = "player buffering";
+        }, 5000);
 
         // getSegment doesn't give the index of the match.
         segments.every(function (seg, i)
