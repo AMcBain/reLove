@@ -215,7 +215,7 @@ header h1, body > div {
 
 section, #lists > div + ol, #lists > ul > li,
 #lists li > div:before, #lists li > div:after,
-#player .segments
+#player .tracks
 {
     transition-duration: 750ms;
 }
@@ -324,7 +324,7 @@ section {
     padding: 0;
 }
 
-#lists h2, #lists > ul, #lists > ol, #player .segments h2 span,
+#lists h2, #lists > ul, #lists > ol, #player .tracks h2 span,
 #player .annotatedplayer div:first-child, .overlay
 {
     line-height: 1.437em;
@@ -435,11 +435,11 @@ _:-ms-input-placeholder, :root #lists a {
     cursor: pointer;
 }
 
-#lists ol li:nth-child(even), #player .segments li:nth-child(even) {
+#lists ol li:nth-child(even), #player .tracks li:nth-child(even) {
     background: #fafafa;
 }
 
-#lists ol li:hover, #player .segments ol li:hover {
+#lists ol li:hover, #player .tracks ol li:hover {
     background: #f0f0f0;
 }
 
@@ -517,7 +517,7 @@ _:-ms-input-placeholder, :root #lists a {
     }
 }
 
-#player .segments {
+#player .tracks {
     position: absolute;
     top: 0;
     left: -75%;
@@ -527,17 +527,17 @@ _:-ms-input-placeholder, :root #lists a {
     background: white;
 }
 
-#player .segments, .chatview {
+#player .tracks, .chatview {
     bottom: 3.687em;
     margin-bottom: 19px;
 }
 
-#player .segments.open {
+#player .tracks.open {
     left: 0;
     margin-left: 0;
 }
 
-#player .segments h2 {
+#player .tracks h2 {
     position: absolute;
     top: 0;
     right: 0;
@@ -548,7 +548,7 @@ _:-ms-input-placeholder, :root #lists a {
     cursor: pointer;
 }
 
-#player .segments h2 span {
+#player .tracks h2 span {
     position: absolute;
     top: 50%;
     left: 0;
@@ -559,11 +559,11 @@ _:-ms-input-placeholder, :root #lists a {
     text-indent: -1.437em;
 }
 
-#player .segments h2, #player .segments h2 span {
+#player .tracks h2, #player .tracks h2 span {
     width: 1.437em;
 }
 
-#player .segments ol {
+#player .tracks ol {
     list-style-type: none;
     height: 100%;
     overflow: auto;
@@ -572,7 +572,7 @@ _:-ms-input-placeholder, :root #lists a {
     padding: 0;
 }
 
-#player .segments li {
+#player .tracks li {
     overflow: hidden;
     text-indent: .375em;
     text-overflow: ellipsis;
@@ -580,12 +580,12 @@ _:-ms-input-placeholder, :root #lists a {
     cursor: pointer;
 }
 
-#player .segments ol li.selected {
+#player .tracks ol li.selected {
     color: white;
     background: #00bcd4;
 }
 
-#player .segments time {
+#player .tracks time {
     margin-right: .75em;
 }
 
@@ -877,7 +877,7 @@ _:-ms-input-placeholder, :root #lists a {
 }
 
 @media (max-height: 299px) {
-    .embedded #player .segments, .embedded .chatview {
+    .embedded #player .tracks, .embedded .chatview {
         display: none;
     }
 

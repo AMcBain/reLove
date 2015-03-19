@@ -1,9 +1,9 @@
 "use strict";
 
-function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedded)
+function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime, playpause,
-            button, volume, volX, countdown, audio, menuX, buffered, segment = 0, unloading, buffering;
+            button, volume, volX, countdown, audio, menuX, buffered, track = 0, unloading, buffering;
 
     container = document.createElement("div");
     container.className = "annotatedplayer";
@@ -31,7 +31,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
     container.firstChild.appendChild(time);
 
     title = document.createElement("div");
-    title.textContent = segments[segment].title;
+    title.textContent = tracks[track].title;
     container.firstChild.appendChild(title);
 
     canvas = document.createElement("canvas");
@@ -76,15 +76,15 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         button.className = "previous";
         button.addEventListener("click", function ()
         {
-            if (segment > 0)
+            if (track > 0)
             {
-                if (audio.currentTime - segments[segment].start > 3)
+                if (audio.currentTime - tracks[track].start > 3)
                 {
-                    seek(segments[segment].start);
+                    seek(tracks[track].start);
                 }
                 else
                 {
-                    seek(segments[segment - 1].start);
+                    seek(tracks[track - 1].start);
                 }
             }
         });
@@ -109,9 +109,9 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         button.className = "next";
         button.addEventListener("click", function ()
         {
-            if (segment < segments.length - 1)
+            if (track < tracks.length - 1)
             {
-                seek(segments[segment + 1].start);
+                seek(tracks[track + 1].start);
             }
         });
         container.firstChild.firstChild.appendChild(button);
@@ -138,12 +138,12 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
 
         progress.addEventListener("mousemove", function (event)
         {
-            var x = (event.pageX - progX), segment = getSegment(event);
+            var x = (event.pageX - progX), track = getTrack(event);
 
-            if (segment)
+            if (track)
             {
                 tooltip.className = "tooltip";
-                tooltip.textContent = segment.artist + " - " + segment.title;
+                tooltip.textContent = track.artist + " - " + track.title;
                 tooltip.style.display = "block";
                 tooltip.style.left = x + "px";
                 tooltip.style.marginLeft = -tooltip.clientWidth / 2 + "px";
@@ -193,11 +193,11 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         {
             var t = this.currentTime;
 
-            // getSegment is potentially expensive. So, this.
-            if (segments[segment + 1] && t >= segments[segment + 1].start)
+            // getTrack is potentially expensive. So, this.
+            if (tracks[track + 1] && t >= tracks[track + 1].start)
             {
-                segment++;
-                notifySegmentListeners();
+                track++;
+                notifyTrackListeners();
             }
 
             if (countdown)
@@ -264,8 +264,8 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
 
         audio.addEventListener("progress", function ()
         {
-            // The buffered segments don't overlap and will combine when they meet,
-            // so if everything is buffered there's only one segment from 0 to end.
+            // The buffered tracks don't overlap and will combine when they meet,
+            // so if everything is buffered there's only one track from 0 to end.
             if (audio.buffered.length === 1 && audio.buffered.start(0) === 0)
             {
                 // Show lengths tend to be longer than the actual length by a bit.
@@ -284,7 +284,7 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
         }
     }
 
-    function getSegment (time)
+    function getTrack (time)
     {
         var i;
 
@@ -293,29 +293,29 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
             time = (time.pageX - progX) / progress.clientWidth * length;
         }
 
-        // Shows don't ever seem to have enough segments to need to making
+        // Shows don't ever seem to have enough tracks to need to making
         // a search use more intelligent methods, or at least a skiplist.
-        for (i = segments.length - 1; i >= 0; i--)
+        for (i = tracks.length - 1; i >= 0; i--)
         {
-            if (segments[i].start <= time)
+            if (tracks[i].start <= time)
             {
-                return segments[i];
+                return tracks[i];
             }
         }
         return null;
     }
 
-    this.getSegment = function ()
+    this.getTrack = function ()
     {
-        return getSegment(audio.currentTime);
+        return getTrack(audio.currentTime);
     };
 
-    function notifySegmentListeners()
+    function notifyTrackListeners()
     {
         var event;
-        title.textContent = segments[segment].artist + " - " + segments[segment].title;
+        title.textContent = tracks[track].artist + " - " + tracks[track].title;
 
-        audio.dispatchEvent(Events.create("segmentupdate", segment));
+        audio.dispatchEvent(Events.create("trackupdate", track));
     }
 
     this.addEventListener = function (event, callback)
@@ -353,15 +353,15 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
             container.lastChild.className = "player buffering";
         }, 5000);
 
-        // getSegment doesn't give the index of the match.
-        segments.every(function (seg, i)
+        // getTrack doesn't give the index of the match.
+        tracks.every(function (seg, i)
         {
-            if (seg.start <= to && (i === segments.length - 1 || to < segments[i + 1].start))
+            if (seg.start <= to && (i === tracks.length - 1 || to < tracks[i + 1].start))
             {
-                if (i !== segment)
+                if (i !== track)
                 {
-                    segment = i;
-                    notifySegmentListeners();
+                    track = i;
+                    notifyTrackListeners();
                 }
                 return false;
             }
@@ -413,30 +413,30 @@ function AnnotatedPlayer (parent, url, mime, length, segments, autoplay, embedde
             width = canvas.width;
             height = canvas.height;
 
-            segments.forEach(function (segment, i)
+            tracks.forEach(function (track, i)
             {
                 var start, end, j;
 
                 // This could all be simplified and replicate the reLive desktop behavior by
                 // removing the type check here, the second if below, and ensuring the first
                 // 1s-long chunk at the start isn't rendered.
-                if (!(i % 2) && (segment.type === Relive.TRACKTYPE_MUSIC || segment.type === Relive.TRACKTYPE_DEFAULT))
+                if (!(i % 2) && (track.type === Relive.TRACKTYPE_MUSIC || track.type === Relive.TRACKTYPE_DEFAULT))
                 {
-                    start = offset(segment.start, width);
-                    end = Math.max(1, (i === segments.length - 1 ? width : offset(segments[i + 1].start, width)) - start);
+                    start = offset(track.start, width);
+                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].start, width)) - start);
 
-                    context.fillStyle = colors[segment.type];
+                    context.fillStyle = colors[track.type];
                     context.fillRect(start, 0, end, height);
                 }
 
                 // The assumption here is that two of the same type are not next to each other.
-                if (segment.type !== Relive.TRACKTYPE_MUSIC)
+                if (track.type !== Relive.TRACKTYPE_MUSIC)
                 {
-                    start = offset(segment.start, width);
-                    end = Math.max(1, (i === segments.length - 1 ? width : offset(segments[i + 1].start, width)) - start);
+                    start = offset(track.start, width);
+                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].start, width)) - start);
 
                     context.save();
-                    context.strokeStyle = colors[segment.type];
+                    context.strokeStyle = colors[track.type];
                     context.rect(start, 0, end, height);
                     context.clip();
                     context.beginPath();

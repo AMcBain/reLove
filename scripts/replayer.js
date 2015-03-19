@@ -2,11 +2,11 @@
 
 window.addEventListener("load", function ()
 {
-    var player, chatview, parent, title, notify, station, stream, segments, chat, cues, resize;
+    var player, chatview, parent, title, notify, station, stream, tracks, chat, cues, resize;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
-    notify = document.getElementById("notify-segment-changes");
+    notify = document.getElementById("notify-track-changes");
 
     window.addEventListener("resize", function ()
     {
@@ -37,14 +37,14 @@ window.addEventListener("load", function ()
 
     Events.keydown(window, 119, function ()
     {
-        parent.querySelector(".segments h2").click();
+        parent.querySelector(".tracks h2").click();
     });
 
     function buildCueList ()
     {
-        var container, toggle, segment, list = document.createElement("ol");
+        var container, toggle, track, list = document.createElement("ol");
 
-        segments.forEach(function (cue, i)
+        tracks.forEach(function (cue, i)
         {
             var time, entry;
 
@@ -73,37 +73,37 @@ window.addEventListener("load", function ()
         // Would be nice not to need the span, but it makes this much easier.
         toggle = document.createElement("h2");
         toggle.appendChild(document.createElement("span"));
-        toggle.lastChild.textContent = "segments";
+        toggle.lastChild.textContent = "tracks";
 
         toggle.addEventListener("click", function ()
         {
             if (container.className.indexOf("open") === -1)
             {
-                container.className = "segments open";
+                container.className = "tracks open";
             }
             else
             {
-                container.className = "segments";
+                container.className = "tracks";
             }
         });
 
         container = document.createElement("div");
-        container.className = "segments";
+        container.className = "tracks";
         container.appendChild(toggle);
         container.appendChild(list);
 
         if (Copy.contextMenuSupported && !App.embedded)
         {
-            list.setAttribute("contextmenu", "segments-menu");
+            list.setAttribute("contextmenu", "tracks-menu");
             list.addEventListener("contextmenu", function (event)
             {
-                segment = segments[event.target.getAttribute("data-index")];
+                track = tracks[event.target.getAttribute("data-index")];
             });
 
-            container.appendChild(Copy.createMenu("segments-menu",
-                    "Copy segment location to clipboard", function ()
+            container.appendChild(Copy.createMenu("tracks-menu",
+                    "Copy track location to clipboard", function ()
             {
-                copytimeurl(segment.start);
+                copytimeurl(track.start);
             }));
         }
 
@@ -118,15 +118,15 @@ window.addEventListener("load", function ()
         url = Relive.getStreamURL(station.id, stream.id);
         mime = Relive.getStreamMimeType(station.id, stream.id);
 
-        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, segments, Replayer.autoplay, App.embedded);
-        player.addEventListener("segmentupdate", function (event)
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, tracks, Replayer.autoplay, App.embedded);
+        player.addEventListener("trackupdate", function (event)
         {
             cues.querySelector(".selected").className = "";
             cues.children[event.detail].className = "selected";
 
             if (notify.checked)
             {
-                Notifications.post(title.textContent, segments[event.detail].artist + " - " + segments[event.detail].title);
+                Notifications.post(title.textContent, tracks[event.detail].artist + " - " + tracks[event.detail].title);
             }
         });
         player.addEventListener("pause", function ()
@@ -234,27 +234,27 @@ window.addEventListener("load", function ()
             stream = _stream;
 
             // Clear out old data to prevent spawning a player twice.
-            segments = null;
+            tracks = null;
             chat = null;
 
             ready = function ()
             {
-                if (requests === 1 && (segments || chat) || (segments && chat))
+                if (requests === 1 && (tracks || chat) || (tracks && chat))
                 {
                     start(_start);
                     parent.className = "loaded";
                 }
             };
 
-            Relive.loadStreamInfo(station.id, stream.id, function (_segments)
+            Relive.loadStreamInfo(station.id, stream.id, function (_tracks)
             {
-                segments = _segments;
+                tracks = _tracks;
                 ready();
             }, function ()
             {
                 // Use the values from the stream, and trick the annotated player to drawing
-                // a light colored bar across instead of a darker one by having two segments.
-                segments = [ {
+                // a light colored bar across instead of a darker one by having two tracks.
+                tracks = [ {
                     title: stream.name,
                     artist: stream.host,
                     start: 0,
@@ -352,9 +352,9 @@ window.addEventListener("load", function ()
         Copy.toClipboard(url + "#" + gentimehash(time));
     }
 
-    document.addEventListener("copysegmenturl", function ()
+    document.addEventListener("copytrackurl", function ()
     {
-        copytimeurl(player.getSegment().start);
+        copytimeurl(player.getTrack().start);
     });
 
     document.addEventListener("copytimeurl", function (event)

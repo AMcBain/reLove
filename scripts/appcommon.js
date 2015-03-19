@@ -21,18 +21,18 @@ window.addEventListener("load", function ()
     {
         (function ()
         {
-            var setting = document.getElementById("notify-segment-changes");
+            var setting = document.getElementById("notify-track-changes");
 
             if (localStorage)
             {
-                setting.checked = (localStorage.notifySegmentChanges === "true");
+                setting.checked = (localStorage.notifyTrackChanges === "true");
             }
 
             setting.addEventListener("change", function (event)
             {
                 if (localStorage)
                 {
-                    localStorage.notifySegmentChanges = setting.checked;
+                    localStorage.notifyTrackChanges = setting.checked;
                 }
             });
         }());
@@ -42,7 +42,7 @@ window.addEventListener("load", function ()
         // If no notification support, hide the menu by default and remove the only dependent option.
         // The menu will be unhidden on the replayer screen to allow access to the remaining features.
         document.getElementById("menu").style.display = "none";
-        document.getElementById("notify-segment-changes").parentNode.setAttribute("data-disabled", "disabled");
+        document.getElementById("notify-track-changes").parentNode.setAttribute("data-disabled", "disabled");
         document.querySelector("#lists header").style.paddingRight = "1em";
     }
 
