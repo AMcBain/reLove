@@ -76,16 +76,27 @@
 
     Copy.createMenu = function (id, label, callback)
     {
-        var item, menu;
+        var menu;
 
-        item = document.createElement("menuitem");
-        item.label = label + (Copy.forceFallback ? "..." : "");
-        item.addEventListener("click", callback);
+        if (!(label instanceof Array))
+        {
+            label = [ {
+                label: label,
+                call: callback
+            } ];
+        }
 
         menu = document.createElement("menu");
         menu.id = id;
         menu.type = "context";
-        menu.appendChild(item);
+
+        label.forEach(function (item)
+        {
+            var menuitem = document.createElement("menuitem");
+            menuitem.label = item.label + (Copy.forceFallback ? "..." : "");
+            menuitem.addEventListener("click", item.call);
+            menu.appendChild(menuitem);
+        });
 
         // A spec difference. "context" is not a valid type, but if the type is
         // set to "popup" like the spec says then Firefox doesn't show the menu.

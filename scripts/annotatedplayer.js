@@ -48,11 +48,20 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
     {
         progress.setAttribute("contextmenu", "annotatedplayer-menu");
 
-        container.lastChild.insertBefore(Copy.createMenu("annotatedplayer-menu",
-                "Copy this stream location to clipboard", function ()
-        {
-            document.dispatchEvent(Events.create("copytimeurl", menuX / progress.clientWidth * length));
-        }), canvas);
+        container.lastChild.insertBefore(Copy.createMenu("annotatedplayer-menu", [
+                {
+                    label: "Copy track location to clipboard",
+                    call: function ()
+                    {
+                            document.dispatchEvent(Events.create("copytimeurl", getTrack(menuX / progress.clientWidth * length).start));
+                    }
+                }, {
+                    label: "Copy this stream location to clipboard",
+                    call: function ()
+                    {
+                        document.dispatchEvent(Events.create("copytimeurl", menuX / progress.clientWidth * length));
+                    }
+                } ]), canvas);
     }
 
     if (localStorage)
