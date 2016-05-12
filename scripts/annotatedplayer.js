@@ -121,13 +121,39 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         container.firstChild.firstChild.appendChild(button);
 
         // Could be a meter tag, except IE doesn't support those. At all.
+        // Edit from May 2016: Apparently Edge now does, though.
         volume = document.createElement("span");
         volume.className = "volume";
-        volume.appendChild(document.createElement("span"));
-        volume.addEventListener("mouseup", function (event)
+        volume.addEventListener("mousedown", function (event)
         {
-            audio.volume = Math.min(Math.max(0, (event.pageX - volX) / this.clientWidth), 1);
+            var update, end, target = document;
+
+            // I love this! Every browser should have this. You can leave the window with
+            // the mouse and it'll still fire events as if it came from this element. This
+            // means it's possible to detect mouseup outside the window. So handy.
+            if (volume.setCapture)
+            {
+                volume.setCapture();
+                target = volume;
+            }
+
+            update = function (event)
+            {
+                audio.volume = Math.min(Math.max(0, (event.pageX - volX) / this.clientWidth), 1);
+            };
+            update.call(this, event);
+
+            end = function (event)
+            {
+                update.call(this, event);
+                target.removeEventListener("mousemove", update);
+                target.removeEventListener("mouseup", end);
+            };
+
+            target.addEventListener("mousemove", update);
+            target.addEventListener("mouseup", end);
         });
+        volume.appendChild(document.createElement("span"));
         volume.firstChild.innerHTML = "Volume: 100%";
         volume.firstChild.style.width = "100%";
         container.firstChild.firstChild.appendChild(volume);
