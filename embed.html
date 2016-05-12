@@ -116,6 +116,19 @@ iframe.relive.stream.player {
 <iframe class="relive stream player" src="reLove/embed.html#stream-1-9c">
     Your browser does not support iframes.
 </iframe>
+
+<p><strong>Events</strong></p>
+
+<p>The embedded player supports events via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">window.postMessage</a> function. Events are supported to indicate initialization, start playing, pause, and get paused status. The <a href="javascripts/messages.js">messages.js</a> script contains constants and utilities to aid for events though using it is not mandatory. The example below indicates how to set the player to auto-start.</p>
+
+<pre><code>var player = document.getElementById("player").contentWindow;
+
+window.addEventListener("message", function (event) {
+    if (event.data === "relive:initialized") {
+        player.postMessage("relive:play", "*");
+    }
+});
+</code></pre>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/AMcBain">AMcBain</a></p>
