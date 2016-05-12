@@ -50,7 +50,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
 
         container.lastChild.insertBefore(Copy.createMenu("annotatedplayer-menu", [
                 {
-                    label: "Copy track location to clipboard",
+                    label: "Copy this track's location to clipboard",
                     call: function ()
                     {
                             document.dispatchEvent(Events.create("copytimeurl", getTrack(menuX / progress.clientWidth * length).start));
