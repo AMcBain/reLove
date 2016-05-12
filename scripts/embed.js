@@ -3,7 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var bits, station, list, lists = document.querySelector("#lists");
+    var error, events, bits, station, list, lists = document.querySelector("#lists");
 
     Object.toArray = function (obj)
     {
@@ -14,6 +14,21 @@ window.addEventListener("load", function ()
                 return list;
             }, []);
     };
+
+    function perror (response, status)
+    {
+        // This reveals more to code-based API callers than the UI would. Consider changing?
+        error = {
+            type: "initialization",
+            value: status + ": " + response
+        };
+        App.error.apply(this, arguments);
+    }
+
+    function initialized ()
+    {
+        window.parent.postMessage(Messages.INITIALIZED, "*");
+    }
 
     function pause ()
     {
@@ -76,7 +91,9 @@ window.addEventListener("load", function ()
                         App.menu(false);
                         lists.style.marginLeft = "";
                     });
-                }, App.error);
+
+                    initialized();
+                }, perror);
             }
             else if (station)
             {
@@ -86,17 +103,25 @@ window.addEventListener("load", function ()
 
                     if (stream)
                     {
-                        Replayer.loadStream(station, stream, 0);
+                        Replayer.loadStream(station, stream, 0, initialized);
                     }
                     else
                     {
-                        App.error("Invalid stream ID.");
+                        error = {
+                            type: "initialization",
+                            value: "Invalid stream ID."
+                        };
+                        App.error(error.value);
                     }
-                }, App.error);
+                }, perror);
             }
             else
             {
-                App.error("Invalid station ID.");
+                error = {
+                    type: "initialization",
+                    value: "Invalid station ID."
+                };
+                App.error(error.value);
             }
         });
     }
@@ -104,4 +129,34 @@ window.addEventListener("load", function ()
     {
         App.error("No station or stream specified.");
     }
+
+    // To be written as if we're initialized. It's not their job to check.
+    events = {};
+    events[Messages.PLAY] = function ()
+    {
+        // This and pause may not succeed (no player yet). If so, the outside has no idea.
+        Replayer.play();
+    };
+    events[Messages.PAUSE] = function ()
+    {
+        Replayer.pause();
+    };
+    events[Messages.PAUSED] = function ()
+    {
+        window.parent.postMessage(Messages.create(Messages.PAUSED, Replayer.paused), "*");
+    };
+
+    window.addEventListener("message", function (event)
+    {
+        var data = Messages.parse(event.data), handler = events[data.message];
+
+        if (handler && error)
+        {
+            window.parent.postMessage(Messages.create(data.message, error, true), "*");
+        }
+        else if (handler && !error)
+        {
+            handler();
+        }
+    });
 });

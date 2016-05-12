@@ -216,7 +216,7 @@ window.addEventListener("load", function ()
         }
     }
 
-    Replayer.loadStream = function (_station, _stream, _start)
+    Replayer.loadStream = function (_station, _stream, _start, _ready)
     {
         var ready, requests;
 
@@ -243,6 +243,11 @@ window.addEventListener("load", function ()
                 {
                     start(_start);
                     parent.className = "loaded";
+
+                    if (_ready)
+                    {
+                        _ready();
+                    }
                 }
             };
 
@@ -311,6 +316,18 @@ window.addEventListener("load", function ()
             player.pause();
         }
     };
+
+    Object.defineProperty(Replayer, "paused", {
+        enumerable: true,
+        get: function ()
+        {
+            if (player)
+            {
+                return player.paused;
+            }
+            return true;
+        }
+    });
 
     // Handle events for app menu items relating to the replayer view.
     function genstreamhash ()

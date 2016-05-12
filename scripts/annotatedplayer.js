@@ -372,11 +372,11 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         audio.pause();
     };
 
-    Object.defineProperty(this, "playing", {
+    Object.defineProperty(this, "paused", {
         enumerable: true,
         get: function ()
         {
-            return audio.playing;
+            return audio.paused;
         }
     });
 
