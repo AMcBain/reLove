@@ -697,6 +697,10 @@ _:-ms-input-placeholder, :root #lists a {
     white-space: nowrap;
 }
 
+#player .annotatedplayer .info .controls .sound {
+    cursor: default;
+}
+
 #player .annotatedplayer .info .controls > span:before,
 #player .annotatedplayer .info .controls > span:after
 {
