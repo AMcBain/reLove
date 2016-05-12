@@ -354,7 +354,7 @@ window.addEventListener("load", function ()
 
     document.addEventListener("copytrackurl", function ()
     {
-        copytimeurl(player.getTrack().start);
+        copytimeurl(player.track.start);
     });
 
     document.addEventListener("copytimeurl", function (event)

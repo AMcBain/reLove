@@ -331,10 +331,13 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         return null;
     }
 
-    this.getTrack = function ()
-    {
-        return getTrack(audio.currentTime);
-    };
+    Object.defineProperty(this, "track", {
+        enumerable: true,
+        get: function ()
+        {
+            return getTrack(audio.currentTime);
+        }
+    });
 
     function notifyTrackListeners()
     {
@@ -368,6 +371,14 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
     {
         audio.pause();
     };
+
+    Object.defineProperty(this, "playing", {
+        enumerable: true,
+        get: function ()
+        {
+            return audio.playing;
+        }
+    });
 
     function seek (to)
     {
