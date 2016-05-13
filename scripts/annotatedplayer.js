@@ -70,7 +70,6 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
     }
 
     audio = new Audio();
-    audio.volume = localStorage && Number(localStorage.volume) || 1;
 
     if (!audio.canPlayType(mime))
     {
@@ -137,6 +136,9 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         {
             var update, end, target = document;
 
+            // Prevent text selection due to dragging.
+            event.preventDefault();
+
             // I love this! Every browser should have this. You can leave the window with
             // the mouse and it'll still fire events as if it came from this element. This
             // means it's possible to detect mouseup outside the window. So handy.
@@ -148,7 +150,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
 
             update = function (event)
             {
-                audio.volume = Math.min(Math.max(0, (event.pageX - volX) / this.clientWidth), 1);
+                audio.volume = Math.min(Math.max(0, (event.pageX - volX) / volume.clientWidth), 1);
             };
             update.call(this, event);
 
@@ -308,6 +310,8 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
             }
             redraw(true);
         });
+
+        audio.volume = localStorage && Number(localStorage.volume) || 1;
 
         if (typeof autoplay === "undefined" || autoplay)
         {
