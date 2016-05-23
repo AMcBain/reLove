@@ -88,7 +88,7 @@ is being used for an embedded stream, hiding the segment list and chat log follo
 a rather compact display of the current track, controls, and progress area for a stream. However due to the lack of a header at such
 small heights users will be unable to return to the stream list when starting from an embedded station.
 
-***Events***
+**Events**
 
 The embedded version does support events using `postMessage`. The `messages.js` file offers an API to aid in passing or decoding messages
 but isn't necessary. Supported events include notification of initialization, play, pause, and getting paused status.
@@ -101,7 +101,7 @@ but isn't necessary. Supported events include notification of initialization, pl
         }
     });
 
-More examples and information can be found at http://amcbain.github.io/reLove/embed.html
+More examples and information about embedding can be found at http://amcbain.github.io/reLove/embed.html
 
 License
 -------
