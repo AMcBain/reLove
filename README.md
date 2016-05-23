@@ -49,8 +49,7 @@ resume playback for the last stream played when opened in a new tab, but reopene
 at the end of the URL indicating the playback location will work.
 * (reLive v.19) "Ctrl+X and Ctrl+C - Create a link to the current playback position and copy it to the clipboard." because clipboard
 support is effectively non-existent. There are menu items, and additionally context menu items in Firefox, offering this ability.
-* (reLiveQt) "Notify on track change" is called "notify segment changes" and is only available in browsers where support for the web
-notifications API exists.
+* (reLiveQt) "Notify on track change" is only available in browsers where support for the web notifications API exists.
 
 Any remaining unmentioned features should be supported in full.
 
@@ -89,11 +88,23 @@ is being used for an embedded stream, hiding the segment list and chat log follo
 a rather compact display of the current track, controls, and progress area for a stream. However due to the lack of a header at such
 small heights users will be unable to return to the stream list when starting from an embedded station.
 
+***Events***
+
+The embedded version does support events using `postMessage`. The `messages.js` file offers an API to aid in passing or decoding messages
+but isn't necessary. Supported events include notification of initialization, play, pause, and getting paused status.
+
+    var player = document.getElementById("player").contentWindow;
+    
+        window.addEventListener("message", function (event) {
+        if (event.data === "relive:initialized") {
+            player.postMessage("relive:play", "*");
+        }
+    });
+
+More examples and information can be found at http://amcbain.github.io/reLove/embed.html
 
 License
 -------
 
 Standard MIT license. See the included LICENSE file. This license does **not** apply to any submodule dependencies. Those retain their
 licenses. Gargaj has indicated the relive.js project is Public Domain.
-
-(This is a prototype software so the choice of this can be debated later.)
