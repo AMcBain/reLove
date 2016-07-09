@@ -2,7 +2,7 @@
 
 (function ()
 {
-    var map, input, close, wrapper, dialog, overlay;
+    var map, input, close, wrapper, dialog, overlay, workaround, fallback;
 
     map = {
         "text/uri-list": "URL"
@@ -10,9 +10,6 @@
 
     window.Copy = {
         mimeType: "text/uri-list",
-        // Copy events don't seem to work except in IE, via its own method.
-        //forceFallback: !(window.ClipboardEvent || window.clipboardData),
-        forceFallback: !window.clipboardData,
         // This will have to change, if Firefox ever becomes spec compliant.
         contextMenuSupported: (document.createElement("menu").type === "list")
     };
@@ -43,35 +40,46 @@
     });
     overlay.appendChild(dialog);
 
+    // Hidden from view but not hidden from rendering, if you were able to scroll backwards past the start of the viewport.
+    workaround = document.createElement("input");
+    workaround.type = "text";
+    workaround.style.cssText = "position: fixed; left: -110px; top: -30px; -box-sizing: border-box; width: 100px; height: 25px;";
+
+    function fallback (text)
+    {
+        input.value = text;
+        document.body.appendChild(overlay);
+
+        input.setSelectionRange(0, text.length);
+        input.focus();
+    }
+
     Copy.toClipboard = function (text)
     {
-        var callback;
+        document.body.appendChild(workaround);
+        workaround.value = text;
+        workaround.focus();
+        workaround.select();
 
-        if (!Copy.forceFallback && window.ClipboardEvent)
+        try
         {
-            // http://lists.w3.org/Archives/Public/public-webapps/2014AprJun/0513.html
-            // presents another method, but calling execCommand for "copy" in Firefox
-            // throws an error NS_ERROR_FAILURE at worst and at best the error thrown
-            // is "SecurityError: The operation is insecure." Both the following and
-            // the aforementioned method fail silently in Chrome.
-            event = new ClipboardEvent("copy", {
-                dataType: Copy.mimeType,
-                data: text
-            });
-            document.dispatchEvent(event);
+            // Implementations that don't support this, for whatever reason, will return false.
+            if (!document.execCommand("copy", false, null))
+            {
+                fallback(text);
+            }
         }
-        else if (!Copy.forceFallback && window.clipboardData)
+        catch (err)
         {
-            clipboardData.setData(map[Copy.mimeType] || "Text", text);
+            // Older Firefoxes will throw an exception instead of returning false.
+            fallback(text);
         }
-        else
-        {
-            input.value = text;
-            document.body.appendChild(overlay);
 
-            input.setSelectionRange(0, text.length);
-            input.focus();
-        }
+        // It may be possible to remove it immediately, but this is just a precaution.
+        setTimeout(function ()
+        {
+            document.body.removeChild(workaround);
+        }, 0);
     };
 
     Copy.createMenu = function (id, label, callback)
@@ -93,7 +101,7 @@
         label.forEach(function (item)
         {
             var menuitem = document.createElement("menuitem");
-            menuitem.label = item.label + (Copy.forceFallback ? "..." : "");
+            menuitem.label = item.label;
             menuitem.addEventListener("click", item.call);
             menu.appendChild(menuitem);
         });
