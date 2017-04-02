@@ -445,6 +445,7 @@ _:-ms-input-placeholder, :root #lists a {
 
 #lists time, #lists time + span {
     float: left;
+    width: 11.5em;
     margin-right: 1.5em;
 }
 
@@ -519,7 +520,7 @@ _:-ms-input-placeholder, :root #lists a {
 
 #player .tracks {
     position: absolute;
-    top: 0;
+    bottom: 1em;
     left: -75%;
     width: 75%;
     max-width: 600px;
@@ -528,12 +529,19 @@ _:-ms-input-placeholder, :root #lists a {
 }
 
 #player .tracks, .chatview {
-    bottom: 3.687em;
-    margin-bottom: 19px;
+    top: 3.687em;
+    margin-top: 19px;
 }
 
 #player .tracks.open {
     left: 0;
+    margin-left: 0;
+}
+
+#player .tracks.all {
+    left: 0;
+    width: calc(100% + 1.437em);
+    max-width: none;
     margin-left: 0;
 }
 
@@ -592,8 +600,8 @@ _:-ms-input-placeholder, :root #lists a {
 /* Adjust height to account for player area. */
 .chatview {
     position: absolute;
-    top: 0;
     right: 0;
+    bottom: 1em;
     left: 1.437em;
     overflow: auto;
     background: #fafafa;
@@ -655,11 +663,11 @@ _:-ms-input-placeholder, :root #lists a {
 
 #player .annotatedplayer {
     position: absolute;
+    top: 0;
     right: 0;
-    bottom: 0;
     left: 0;
     background: #fafafa;
-    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 #player .annotatedplayer .info {

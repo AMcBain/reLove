@@ -88,7 +88,7 @@ window.addEventListener("load", function ()
         });
 
         container = document.createElement("div");
-        container.className = "tracks";
+        container.className = "tracks" + (chat ? "" : " all");
         container.appendChild(toggle);
         container.appendChild(list);
 
