@@ -337,11 +337,11 @@ window.addEventListener("load", function ()
 
     document.addEventListener("copystreamurl", function ()
     {
-        var url = location.href, q = url.indexOf("?");
+        var url = location.href, h = url.indexOf("#");
 
-        if (q !== -1)
+        if (h !== -1)
         {
-            url = url.substring(0, q);
+            url = url.substring(0, h);
         }
 
         Copy.toClipboard(url + "#" + genstreamhash());
