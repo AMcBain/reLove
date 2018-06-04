@@ -64,15 +64,14 @@ window.addEventListener("load", function ()
 
             if (station && bits[0] === "#station")
             {
-                Relive.loadStationInfo(station.id, function (info)
+                Relive.loadStationInfo(station, function (info)
                 {
                     var streams;
 
-                    streams = Object.toArray(info.streams)
-                        .sort(function (a, b)
-                        {
-                            return b.timestamp - a.timestamp;
-                        });
+                    streams = info.streams.sort(function (a, b)
+                    {
+                        return b.timestamp - a.timestamp;
+                    });
 
                     streams.forEach(function (stream)
                     {
@@ -83,7 +82,7 @@ window.addEventListener("load", function ()
                     });
 
                     list.className = "loaded";
-                    document.querySelector("#lists h1").textContent = info.name;
+                    document.querySelector("#lists h1").textContent = info.stationName;
 
                     document.getElementById("back").addEventListener("click", function (event)
                     {
@@ -97,7 +96,7 @@ window.addEventListener("load", function ()
             }
             else if (station)
             {
-                Relive.loadStationInfo(station.id, function (info)
+                Relive.loadStationInfo(station, function (info)
                 {
                     var stream = info.streams[Relive.fromBase62(bits[2])];
 
