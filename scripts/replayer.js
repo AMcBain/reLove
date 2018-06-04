@@ -149,7 +149,7 @@ window.addEventListener("load", function ()
 
         if (chat)
         {
-            chatview = new ChatView(parent.lastChild, chat.name, stream.timestamp);
+            chatview = new ChatView(parent.lastChild, chat.title, stream.timestamp);
 
             player.addEventListener("timeupdate", function ()
             {
