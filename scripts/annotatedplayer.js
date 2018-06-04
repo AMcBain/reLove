@@ -248,10 +248,7 @@ function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, emb
 
             if (buffering && audio.currentTime !== buffering)
             {
-                //clearTimeout(buffering);
-                //buffering = null;
                 container.lastChild.className = "player";
-                chromefix = true;
                 seek(buffering);
             }
             buffering = null;
@@ -397,35 +394,13 @@ function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, emb
         }
     });
 
-    var chromefix = false, buffering;
+    var buffering;
     function seek (to)
     {
         var bytes;
-// console.log(chromefix);
-        // // Would love to get rid of this. However Chrome doesn't like some spec-compliant
-        // // range request implementations and treats the stream as if it's not seekable. It
-        // // also buffers very slowly ahead of the currentTime. This uses the API to generate
-        // // a stream that starts at the location we want.
-        // if (chromefix)
-        // {
-            // bytes = to * size / length / 1024;
-            // audio.url = url.replace(/start=\d+/, "start=" + bytes);
-        // }
-        // else
-        // {
-// console.log(to);
-            audio.currentTime = to;
-            buffering = to;
-        // }
 
-//        clearTimeout(buffering);
-/*        buffering = setTimeout(function ()
-        {
-            container.lastChild.className = "player buffering";
-console.log("buffering");
-            chromefix = true;
-            seek(to);
-        }, 5000);*/
+        audio.currentTime = to;
+        buffering = to;
 
         // getTrack doesn't give the index of the match.
         tracks.every(function (seg, i)
