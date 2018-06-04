@@ -4,16 +4,6 @@ window.addEventListener("load", function ()
 {
     var load, latest = [], title = document.title, start, actions;
 
-    Object.toArray = function (obj)
-    {
-        return Object.keys(obj)
-            .reduce(function (list, key)
-            {
-                list.push(obj[key]);
-                return list;
-            }, []);
-    };
-
     function pause ()
     {
         Replayer.pause();

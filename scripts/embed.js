@@ -5,16 +5,6 @@ window.addEventListener("load", function ()
 {
     var error, events, bits, station, list, lists = document.querySelector("#lists");
 
-    Object.toArray = function (obj)
-    {
-        return Object.keys(obj)
-            .reduce(function (list, key)
-            {
-                list.push(obj[key]);
-                return list;
-            }, []);
-    };
-
     function perror (response, status)
     {
         // This reveals more to code-based API callers than the UI would. Consider changing?
@@ -60,7 +50,10 @@ window.addEventListener("load", function ()
 
         Relive.loadStations(function (stations)
         {
-            station = stations[station];
+            station = stations.find(function (_station)
+            {
+                return _station.id === station;
+            });
 
             if (station && bits[0] === "#station")
             {
@@ -98,7 +91,11 @@ window.addEventListener("load", function ()
             {
                 Relive.loadStationInfo(station, function (info)
                 {
-                    var stream = info.streams[Relive.fromBase62(bits[2])];
+                    var id = Relive.fromBase62(bits[2]),
+                        stream = info.streams.find(function (stream)
+                        {
+                            return stream.id === id;
+                        });
 
                     if (stream)
                     {
