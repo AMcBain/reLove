@@ -631,33 +631,33 @@ _:-ms-input-placeholder, :root #lists a {
    learn how to change them.
  */
 
-.chattype0 td {
+.chattypeUnknown td {
     /* No idea. Slightly dimmed for now. */
     color: #4c4c4c;
 }
 
-.chattype1 td:nth-child(2), .chattype2 td:nth-child(2),
-.chattype2 td:nth-child(3) span {
+.chattypeMessage td:nth-child(2), .chattypeMe td:nth-child(2),
+.chattypeMe td:nth-child(3) span {
     color: #3636b3;
 }
 
-.chattype3 td:nth-child(2), .chattype3 td:nth-child(3) {
+.chattypeJoin td:nth-child(2), .chattypeJoin td:nth-child(3) {
     color: #2a8c2a;
 }
 
-.chattype4 td:nth-child(2), .chattype4 td:nth-child(3),
-.chattype5 td:nth-child(2), .chattype5 td:nth-child(3)
+.chattypeLeave td:nth-child(2), .chattypeLeave td:nth-child(3),
+.chattypeQuit td:nth-child(2), .chattypeQuit td:nth-child(3)
 {
     color: #66361f;
 }
 
-.chattype6 td:nth-child(2), .chattype7 td:nth-child(2),
-.chattype7 td:nth-child(3), .chattype8 td:nth-child(2)
+.chattypeNick td:nth-child(2), .chattypeTopic td:nth-child(2),
+.chattypeTopic td:nth-child(3), .chattypeMode td:nth-child(2)
 {
     color: #80267f;
 }
 
-.chattype9 td:nth-child(2), .chattype9 td:nth-child(3) {
+.chattypeKick td:nth-child(2), .chattypeKick td:nth-child(3) {
     color: #c73232;
 }
 

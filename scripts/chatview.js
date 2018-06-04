@@ -73,15 +73,15 @@ function ChatView (parent, channel, offset)
 
     function rowstar (line, message)
     {
-        row(line.type, line.timestamp, "*", message);
+        row(line.messageType, line.time, "*", message);
     }
 
     // Best guess as to what to do with these.
-    types[Relive.CHATTYPE_UNKNOWN] = function (line)
+    types.Unknown = function (line)
     {
         if (line.strings.length > 1)
         {
-            row(line.type, line.timestamp, line.strings[0], line.strings[1]);
+            row(line.messageType, line.time, line.strings[0], line.strings[1]);
         }
         else
         {
@@ -89,22 +89,22 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    types[Relive.CHATTYPE_MESSAGE] = function (line)
+    types.Message = function (line)
     {
-        row(line.type, line.timestamp, line.strings[0], line.strings[1]);
+        row(line.messageType, line.time, line.strings[0], line.strings[1]);
     };
 
-    types[Relive.CHATTYPE_ME] = function (line)
+    types.Me = function (line)
     {
-        rowspc(line.type, line.timestamp, line.strings[0], line.strings[1]);
+        rowspc(line.messageType, line.time, line.strings[0], line.strings[1]);
     };
 
-    types[Relive.CHATTYPE_JOIN] = function (line)
+    types.Join = function (line)
     {
         rowstar(line, line.strings[0] + " has joined " + channel);
     };
 
-    types[Relive.CHATTYPE_LEAVE] = function (line)
+    types.Leave = function (line)
     {
         var msg = line.strings[0] + " has left " + channel;
 
@@ -118,7 +118,7 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    types[Relive.CHATTYPE_QUIT] = function (line)
+    types.Quit = function (line)
     {
         var msg = line.strings[0] + " has quit";
 
@@ -132,18 +132,18 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    types[Relive.CHATTYPE_NICK] = function (line)
+    types.Nick = function (line)
     {
         rowstar(line, line.strings[0] + " is now known as " + line.strings[1]);
     };
 
-    types[Relive.CHATTYPE_TOPIC] = function (line)
+    types.Topic = function (line)
     {
         rowstar(line, line.strings[0] + " has set the topic to: " + line.strings[1]);
     };
 
     // TODO Find an example of channel mode changing and update code to accommodate, if needed.
-    types[Relive.CHATTYPE_MODE] = function (line)
+    types.Mode = function (line)
     {
         if (line.strings.length > 2)
         {
@@ -157,7 +157,7 @@ function ChatView (parent, channel, offset)
         }
     };
 
-    types[Relive.CHATTYPE_KICK] = function (line)
+    types.Kick = function (line)
     {
         var msg = line.strings[0] + " has kicked " + line.strings[1] + " from " + channel;
 
@@ -185,8 +185,7 @@ function ChatView (parent, channel, offset)
     {
         var scroll = autoscroll();
 
-        // Just in case, map unknown type numbers to CHATTYPE_UNKNOWN?
-        types[line.type](line);
+        (types[line.messageType] || types.Unknown)(line);
 
         clearTimeout(fix);
         fix = setTimeout(this.resize, 1);

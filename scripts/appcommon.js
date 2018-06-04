@@ -88,13 +88,13 @@ App.entry = function (station, stream, callback)
     time.textContent = date.replace("T", " ").replace(/\..+$/, "");
 
     length = document.createElement("span");
-    length.textContent = Time.duration(stream.length, true);
+    length.textContent = Time.duration(stream.duration, true);
 
     info = document.createElement("span");
-    info.textContent = stream.host + " - " + stream.infoText;
+    info.textContent = stream.hostName + " - " + stream.description;
 
     title = document.createElement("h3");
-    title.textContent = stream.name + " ";
+    title.textContent = stream.streamName + " ";
     title.appendChild(info);
 
     entry = document.createElement("li");
@@ -116,6 +116,41 @@ App.entry = function (station, stream, callback)
     });
 
     return entry;
+};
+
+App.requestJSON = function request (options)
+{
+    var xhr = new XMLHttpRequest();
+    xhr.open(options.method ? options.method : "GET", options.url, true);
+    xhr.onload = function() 
+    {
+        if (this.status === 200)
+        {
+            if (options.success)
+            {
+                try
+                {
+                    options.success(JSON.parse(this.response));
+                }
+                catch (error)
+                {
+                    if (options.error)
+                    {
+                        options.error(error.message || error, 0);
+                    }
+                }
+            }
+        }
+        else if (this.status >= 400 && this.status <= 599)
+        {
+            if (options.error)
+            {
+                options.error(this.response, this.status);
+            }
+        }
+    };
+
+    xhr.send();
 };
 
 App.error = function (message, status)

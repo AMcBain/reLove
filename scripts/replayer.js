@@ -49,12 +49,12 @@ window.addEventListener("load", function ()
             var time, entry;
 
             time = document.createElement("time");
-            time.setAttribute("datetime", new Date((stream.timestamp + cue.start) * 1000).toISOString());
-            time.textContent = Time.duration(cue.start);
+            time.setAttribute("datetime", new Date((stream.timestamp + cue.time) * 1000).toISOString());
+            time.textContent = Time.duration(cue.time);
 
             entry = document.createElement("li");
             entry.setAttribute("data-index", i);
-            entry.textContent = " " + cue.artist + " - " + cue.title;
+            entry.textContent = " " + cue.artistName + " - " + cue.trackName;
             entry.insertBefore(time, entry.firstChild);
 
             if (i === 0)
@@ -64,7 +64,7 @@ window.addEventListener("load", function ()
 
             entry.addEventListener("click", function ()
             {
-                player.seek(cue.start);
+                player.seek(cue.time);
             });
 
             list.appendChild(entry);
@@ -103,7 +103,7 @@ window.addEventListener("load", function ()
             container.appendChild(Copy.createMenu("tracks-menu",
                     "Copy track location to clipboard", function ()
             {
-                copytimeurl(track.start);
+                copytimeurl(track.time);
             }));
         }
 
@@ -115,10 +115,10 @@ window.addEventListener("load", function ()
     {
         var url, mime, once, lastTime, last = 0;
 
-        url = Relive.getStreamURL(station.id, stream.id);
-        mime = Relive.getStreamMimeType(station.id, stream.id);
+        url = Relive.getStreamURL(station, stream);
+        mime = Relive.getStreamMimeType(station, stream);
 
-        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.length, tracks, Replayer.autoplay, App.embedded);
+        player = new AnnotatedPlayer(parent.lastChild, url, mime, stream.size, stream.duration, tracks, Replayer.autoplay, App.embedded);
         player.addEventListener("trackupdate", function (event)
         {
             cues.querySelector(".selected").className = "";
@@ -126,7 +126,7 @@ window.addEventListener("load", function ()
 
             if (notify.checked)
             {
-                Notifications.post(title.textContent, tracks[event.detail].artist + " - " + tracks[event.detail].title);
+                Notifications.post(title.textContent, tracks[event.detail].artistName + " - " + tracks[event.detail].trackName);
             }
         });
         player.addEventListener("pause", function ()
@@ -149,7 +149,7 @@ window.addEventListener("load", function ()
 
         if (chat)
         {
-            chatview = new ChatView(parent.lastChild, chat[0].name, stream.timestamp);
+            chatview = new ChatView(parent.lastChild, chat.name, stream.timestamp);
 
             player.addEventListener("timeupdate", function ()
             {
@@ -158,11 +158,11 @@ window.addEventListener("load", function ()
                 // Handle seeking backwards.
                 if (lastTime > time)
                 {
-                    if (last === chat[0].rows.length)
+                    if (last === chat.messages.length)
                     {
                         last--;
                     }
-                    while (last > 0 && chat[0].rows[last].timestamp > time)
+                    while (last > 0 && chat.messages[last].time > time)
                     {
                         last--;
                         chatview.removeLine(last);
@@ -170,9 +170,9 @@ window.addEventListener("load", function ()
                 }
                 else
                 {
-                    while (last < chat[0].rows.length && chat[0].rows[last].timestamp <= time)
+                    while (last < chat.messages.length && chat.messages[last].time <= time)
                     {
-                        chatview.addLine(chat[0].rows[last]);
+                        chatview.addLine(chat.messages[last]);
                         last++;
                     }
                 }
@@ -251,7 +251,7 @@ window.addEventListener("load", function ()
                 }
             };
 
-            Relive.loadStreamInfo(station.id, stream.id, function (_tracks)
+            Relive.loadStreamInfo(station, stream, function (_tracks)
             {
                 tracks = _tracks;
                 ready();
@@ -263,17 +263,17 @@ window.addEventListener("load", function ()
                     title: stream.name,
                     artist: stream.host,
                     start: 0,
-                    type: Relive.TRACKTYPE_JINGLE
+                    type: "Jingle"
                 }, {
                     title: stream.name,
                     artist: stream.host,
                     start: 1,
-                    type: Relive.TRACKTYPE_MUSIC
+                    type: "Music"
                 } ];
                 ready();
             });
 
-            Relive.loadStreamChat(station.id, stream.id, function (_chat)
+            Relive.loadStreamChat(station, stream, function (_chat)
             {
                 chat = _chat;
                 ready();
@@ -291,7 +291,7 @@ window.addEventListener("load", function ()
             parent.appendChild(document.createElement("div"));
 
             parent.className = "";
-            title.textContent = station.name + ": " + stream.name;
+            title.textContent = station.name + ": " + stream.streamName;
             document.title = title.textContent;
 
             if (isNaN(Number(_start)))
@@ -371,7 +371,7 @@ window.addEventListener("load", function ()
 
     document.addEventListener("copytrackurl", function ()
     {
-        copytimeurl(player.track.start);
+        copytimeurl(player.track.time);
     });
 
     document.addEventListener("copytimeurl", function (event)

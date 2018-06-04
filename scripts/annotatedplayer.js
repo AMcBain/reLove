@@ -1,6 +1,6 @@
 "use strict";
 
-function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
+function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, embedded)
 {
     var container, time, title, canvas, progress, menu, progX, colors, tooltip, tooltime, playpause,
             button, volume, volX, countdown, audio, menuX, buffered, track = 0, unloading, buffering;
@@ -31,7 +31,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
     container.firstChild.appendChild(time);
 
     title = document.createElement("div");
-    title.textContent = tracks[track].title;
+    title.textContent = tracks[track].trackName;
     container.firstChild.appendChild(title);
 
     canvas = document.createElement("canvas");
@@ -53,7 +53,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
                     label: "Copy this track's location to clipboard",
                     call: function ()
                     {
-                            document.dispatchEvent(Events.create("copytimeurl", getTrack(menuX / progress.clientWidth * length).start));
+                            document.dispatchEvent(Events.create("copytimeurl", getTrack(menuX / progress.clientWidth * length).time));
                     }
                 }, {
                     label: "Copy this stream location to clipboard",
@@ -86,13 +86,13 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         {
             if (track > 0)
             {
-                if (audio.currentTime - tracks[track].start > 3)
+                if (audio.currentTime - tracks[track].time > 3)
                 {
-                    seek(tracks[track].start);
+                    seek(tracks[track].time);
                 }
                 else
                 {
-                    seek(tracks[track - 1].start);
+                    seek(tracks[track - 1].time);
                 }
             }
         });
@@ -119,7 +119,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         {
             if (track < tracks.length - 1)
             {
-                seek(tracks[track + 1].start);
+                seek(tracks[track + 1].time);
             }
         });
         container.firstChild.firstChild.appendChild(button);
@@ -180,7 +180,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
             if (track)
             {
                 tooltip.className = "tooltip";
-                tooltip.textContent = track.artist + " - " + track.title;
+                tooltip.textContent = track.artistName + " - " + track.trackName;
                 tooltip.style.display = "block";
                 tooltip.style.left = x + "px";
                 tooltip.style.marginLeft = -tooltip.clientWidth / 2 + "px";
@@ -231,7 +231,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
             var t = this.currentTime;
 
             // getTrack is potentially expensive. So, this.
-            if (tracks[track + 1] && t >= tracks[track + 1].start)
+            if (tracks[track + 1] && t >= tracks[track + 1].time)
             {
                 track++;
                 notifyTrackListeners();
@@ -246,11 +246,15 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
                 time.textContent = Time.duration(t);
             }
 
-            if (buffering)
+            if (buffering && audio.currentTime !== buffering)
             {
-                clearTimeout(buffering);
+                //clearTimeout(buffering);
+                //buffering = null;
                 container.lastChild.className = "player";
+                chromefix = true;
+                seek(buffering);
             }
+            buffering = null;
 
             progress.firstChild.innerHTML = "Progress: " + Math.round(t / length * 100) + "%";
             progress.firstChild.style.width = t / length * progress.clientWidth + "px";
@@ -336,7 +340,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         // a search use more intelligent methods, or at least a skiplist.
         for (i = tracks.length - 1; i >= 0; i--)
         {
-            if (tracks[i].start <= time)
+            if (tracks[i].time <= time)
             {
                 return tracks[i];
             }
@@ -355,7 +359,7 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
     function notifyTrackListeners()
     {
         var event;
-        title.textContent = tracks[track].artist + " - " + tracks[track].title;
+        title.textContent = tracks[track].artistName + " - " + tracks[track].trackName;
 
         audio.dispatchEvent(Events.create("trackupdate", track));
     }
@@ -393,20 +397,40 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
         }
     });
 
+    var chromefix = false, buffering;
     function seek (to)
     {
-        audio.currentTime = to;
+        var bytes;
+// console.log(chromefix);
+        // // Would love to get rid of this. However Chrome doesn't like some spec-compliant
+        // // range request implementations and treats the stream as if it's not seekable. It
+        // // also buffers very slowly ahead of the currentTime. This uses the API to generate
+        // // a stream that starts at the location we want.
+        // if (chromefix)
+        // {
+            // bytes = to * size / length / 1024;
+            // audio.url = url.replace(/start=\d+/, "start=" + bytes);
+        // }
+        // else
+        // {
+// console.log(to);
+            audio.currentTime = to;
+            buffering = to;
+        // }
 
-        clearTimeout(buffering);
-        buffering = setTimeout(function ()
+//        clearTimeout(buffering);
+/*        buffering = setTimeout(function ()
         {
             container.lastChild.className = "player buffering";
-        }, 5000);
+console.log("buffering");
+            chromefix = true;
+            seek(to);
+        }, 5000);*/
 
         // getTrack doesn't give the index of the match.
         tracks.every(function (seg, i)
         {
-            if (seg.start <= to && (i === tracks.length - 1 || to < tracks[i + 1].start))
+            if (seg.time <= to && (i === tracks.length - 1 || to < tracks[i + 1].time))
             {
                 if (i !== track)
                 {
@@ -427,12 +451,13 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
 
     // Narration could have a different color from talk, but the effect
     // is similar for both: "blah blah blah, play more music!"
-    colors = {};
-    colors[Relive.TRACKTYPE_DEFAULT] = "#a7a7a7";
-    colors[Relive.TRACKTYPE_MUSIC] = "#a7a7a7";
-    colors[Relive.TRACKTYPE_TALK] = "#8659b3";
-    colors[Relive.TRACKTYPE_JINGLE] = "#8a9add";
-    colors[Relive.TRACKTYPE_NARRATION] = "#8659b3";
+    colors = {
+        Default: "#a7a7a7",
+        Music: "#a7a7a7",
+        Talk: "#8659b3",
+        Jingle: "#8a9add",
+        Narration: "#8659b3"
+    };
 
     function calculateOffsetLeft (element, ignore2)
     {
@@ -470,23 +495,23 @@ function AnnotatedPlayer (parent, url, mime, length, tracks, autoplay, embedded)
                 // This could all be simplified and replicate the reLive desktop behavior by
                 // removing the type check here, the second if below, and ensuring the first
                 // 1s-long chunk at the start isn't rendered.
-                if (!(i % 2) && (track.type === Relive.TRACKTYPE_MUSIC || track.type === Relive.TRACKTYPE_DEFAULT))
+                if (!(i % 2) && (track.trackType === "Music" || track.trackType === "Default"))
                 {
-                    start = offset(track.start, width);
-                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].start, width)) - start);
+                    start = offset(track.time, width);
+                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].time, width)) - start);
 
-                    context.fillStyle = colors[track.type];
+                    context.fillStyle = colors[track.trackType];
                     context.fillRect(start, 0, end, height);
                 }
 
                 // The assumption here is that two of the same type are not next to each other.
-                if (track.type !== Relive.TRACKTYPE_MUSIC)
+                if (track.trackType !== "Music")
                 {
-                    start = offset(track.start, width);
-                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].start, width)) - start);
+                    start = offset(track.time, width);
+                    end = Math.max(1, (i === tracks.length - 1 ? width : offset(tracks[i + 1].time, width)) - start);
 
                     context.save();
-                    context.strokeStyle = colors[track.type];
+                    context.strokeStyle = colors[track.trackType];
                     context.rect(start, 0, end, height);
                     context.clip();
                     context.beginPath();

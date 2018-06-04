@@ -1,5 +1,4 @@
 "use strict";
-Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
@@ -53,6 +52,7 @@ window.addEventListener("load", function ()
                 catch (e)
                 {
                     console.log("There is no station ", station, stream ? " stream " + stream : "", " only Zuul.");
+                    console.log(e);
                 }
             }
         },
@@ -137,7 +137,7 @@ window.addEventListener("load", function ()
 
     function stationInfo (station, parent)
     {
-        Relive.loadStationInfo(station.id, function (info)
+        Relive.loadStationInfo(station, function (info)
         {
             var url, list, streams;
 
@@ -156,12 +156,10 @@ window.addEventListener("load", function ()
             list = document.createElement("ol");
             list.setAttribute("reversed", "reversed");
 
-            // Again? :(
-            streams = Object.toArray(info.streams)
-                .sort(function (a, b)
-                {
-                    return b.timestamp - a.timestamp;
-                });
+            streams = info.streams.sort(function (a, b)
+            {
+                return b.timestamp - a.timestamp;
+            });
 
             streams.forEach(function (stream)
             {
@@ -188,12 +186,10 @@ window.addEventListener("load", function ()
     {
         var list = document.createElement("ul");
 
-        // Why is this an object? When will there ever be meaningful holes in the list?
-        stations = Object.toArray(stations)
-            .sort(function (a, b)
-            {
-                return a.name.localeCompare(b.name);
-            });
+        stations.sort(function (a, b)
+        {
+            return a.name.localeCompare(b.name);
+        });
 
         stations.forEach(function (station, i)
         {
