@@ -4,9 +4,8 @@
 {
     var post, tag = "notifications" + (Math.random() * 42);
 
-    // TODO use real reLive icon.
     window.Notifications = {
-        icon: "",
+        icon: "images/notification.png",
         inactiveOnly: false,
         supported: true
     };
