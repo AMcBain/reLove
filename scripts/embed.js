@@ -68,9 +68,18 @@ window.addEventListener("load", function ()
             if (!options.showbackbtn)
             {
                 document.getElementById("back").style.display = "none";
-                lists.style.transition = "none";
             }
+
+            lists.style.transition = "none";
             lists.style.marginLeft = "-100%";
+
+            if (options.showbackbtn)
+            {
+                setTimeout(function ()
+                {
+                    lists.style.transition = "";
+                }, 1);
+            }
         }
 
         Relive.loadStations(function (stations)
@@ -115,11 +124,18 @@ window.addEventListener("load", function ()
             {
                 Relive.loadStationInfo(station, function (info)
                 {
-                    var streams, id = Relive.fromBase62(bits[2]),
-                        stream = info.streams.find(function (stream)
+                    var streams, id = Relive.fromBase62(bits[2]), stream;
+
+                    // IE again. See above.
+                    info.streams.some(function (_stream)
+                    {
+                        if (_stream.id === id)
                         {
-                            return stream.id === id;
-                        });
+                            stream = _stream;
+                            return true;
+                        }
+                        return false;
+                    });
 
                     if (options.showbackbtn)
                     {
