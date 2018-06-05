@@ -53,17 +53,6 @@ support is effectively non-existent. There are menu items, and additionally cont
 
 Any remaining unmentioned features should be supported in full.
 
-Dependencies
-------------
-
-This project depends on Gargaj's relive.js library. It is set up as a submodule in the repository, so when you clone this repository
-it is likely you'll need to initialize the submodule. To initialze submodules on clone, in newer versions of Git, just include the
-following flag.
-
-    git clone --recursive [...]
-
-If that doesn't work, ask Google how to do it.
-
 Deploying
 ---------
 
