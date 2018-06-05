@@ -70,14 +70,6 @@ var Relive = (function ()
         {
             return stream.mediaDirectUrls[0];
         },
-        // Was going to be a fallback for Chrome, may not be needed anymore.
-        getStreamURLAt: function (station, stream, start)
-        {
-            return station.servers[0] + "getstreamdata/" + protocol +
-                "&streamid=" + encodeURIComponent(stream.id) +
-                "start=" + encodeURIComponent(start) +
-                "&length=" + encodeURIComponent(stream.size);
-        },
         getStreamMimeType: function (station, stream)
         {
           switch(stream.mediaDataFormat)
