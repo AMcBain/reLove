@@ -95,5 +95,4 @@ More examples and information about embedding can be found at http://amcbain.git
 License
 -------
 
-Standard MIT license. See the included LICENSE file. This license does **not** apply to any submodule dependencies. Those retain their
-licenses. Gargaj has indicated the relive.js project is Public Domain.
+Standard MIT license. See the included LICENSE file.
