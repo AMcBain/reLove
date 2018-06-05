@@ -23,6 +23,7 @@ window.addEventListener("load", function ()
     function pause ()
     {
         Replayer.pause();
+        document.body.parentNode.style.overflow = "";
         document.body.style.overflow = "";
     }
 
