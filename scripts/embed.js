@@ -68,18 +68,9 @@ window.addEventListener("load", function ()
             if (!options.showbackbtn)
             {
                 document.getElementById("back").style.display = "none";
+                lists.style.transition = "none";
             }
-
-            lists.style.transition = "none";
             lists.style.marginLeft = "-100%";
-
-            if (options.showbackbtn)
-            {
-                setTimeout(function ()
-                {
-                    lists.style.transition = "";
-                }, 1);
-            }
         }
 
         Relive.loadStations(function (stations)
