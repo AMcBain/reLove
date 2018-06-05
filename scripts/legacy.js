@@ -20,7 +20,7 @@ var Relive = (function ()
                         station.servers.map(function (server)
                         {
                             var server = server.replace(/^[^:]+:/, location.protocol);
-                            if (!server.endsWith("/"))
+                            if (server.substring(server.length - 1) !== "/")
                             {
                                 server += "/";
                             }
