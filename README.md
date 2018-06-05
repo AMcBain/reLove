@@ -29,7 +29,7 @@ Unsupported features from both:
 
 Unsupported features from reLive v.19:
 
-* "Hide conversations in tracklist", because it is unknown what that actually does.
+* "Hide conversations in tracklist"
 * "Ctrl+V - Start playing link from clipboard" as paste events only work on elements designed to receive a pasted data (inputs, etc.)*
 
 Unsupported features from reLiveQt:
