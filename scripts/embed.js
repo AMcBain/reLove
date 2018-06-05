@@ -3,7 +3,7 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var error, events, bits, station, list, lists = document.querySelector("#lists");
+    var error, events, hash, bits, options = {}, station, list, lists = document.querySelector("#lists");
 
     function perror (response, status)
     {
@@ -27,9 +27,22 @@ window.addEventListener("load", function ()
     }
 
     // Detect a URL with #station-0 or #stream-0-0
-    if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+    if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+)(?:\|options=.*)?$/.test(location.hash))
     {
-        bits = location.hash.split("-");
+        hash = location.hash;
+
+        if (hash.indexOf("|") !== -1)
+        {
+            options = hash.split("|");
+            hash = options[0];
+            options = options[1].replace(/^options=/, "").split(",").reduce(function (opts, option)
+            {
+                opts[option] = true;
+                return opts;
+            }, {});
+        }
+
+        bits = hash.split("-");
         station = Relive.fromBase62(bits[1]);
 
         // Get the loading indicator sooner.
@@ -43,7 +56,10 @@ window.addEventListener("load", function ()
         {
             Replayer.autoplay = false;
 
-            document.getElementById("back").style.display = "none";
+            if (!options.showbackbtn)
+            {
+                document.getElementById("back").style.display = "none";
+            }
             lists.style.transition = "none";
             lists.style.marginLeft = "-100%";
         }
