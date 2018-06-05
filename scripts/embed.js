@@ -75,9 +75,15 @@ window.addEventListener("load", function ()
 
         Relive.loadStations(function (stations)
         {
-            station = stations.find(function (_station)
+            // Yes, this should be .find(...); IE ruined it.
+            stations.some(function (_station)
             {
-                return _station.id === station;
+                if (_station.id === station)
+                {
+                    station = _station;
+                    return true;
+                }
+                return false;
             });
 
             if (station && bits[0] === "#station")
