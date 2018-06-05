@@ -46,21 +46,29 @@ window.addEventListener("load", function ()
         station = Relive.fromBase62(bits[1]);
 
         // Get the loading indicator sooner.
-        if (bits[0] === "#station")
+        list = document.createElement("ol");
+        list.setAttribute("reversed", "reversed");
+        document.getElementById("lists").appendChild(list);
+
+        if (options.showbackbtn || station && bits[0] === "#station")
         {
-            list = document.createElement("ol");
-            list.setAttribute("reversed", "reversed");
-            document.getElementById("lists").appendChild(list);
+            document.getElementById("back").addEventListener("click", function (event)
+            {
+                pause();
+                App.menu(false);
+                lists.style.marginLeft = "";
+            });
         }
-        else
+
+        if (bits[0] === "#stream")
         {
             Replayer.autoplay = false;
 
             if (!options.showbackbtn)
             {
                 document.getElementById("back").style.display = "none";
+                lists.style.transition = "none";
             }
-            lists.style.transition = "none";
             lists.style.marginLeft = "-100%";
         }
 
@@ -93,13 +101,6 @@ window.addEventListener("load", function ()
                     list.className = "loaded";
                     document.querySelector("#lists h1").textContent = info.stationName;
 
-                    document.getElementById("back").addEventListener("click", function (event)
-                    {
-                        pause();
-                        App.menu(false);
-                        lists.style.marginLeft = "";
-                    });
-
                     initialized();
                 }, perror);
             }
@@ -107,11 +108,30 @@ window.addEventListener("load", function ()
             {
                 Relive.loadStationInfo(station, function (info)
                 {
-                    var id = Relive.fromBase62(bits[2]),
+                    var streams, id = Relive.fromBase62(bits[2]),
                         stream = info.streams.find(function (stream)
                         {
                             return stream.id === id;
                         });
+
+                    if (options.showbackbtn)
+                    {
+                        streams = info.streams.sort(function (a, b)
+                        {
+                            return b.timestamp - a.timestamp;
+                        });
+
+                        streams.forEach(function (stream)
+                        {
+                            list.appendChild(App.entry(station, stream, function ()
+                            {
+                                Replayer.loadStream(station, stream, 0);
+                            }));
+                        });
+
+                        list.className = "loaded";
+                        document.querySelector("#lists h1").textContent = info.stationName;
+                    }
 
                     if (stream)
                     {
