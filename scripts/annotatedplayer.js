@@ -491,7 +491,7 @@ function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, emb
                     context.clip();
                     context.beginPath();
 
-                    for (j = -9; j < end; j+= 3)
+                    for (j = -9; j < end + 3; j+= 3)
                     {
                         context.moveTo(start + j, height);
                         context.lineTo(start + j + 9, 0);
