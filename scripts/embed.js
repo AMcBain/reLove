@@ -71,6 +71,11 @@ window.addEventListener("load", function ()
                 lists.style.transition = "none";
             }
             lists.style.marginLeft = "-100%";
+
+            // Normally handled by clicking an entry, but since
+            // we're auto-loading one we need to do it ourself.
+            document.body.parentNode.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
         }
 
         Relive.loadStations(function (stations)
@@ -116,7 +121,7 @@ window.addEventListener("load", function ()
                 Relive.loadStationInfo(station, function (info)
                 {
                     var streams, stream, id = Relive.fromBase62(bits[2]), start = Relive.fromBase62(bits[3] || "");
-console.log(start);
+
                     // IE again. See above.
                     info.streams.some(function (_stream)
                     {
@@ -128,27 +133,27 @@ console.log(start);
                         return false;
                     });
 
-                    if (options.showbackbtn)
-                    {
-                        streams = info.streams.sort(function (a, b)
-                        {
-                            return b.timestamp - a.timestamp;
-                        });
-
-                        streams.forEach(function (stream)
-                        {
-                            list.appendChild(App.entry(station, stream, function ()
-                            {
-                                Replayer.loadStream(station, stream, 0);
-                            }));
-                        });
-
-                        list.className = "loaded";
-                        document.querySelector("#lists h1").textContent = info.stationName;
-                    }
-
                     if (stream)
                     {
+                        if (options.showbackbtn)
+                        {
+                            streams = info.streams.sort(function (a, b)
+                            {
+                                return b.timestamp - a.timestamp;
+                            });
+
+                            streams.forEach(function (stream)
+                            {
+                                list.appendChild(App.entry(station, stream, function ()
+                                {
+                                    Replayer.loadStream(station, stream, 0);
+                                }));
+                            });
+
+                            list.className = "loaded";
+                            document.querySelector("#lists h1").textContent = info.stationName;
+                        }
+
                         Replayer.loadStream(station, stream, start, initialized);
                     }
                     else
