@@ -173,6 +173,11 @@ function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, emb
         tooltip.className = "tooltip";
         container.lastChild.appendChild(tooltip);
 
+        progress.addEventListener("mousedown", function (event)
+        {
+            event.preventDefault();
+        });
+
         progress.addEventListener("mousemove", function (event)
         {
             var x = (event.pageX - progX), track = getTrack(event);
