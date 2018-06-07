@@ -28,7 +28,7 @@ window.addEventListener("load", function ()
     }
 
     // Detect a URL with #station-0 or #stream-0-0
-    if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+)(?:\|options=.*)?$/.test(location.hash))
+    if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)(?:\|options=.*)?$/.test(location.hash))
     {
         hash = location.hash;
 
@@ -61,7 +61,7 @@ window.addEventListener("load", function ()
             });
         }
 
-        if (bits[0] === "#stream")
+        if (bits[0] === "#stream" || bits[0] === "#track")
         {
             Replayer.autoplay = false;
 
@@ -115,8 +115,8 @@ window.addEventListener("load", function ()
             {
                 Relive.loadStationInfo(station, function (info)
                 {
-                    var streams, id = Relive.fromBase62(bits[2]), stream;
-
+                    var streams, stream, id = Relive.fromBase62(bits[2]), start = Relive.fromBase62(bits[3] || "");
+console.log(start);
                     // IE again. See above.
                     info.streams.some(function (_stream)
                     {
@@ -149,7 +149,7 @@ window.addEventListener("load", function ()
 
                     if (stream)
                     {
-                        Replayer.loadStream(station, stream, 0, initialized);
+                        Replayer.loadStream(station, stream, start, initialized);
                     }
                     else
                     {
@@ -173,7 +173,7 @@ window.addEventListener("load", function ()
     }
     else
     {
-        App.error("No station or stream specified.");
+        App.error("No valid station, stream, or track specified.");
     }
 
     // To be written as if we're initialized. It's not their job to check.
