@@ -254,6 +254,11 @@ window.addEventListener("load", function ()
         pause();
         start = null;
 
+        if (App.scrollingElement)
+        {
+            App.scrollingElement.scrollTop = App.restoreScrollTo;
+        }
+
         App.menu(false);
 
         // Pausing is asynchronous and may do a history replacement which would happen after

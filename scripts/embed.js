@@ -58,6 +58,10 @@ window.addEventListener("load", function ()
                 pause();
                 App.menu(false);
                 lists.style.marginLeft = "";
+                if (App.scrollingElement)
+                {
+                    App.scrollingElement.scrollTop = App.restoreScrollTo;
+                }
             });
         }
 

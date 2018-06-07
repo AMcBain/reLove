@@ -105,6 +105,17 @@ App.entry = function (station, stream, callback)
 
     entry.addEventListener("click", function ()
     {
+        if (document.body.scrollTop)
+        {
+            App.scrollingElement = document.body;
+            App.restoreScrollTo = document.body.scrollTop;
+        }
+        else
+        {
+            App.scrollingElement = document.body.parentNode;
+            App.restoreScrollTo = document.body.parentNode.scrollTop;
+        }
+
         document.body.parentNode.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
