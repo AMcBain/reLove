@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var load, latest = [], title = document.title, start, actions;
+    var load = 0, latest = [], title = document.title, start, actions;
 
     function pause ()
     {
@@ -162,10 +162,9 @@ window.addEventListener("load", function ()
                 }
             });
 
-            if (latest)
+            if (!--load)
             {
-                clearTimeout(load);
-                load = setTimeout(latestStreams, 2000);
+                latestStreams();
             }
 
             parent.appendChild(list);
@@ -198,6 +197,7 @@ window.addEventListener("load", function ()
             entry.appendChild(name);
             list.appendChild(entry);
 
+            load++;
             stationInfo(station, entry);
         });
 
