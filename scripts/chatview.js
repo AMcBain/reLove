@@ -2,7 +2,7 @@
 
 function ChatView (parent, channel, offset)
 {
-    var container, table, types = {}, init, fix, styles;
+    var container, table, tbody, types = {}, init, fix, styles;
 
     container = document.createElement("div");
     container.className = "chatview";
@@ -15,6 +15,8 @@ function ChatView (parent, channel, offset)
     }, 1);
 
     table = document.createElement("table");
+    tbody = document.createElement("tbody");
+    table.appendChild(tbody);
     container.appendChild(table);
 
     function timefmt (timestamp)
@@ -48,7 +50,8 @@ function ChatView (parent, channel, offset)
         row.appendChild(time);
         row.appendChild(column(user));
         row.appendChild(column(message));
-        table.appendChild(row);
+
+        return row;
     }
 
     // Like rowstar, except it singles out the username in the message part to allow styling.
@@ -68,12 +71,13 @@ function ChatView (parent, channel, offset)
         row.appendChild(column("*"));
         row.appendChild(column(" " + message));
         row.lastChild.insertBefore(nick, row.lastChild.firstChild);
-        table.appendChild(row);
+
+        return row;
     }
 
     function rowstar (line, message)
     {
-        row(line.messageType, line.time, "*", message);
+        return row(line.messageType, line.time, "*", message);
     }
 
     // Best guess as to what to do with these.
@@ -81,27 +85,24 @@ function ChatView (parent, channel, offset)
     {
         if (line.strings.length > 1)
         {
-            row(line.messageType, line.time, line.strings[0], line.strings[1]);
+            return row(line.messageType, line.time, line.strings[0], line.strings[1]);
         }
-        else
-        {
-            rowstar(line, line.strings[0]);
-        }
+        return rowstar(line, line.strings[0]);
     };
 
     types.Message = function (line)
     {
-        row(line.messageType, line.time, line.strings[0], line.strings[1]);
+        return row(line.messageType, line.time, line.strings[0], line.strings[1]);
     };
 
     types.Me = function (line)
     {
-        rowspc(line.messageType, line.time, line.strings[0], line.strings[1]);
+        return rowspc(line.messageType, line.time, line.strings[0], line.strings[1]);
     };
 
     types.Join = function (line)
     {
-        rowstar(line, line.strings[0] + " has joined " + channel);
+        return rowstar(line, line.strings[0] + " has joined " + channel);
     };
 
     types.Leave = function (line)
@@ -110,12 +111,9 @@ function ChatView (parent, channel, offset)
 
         if (line.strings.length > 1)
         {
-            rowstar(line, msg + " (" + line.strings[1] + ")");
+            return rowstar(line, msg + " (" + line.strings[1] + ")");
         }
-        else
-        {
-            rowstar(line, msg);
-        }
+        return rowstar(line, msg);
     };
 
     types.Quit = function (line)
@@ -124,22 +122,19 @@ function ChatView (parent, channel, offset)
 
         if (line.strings.length > 1)
         {
-            rowstar(line, msg + " (" + line.strings[1] + ")");
+            return rowstar(line, msg + " (" + line.strings[1] + ")");
         }
-        else
-        {
-            rowstar(line, msg);
-        }
+        return rowstar(line, msg);
     };
 
     types.Nick = function (line)
     {
-        rowstar(line, line.strings[0] + " is now known as " + line.strings[1]);
+        return rowstar(line, line.strings[0] + " is now known as " + line.strings[1]);
     };
 
     types.Topic = function (line)
     {
-        rowstar(line, line.strings[0] + " has set the topic to: " + line.strings[1]);
+        return rowstar(line, line.strings[0] + " has set the topic to: " + line.strings[1]);
     };
 
     // TODO Find an example of channel mode changing and update code to accommodate, if needed.
@@ -147,14 +142,11 @@ function ChatView (parent, channel, offset)
     {
         if (line.strings.length > 2)
         {
-            rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + line.strings[2]);
+            return rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + line.strings[2]);
         }
-        else
-        {
-            // Hope this is a channel mode change. If it's not the added or removed mode then the
-            // message format should probably be: "Channel " + channel + " modes: " + line.strings[1]
-            rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + channel);
-        }
+        // Hope this is a channel mode change. If it's not the added or removed mode then the
+        // message format should probably be: "Channel " + channel + " modes: " + line.strings[1]
+        return rowstar(line, line.strings[0] + " sets mode " + line.strings[1] + " on " + channel);
     };
 
     types.Kick = function (line)
@@ -163,17 +155,14 @@ function ChatView (parent, channel, offset)
 
         if (line.strings.length > 2)
         {
-            rowstar(line, msg + " (" + line.strings[2] + ")");
+            return rowstar(line, msg + " (" + line.strings[2] + ")");
         }
-        else
-        {
-            rowstar(line, msg);
-        }
+        return rowstar(line, msg);
     };
 
     function autoscroll ()
     {
-        return table.children.length && container.scrollHeight - container.clientHeight - container.scrollTop <= 34;
+        return !tbody.children.length || container.scrollHeight - container.clientHeight - container.scrollTop <= 34;
     }
 
     function scrollToBottom ()
@@ -185,7 +174,27 @@ function ChatView (parent, channel, offset)
     {
         var scroll = autoscroll();
 
-        (types[line.messageType] || types.Unknown)(line);
+        tbody.appendChild((types[line.messageType] || types.Unknown)(line));
+
+        clearTimeout(fix);
+        fix = setTimeout(this.resize, 1);
+
+        if (scroll)
+        {
+            scrollToBottom();
+        }
+    };
+
+    this.renderLine = function (line)
+    {
+        return (types[line.messageType] || types.Unknown)(line).outerHTML;
+    };
+
+    this.appendLines = function (lines)
+    {
+        var scroll = autoscroll();
+
+        tbody.insertAdjacentHTML("beforeend", lines);
 
         clearTimeout(fix);
         fix = setTimeout(this.resize, 1);
@@ -198,7 +207,7 @@ function ChatView (parent, channel, offset)
 
     this.removeLine = function (index)
     {
-        table.removeChild(table.children[index]);
+        tbody.removeChild(tbody.children[index]);
     };
 
     this.resize = function ()
@@ -224,8 +233,8 @@ function ChatView (parent, channel, offset)
             }
 
             // 10 is a magic number. It's how much it was off by and it seems to work in Firefox and IE.
-            styles.style.maxWidth = container.clientWidth - table.firstChild.children[0].offsetWidth
-                    - table.firstChild.children[1].offsetWidth - 10 + "px";
+            styles.style.maxWidth = container.clientWidth - tbody.firstChild.children[0].offsetWidth
+                    - tbody.firstChild.children[1].offsetWidth - 10 + "px";
         }
 
         if (scroll)

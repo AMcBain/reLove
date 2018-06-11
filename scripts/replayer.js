@@ -170,11 +170,13 @@ window.addEventListener("load", function ()
                 }
                 else
                 {
+                    var lines = "";
                     while (last < chat.messages.length && chat.messages[last].time <= time)
                     {
-                        chatview.addLine(chat.messages[last]);
+                        lines += chatview.renderLine(chat.messages[last]);
                         last++;
                     }
+                    chatView.renderLines(lines);
                 }
 
                 lastTime = time;
