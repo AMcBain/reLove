@@ -196,7 +196,7 @@ window.addEventListener("load", function ()
 
     // I can't see reason why there needs to be more than one of these.
     window.Replayer = {
-        autoplay: true
+        autoplay: false
     };
 
     function archive ()
