@@ -162,12 +162,12 @@ window.addEventListener("load", function ()
                 }
             });
 
+            parent.appendChild(list);
+
             if (!--load)
             {
                 latestStreams();
             }
-
-            parent.appendChild(list);
         }, App.error);
     };
 
