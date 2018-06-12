@@ -176,7 +176,7 @@ window.addEventListener("load", function ()
                         lines += chatview.renderLine(chat.messages[last]);
                         last++;
                     }
-                    chatview.renderLines(lines);
+                    chatview.appendLines(lines);
                 }
 
                 lastTime = time;
