@@ -608,7 +608,7 @@ _:-ms-input-placeholder, :root #lists a {
 }
 
 .chatview table {
-    font-family: Consolas, monospace;
+    font-family: Consolas, Menlo, monospace;
     font-size: .8125em;
 }
 
