@@ -180,6 +180,7 @@ body > div {
 }
 
 body.embedded > div {
+    max-width: none;
     margin-bottom: 0;
 }
 
@@ -526,6 +527,18 @@ _:-ms-input-placeholder, :root #lists a {
     max-width: 600px;
     margin-left: 1.437em;
     background: white;
+}
+
+.embedded #player .tracks {
+    left: -600px;
+    width: 600px;
+}
+
+@media (max-width: 600px) {
+    .embedded #player .tracks {
+        left: -75%;
+        width: 75%;
+    }
 }
 
 #player .tracks, .chatview {
