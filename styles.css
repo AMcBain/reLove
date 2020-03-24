@@ -5,6 +5,11 @@ html, body {
     font-weight: 400;
 }
 
+body {
+    --header-color: white;
+    --header-background: #00bcd4;
+}
+
 body:before {
     content: "";
     position: absolute;
@@ -13,6 +18,7 @@ body:before {
     left: 0;
     height: 4.1255em;
     background: #00bcd4;
+    background: var(--header-background, #00bcd4);
     z-index: 0;
 }
 
@@ -151,6 +157,7 @@ header {
     padding: 1em;
     padding-right: 3.3846em;
     color: white;
+    color: var(--header-color, white);
 }
 
 header h1, #back {

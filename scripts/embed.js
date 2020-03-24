@@ -200,6 +200,10 @@ window.addEventListener("load", function ()
     {
         window.parent.postMessage(Messages.create(Messages.PAUSED, Replayer.paused), "*");
     };
+    events[Messages.CONFIGURE] = function (data)
+    {
+        Replayer.configure(data);
+    };
 
     window.addEventListener("message", function (event)
     {
@@ -211,7 +215,7 @@ window.addEventListener("load", function ()
         }
         else if (handler && !error)
         {
-            handler();
+            handler(data);
         }
     });
 });

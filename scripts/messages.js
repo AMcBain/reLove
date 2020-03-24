@@ -6,6 +6,7 @@ var Messages = {
     PLAY: "relive:play",
     PAUSE: "relive:pause",
     PAUSED: "relive:paused",
+    CONFIGURE: "relove:config",
     create: function (message, value, error)
     {
         return message + "|" + JSON.stringify({

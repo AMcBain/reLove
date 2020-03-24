@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, chatview, parent, title, notify, station, stream, tracks, chat, cues, resize;
+    var player, chatview, parent, title, notify, station, stream, tracks, chat, cues, resize, config;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -39,6 +39,10 @@ window.addEventListener("load", function ()
     {
         parent.querySelector(".tracks h2").click();
     });
+
+    config = {
+        titleFormat: "${station.name}: ${stream.streamName}"
+    };
 
     function buildCueList ()
     {
@@ -218,6 +222,26 @@ window.addEventListener("load", function ()
         }
     }
 
+    function updateTitle () {
+        title.textContent = config.titleFormat.replace(/\$\{station\.([^}]+)\}/g, function (_, match) {
+                return station && station[match] || '';
+            }).replace(/\$\{stream\.([^}]+)\}/g, function (_, match) {
+                return stream && stream[match] || '';
+            });
+        document.title = title.textContent;
+    }
+
+    Replayer.configure = function (_config) {
+        config = _config;
+        updateTitle();
+        if (config.headerColor) {
+            document.body.style.setProperty("--header-color", config.headerColor);
+        }
+        if (config.headerBackground) {
+            document.body.style.setProperty("--header-background", config.headerBackground);
+        }
+    };
+
     Replayer.loadStream = function (_station, _stream, _start, _ready)
     {
         var ready, requests;
@@ -293,8 +317,7 @@ window.addEventListener("load", function ()
             parent.appendChild(document.createElement("div"));
 
             parent.className = "";
-            title.textContent = station.name + ": " + stream.streamName;
-            document.title = title.textContent;
+            updateTitle();
 
             if (isNaN(Number(_start)))
             {
