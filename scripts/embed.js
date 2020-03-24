@@ -28,7 +28,7 @@ window.addEventListener("load", function ()
     }
 
     // Detect a URL with #station-0 or #stream-0-0
-    if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)(?:\|options=.*)?$/.test(location.hash))
+    if (/^#(?:station-[\da-zA-Z]+|stream-[\da-zA-Z]+-[\da-zA-Z]+|track-[\da-zA-Z]+-[\da-zA-Z]+-[\da-zA-Z]+)(?:\|options=.*)?$/.test(location.hash))
     {
         hash = location.hash;
 

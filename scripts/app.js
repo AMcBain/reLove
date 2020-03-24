@@ -17,7 +17,7 @@ window.addEventListener("load", function ()
             var bits, station, stream;
 
             // Detect a URL with #stream-0-0 or #track-0-0-0
-            if (/^#(?:station-[\da-zA-z]+|stream-[\da-zA-z]+-[\da-zA-z]+|track-[\da-zA-z]+-[\da-zA-z]+-[\da-zA-z]+)$/.test(location.hash))
+            if (/^#(?:station-[\da-zA-Z]+|stream-[\da-zA-Z]+-[\da-zA-Z]+|track-[\da-zA-Z]+-[\da-zA-Z]+-[\da-zA-Z]+)$/.test(location.hash))
             {
                 bits = location.hash.split("-");
                 start = Relive.fromBase62(bits[3] || "");
