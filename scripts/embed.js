@@ -218,4 +218,6 @@ window.addEventListener("load", function ()
             handler(data);
         }
     });
+
+    window.parent.postMessage(Messages.LOADED, "*");
 });

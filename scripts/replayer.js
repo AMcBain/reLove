@@ -244,12 +244,16 @@ window.addEventListener("load", function ()
     Replayer.configure = function (_config) {
         config = _config;
         updateTitle();
-        if (config.headerColor) {
-            document.body.style.setProperty("--header-color", config.headerColor);
-        }
-        if (config.headerBackground) {
-            document.body.style.setProperty("--header-background", config.headerBackground);
-        }
+        // Just let them pass a stylesheet? :(
+        var style = document.body.style;
+        if (config.background)       style.setProperty("--background",        config.background);
+        if (config.loadingColor)     style.setProperty("--loading-color",     config.loadingColor);
+        if (config.headerColor)      style.setProperty("--header-color",      config.headerColor);
+        if (config.headerBackground) style.setProperty("--header-background", config.headerBackground);
+        if (config.playerColor)      style.setProperty("--player-color",      config.playerColor);
+        if (config.playerBackground) style.setProperty("--player-background", config.playerBackground);
+        if (config.chatColor)        style.setProperty("--chat-color",        config.chatColor);
+        if (config.chatBackground)   style.setProperty("--chat-background",   config.chatBackground);
     };
 
     Replayer.loadStream = function (_station, _stream, _start, _ready)

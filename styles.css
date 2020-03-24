@@ -6,8 +6,7 @@ html, body {
 }
 
 body {
-    --header-color: white;
-    --header-background: #00bcd4;
+    background: var(--background, none);
 }
 
 body:before {
@@ -287,6 +286,9 @@ section {
     background: -webkit-repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, white 5px, white 10px);
     background: -moz-repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, white 5px, white 10px);
     background: repeating-linear-gradient(105deg, #00bcd4, #00bcd4 5px, white 5px, white 10px);
+    background: -webkit-repeating-linear-gradient(105deg, var(--loading-color, #00bcd4), var(--loading-color, #00bcd4) 5px, var(--background, white) 5px, var(--background, white) 10px);
+    background: -moz-repeating-linear-gradient(105deg, var(--loading-color, #00bcd4), var(--loading-color, #00bcd4) 5px, var(--background, white) 5px, var(--background, white) 10px);
+    background: repeating-linear-gradient(105deg, var(--loading-color, #00bcd4), var(--loading-color, #00bcd4) 5px, var(--background, white) 5px, var(--background, white) 10px);
     background-size: 110%;
     -webkit-animation: move 350ms linear infinite;
     -moz-animation: move 350ms linear infinite;
@@ -651,7 +653,9 @@ _:-ms-input-placeholder, :root #lists a {
     bottom: 1em;
     left: 1.437em;
     overflow: auto;
+    color: var(--chat-color, black);
     background: #fafafa;
+    background: var(--chat-background, #fafafa);
 }
 
 .chatview table {
@@ -714,7 +718,9 @@ _:-ms-input-placeholder, :root #lists a {
     top: 0;
     right: 0;
     left: 0;
+    color: var(--player-color, black);
     background: #fafafa;
+    background: var(--player-background, #fafafa);
     border-bottom: 1px solid #ccc;
 }
 
@@ -772,6 +778,7 @@ _:-ms-input-placeholder, :root #lists a {
     border-top: .39em solid transparent;
     border-bottom: .39em solid transparent;
     border-right: .39em solid #000;
+    border-right: .39em solid var(--player-color, #000);
 }
 
 #player .annotatedplayer .info .controls .play:before,
@@ -781,6 +788,7 @@ _:-ms-input-placeholder, :root #lists a {
     border-top: .39em solid transparent;
     border-bottom: .39em solid transparent;
     border-left: .39em solid #000;
+    border-left: .39em solid var(--player-color, #000);
 }
 
 #player .annotatedplayer .info .controls .previous:before,
@@ -792,6 +800,7 @@ _:-ms-input-placeholder, :root #lists a {
     width: .45em;
     height: .78em;
     background: #000;
+    background: var(--player-color, #000);
 }
 
 #player .annotatedplayer .info .controls .previous:before,
@@ -811,10 +820,12 @@ _:-ms-input-placeholder, :root #lists a {
     vertical-align: .195em;
     margin-right: -.2em;
     background: #a7a7a7;
+    background: var(--player-color, #a7a7a7);
 }
 
 #player .annotatedplayer .info .controls .sound:after {
     border-right-color: #a7a7a7;
+    border-right-color: var(--player-color, #a7a7a7);
 }
 
 #player .annotatedplayer .info .controls .volume {
@@ -845,6 +856,7 @@ _:-ms-input-placeholder, :root #lists a {
     bottom: 0;
     left: 0;
     background: #a7a7a7;
+    background: var(--player-color, #a7a7a7);
 }
 
 #player .annotatedplayer .info .controls .volume span,
