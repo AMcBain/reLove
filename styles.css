@@ -816,7 +816,7 @@ _:-ms-input-placeholder, :root #lists a {
 #player .annotatedplayer .info .controls .volume span,
 #player .annotatedplayer .progress span
 {
-    text-indent: 100%;
+    text-indent: 9000%;
 }
 
 #player .annotatedplayer .player {
