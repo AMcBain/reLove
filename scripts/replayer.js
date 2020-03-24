@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, chatview, parent, title, notify, station, stream, tracks, chat, cues, resize, config;
+    var player, channelmanager, parent, title, notify, station, stream, tracks, chat, cues, resize, config;
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -19,9 +19,9 @@ window.addEventListener("load", function ()
             {
                 player.redraw();
 
-                if (chatview)
+                if (channelmanager)
                 {
-                    chatview.resize();
+                    channelmanager.resize();
                 }
             }, 250);
         }
@@ -117,7 +117,7 @@ window.addEventListener("load", function ()
 
     function start (at)
     {
-        var url, mime, once, lastTime, last = 0;
+        var url, mime, once, lastTime;
 
         url = Relive.getStreamURL(station, stream);
         mime = Relive.getStreamMimeType(station, stream);
@@ -149,38 +149,48 @@ window.addEventListener("load", function ()
                 }
             }
         });
-        chatview = null;
+        channelmanager = null;
 
         if (chat)
         {
-            chatview = new ChatView(parent.lastChild, chat.title, stream.timestamp);
+            var channels = []
+            for (var t in chat.timelines) channels.push( chat.timelines[t].title );
+            channelmanager = new ChannelManager( parent.lastChild, channels, stream.timestamp );
 
             player.addEventListener("timeupdate", function ()
             {
                 var i, time = Math.floor(this.currentTime);
 
-                // Handle seeking backwards.
-                if (lastTime > time)
+                for (var t in chat.timelines)
                 {
-                    if (last === chat.messages.length)
+                    var timeline = chat.timelines[t];
+                    var chatview = channelmanager.getChat(t);
+                    var last = channelmanager.getLast(t);
+                    
+                    // Handle seeking backwards.
+                    if (lastTime > time)
                     {
-                        last--;
+                        if (last === timeline.messages.length)
+                        {
+                            last--;
+                        }
+                        while (last > 0 && timeline.messages[last].time > time)
+                        {
+                            last--;
+                            chatview.removeLine(last);
+                        }
                     }
-                    while (last > 0 && chat.messages[last].time > time)
+                    else
                     {
-                        last--;
-                        chatview.removeLine(last);
+                        var lines = "";
+                        while (last < timeline.messages.length && timeline.messages[last].time <= time)
+                        {
+                            lines += chatview.renderLine(timeline.messages[last]);
+                            last++;
+                        }
+                        chatview.appendLines(lines);
                     }
-                }
-                else
-                {
-                    var lines = "";
-                    while (last < chat.messages.length && chat.messages[last].time <= time)
-                    {
-                        lines += chatview.renderLine(chat.messages[last]);
-                        last++;
-                    }
-                    chatview.appendLines(lines);
+                    channelmanager.setLast( t, last );
                 }
 
                 lastTime = time;

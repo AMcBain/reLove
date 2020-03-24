@@ -61,7 +61,7 @@ var Relive = (function ()
         loadStreamChat: function (station, stream, finished, error)
         {
             App.requestJSON({
-                url: station.servers[0] + "getstreamchat/" + protocol + "&streamid=" + encodeURIComponent(stream.id),
+                url: station.servers[0] + "getstreamchats/" + protocol + "&streamid=" + encodeURIComponent(stream.id),
                 success: finished,
                 error: error
             });
