@@ -127,16 +127,147 @@ iframe.relive.stream.player {
 
 <p><strong>Events</strong></p>
 
-<p>The embedded player supports events via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">window.postMessage</a> function. Events are supported to indicate initialization, start playing, pause, and get paused status. The <a href="reLove/scripts/messages.js">messages.js</a> script contains constants and utilities to aid for events though using it is not mandatory. The example below indicates how to set the player to auto-start.</p>
+<p>The embedded player supports events via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage">window.postMessage</a> function. Events are supported to indicate initialization, start playing, pause, get information on streams, and status changes. The <a href="reLove/scripts/messages.js">messages.js</a> script contains constants and utilities to aid for events though using it is not mandatory. The example below indicates how to set the player to auto-start.</p>
+
+<p><strong>Sending Events</strong></p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 6em">Type</th>
+            <th style="width: 9em">Format</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>relive:play</td>
+            <td><code>relive:play</code></td>
+            <td>Tells the player to start playing.</td>
+        </tr>
+        <tr>
+            <td>relive:pause</td>
+            <td><code>relive:pause</code></td>
+            <td>Tells the player to pause.</td>
+        </tr>
+        <tr>
+            <td>relive:seek</td>
+            <td><code>relive:seek|123</code></td>
+            <td>Tells the player to seek X seconds into the stream.</td>
+        </tr>
+        <tr>
+            <td>relive:config</td>
+            <td><code>relive:config|{...}</code></td>
+            <td>Configures player styles and formats.</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>All events should be sent after the initialized event is received, but the config event can and probably should be sent after the loaded event. See the next section for those events.</p>
 
 <pre><code>var player = document.getElementById("player").contentWindow;
 
 window.addEventListener("message", function (event) {
     if (event.data === "relive:initialized") {
-        player.postMessage("relive:play", "*");
+        player.postMessage("relive:seek|123", "*");
     }
 });
 </code></pre>
+
+<pre><code>var player = document.getElementById("player").contentWindow;
+
+window.addEventListener("message", function (event) {
+    if (event.data === "relive:loaded") {
+        var message = JSON.stringify({
+
+            // Any valid CSS background value.
+            background: "dodgerblue",
+            headerBackground: "linear-gradient(to right, #00bcd4, #999)",
+            playerBackground: "hotpink",
+            chatBackground: "wheat",
+
+            // Any valid CSS <color> value.
+            loadingColor: "limegreen",
+            playerColor: "wheat",
+            chatColor: "hotpink",
+
+            // Default is "${station.name}: ${stream.streamName}"
+            // Any properties available on the station and stream objects can be used.
+            // It's a simple find-and-replace so no code is allowed inside the braces.
+            titleFormat: "${stream.streamName}",
+        });
+        player.postMessage("relove:config|" + message, "*");
+    }
+});
+</code></pre>
+
+<p><strong>Receiving Events</strong></p>
+
+<table>
+    <thead>
+        <tr>
+            <th style="width: 6em">Type</th>
+            <th style="width: 12em">Format</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>relive:loaded</td>
+            <td><code>relive:loaded</code></td>
+            <td>Player is done loading, but isn't ready yet.</td>
+        </tr>
+        <tr>
+            <td>relive:initialized</td>
+            <td><code>relive:initialized</code></td>
+            <td>Player is fully initialized and ready.</td>
+        </tr>
+        <tr>
+            <td>relive:error</td>
+            <td><code>relive:error|{error:"..."}</code></td>
+            <td>Player had error an outside of an event.</td>
+        </tr>
+        <tr>
+            <td>relive:info</td>
+            <td><code>relive:info|{...}</code></td>
+            <td>Objects for the station, stream, and tracks.</td>
+        </tr>
+        <tr>
+            <td>relive:play</td>
+            <td><code>relive:play</code></td>
+            <td>The player is now playing.</td>
+        </tr>
+        <tr>
+            <td>relive:pause</td>
+            <td><code>relive:pause</code></td>
+            <td>The player is now paused.</td>
+        </tr>
+        <tr>
+            <td>relive:track</td>
+            <td><code>relive:track|{value:1}</code></td>
+            <td>The current track. Sent on change.</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>All event with data will always send valid JSON. You can check/parse as below.</p>
+
+<pre><code>var player = document.getElementById("player").contentWindow;
+
+window.addEventListener("message", function (event) {
+    if (event.data.startsWith("relive")) {
+        var message = event.data.split("|");
+        var event = message[0];
+        var data = message.length > 1 ? JSON.parse(message[1]) : null;
+        console.log(event, data.value, data.error);
+    }
+});
+</code></pre>
+
+<p><strong>Event Errors</strong></p>
+<p>Sometimes there may be an error when sending an event. It could be event data was sent that wasn't valid JSON, or some other error occurred trying to effect the requested event.</p>
+<p>All events will come with either a <code>value</code> or <code>error</code> property, not both. If an error was caused in response to an event sent by postMessage, that is used as the error's event type. If it was caused outside of that, the event type is <code>relive:error</code></p>
+<p>Error objects will contain a <code>type</code> and a <code>value</code> property. The former is just for classifying the type of event, and the value contains a hopefully useful message.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/AMcBain">AMcBain</a></p>
