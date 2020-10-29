@@ -2,7 +2,7 @@
 
 window.addEventListener("load", function ()
 {
-    var player, channelmanager, parent, title, notify, station, stream, tracks, chat, cues, resize, config;
+    var player, channelmanager, parent, title, notify, station, stream, tracks, chat, cues, resize, config, events = {};
 
     parent = document.getElementById("player");
     title = parent.querySelector("h1");
@@ -117,7 +117,7 @@ window.addEventListener("load", function ()
 
     function start (at)
     {
-        var url, mime, once, lastTime;
+        var url, mime, once, lastTime, event, handler;
 
         url = Relive.getStreamURL(station, stream);
         mime = Relive.getStreamMimeType(station, stream);
@@ -149,6 +149,13 @@ window.addEventListener("load", function ()
                 }
             }
         });
+        for (event in events)
+        {
+            for (handler = 0; handler < events[event].length; handler++)
+            {
+                player.addEventListener(event, events[event][handler]);
+            }
+        }
         channelmanager = null;
 
         if (chat)
@@ -286,7 +293,7 @@ window.addEventListener("load", function ()
 
                     if (_ready)
                     {
-                        _ready();
+                        _ready(station, stream, tracks);
                     }
                 }
             };
@@ -310,7 +317,7 @@ window.addEventListener("load", function ()
                     start: 1,
                     type: "Music"
                 } ];
-                ready();
+                ready(tracks);
             });
 
             Relive.loadStreamChat(station, stream, function (_chat)
@@ -367,6 +374,43 @@ window.addEventListener("load", function ()
             return true;
         }
     });
+
+    Replayer.seek = function (to)
+    {
+        if (player)
+        {
+            player.seek(to);
+        }
+    };
+
+    Replayer.addEventListener = function (event, handler)
+    {
+        if (!events[event])
+        {
+            events[event] = [];
+        }
+        events[event].push(handler);
+
+        if (player)
+        {
+            player.addEventListener(event, handler);
+        }
+    };
+
+    Replayer.removeEventListener = function (event, handler)
+    {
+        var index;
+
+        if (events[event])
+        {
+            index = events[event].indexOf(handler);
+            if (index !== -1)
+            {
+                events[event].splice(index, 1);
+            }
+        }
+        player.removeEventListener(event, handler);
+    };
 
     // Handle events for app menu items relating to the replayer view.
     function genstreamhash ()

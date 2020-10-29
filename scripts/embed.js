@@ -3,7 +3,18 @@ Relive.useSingleton = false;
 
 window.addEventListener("load", function ()
 {
-    var error, events, hash, bits, options = {}, station, list, lists = document.querySelector("#lists");
+    var error, events, allowedEvents = [], hash, bits, options = {}, station, list, initialized,
+        lists = document.querySelector("#lists");
+
+    function sendMessage (message)
+    {
+        // If the page that loads embed.js is loaded directly,
+        // not handling this would cause us to spam ourselves.
+        if (window.parent !== window)
+        {
+            window.parent.postMessage(message, "*");
+        }
+    }
 
     function perror (response, status)
     {
@@ -15,9 +26,28 @@ window.addEventListener("load", function ()
         App.error.apply(this, arguments);
     }
 
-    function initialized ()
+    function initialized (station, stream, tracks)
     {
-        window.parent.postMessage(Messages.INITIALIZED, "*");
+        if (!initialized)
+        {
+            sendMessage(Messages.INITIALIZED, "*");
+        }
+        if (station && stream && tracks)
+        {
+            sendMessage(Messages.create(Messages.INFO, {
+                station: {
+                    id: station.id,
+                    name: station.name
+                },
+                stream: {
+                    id: stream.id,
+                    streamName: stream.streamName,
+                    hostName: stream.hostName,
+                    duration: stream.duration
+                },
+                tracks: tracks
+            }));
+        }
     }
 
     function pause ()
@@ -196,28 +226,79 @@ window.addEventListener("load", function ()
     {
         Replayer.pause();
     };
-    events[Messages.PAUSED] = function ()
+    events[Messages.SEEK] = function (to)
     {
-        window.parent.postMessage(Messages.create(Messages.PAUSED, Replayer.paused), "*");
+        Replayer.seek(to);
     };
     events[Messages.CONFIGURE] = function (data)
     {
         Replayer.configure(data);
     };
 
+    allowedEvents = Object.keys(events);
+
+    Replayer.addEventListener("play", function ()
+    {
+        sendMessage(Messages.PLAY, "*");
+    });
+    Replayer.addEventListener("pause", function ()
+    {
+        sendMessage(Messages.PAUSE, "*");
+    });
+    Replayer.addEventListener("trackupdate", function (event)
+    {
+        sendMessage(Messages.create(Messages.TRACK, event.detail));
+    });
+
     window.addEventListener("message", function (event)
     {
-        var data = Messages.parse(event.data), handler = events[data.message];
+        var type, data, handler;
 
-        if (handler && error)
+        try
         {
-            window.parent.postMessage(Messages.create(data.message, error, true), "*");
+            error = null;
+            data = Messages.parse(event.data);
+            handler = events[data.message];
         }
-        else if (handler && !error)
+        catch (err)
         {
-            handler(data);
+            error = {
+                type: "format",
+                value: err.message
+            };
+            sendMessage(Messages.create(Messages.ERROR, error, true));
+        }
+
+        if (data && !error)
+        {
+            if (handler)
+            {
+                try
+                {
+                    handler(data.value);
+                }
+                catch (err)
+                {
+                    error = {
+                        type: "exec",
+                        value: err.message
+                    };
+                }
+            }
+            else
+            {
+                error = {
+                    type: "event",
+                    value: "Unrecognized event. Must be one of " + allowedEvents.join(", ")
+                };
+            }
+        }
+
+        if (error)
+        {
+            sendMessage(Messages.create(event.data.split("|")[0], error, true));
         }
     });
 
-    window.parent.postMessage(Messages.LOADED, "*");
+    sendMessage(Messages.LOADED);
 });
