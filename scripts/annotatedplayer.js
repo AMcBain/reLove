@@ -383,7 +383,7 @@ function AnnotatedPlayer (parent, url, mime, size, length, tracks, autoplay, emb
 
     this.play = function ()
     {
-        audio.play();
+        return audio.play();
     };
 
     this.pause = function ()

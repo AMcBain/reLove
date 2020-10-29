@@ -4,7 +4,7 @@ Relive.useSingleton = false;
 window.addEventListener("load", function ()
 {
     var error, events, allowedEvents = [], hash, bits, options = {}, station, list, initialized,
-        lists = document.querySelector("#lists");
+        lists = document.querySelector("#lists"), /* avoid self-loops */ postMessage;
 
     function sendMessage (message)
     {
@@ -18,12 +18,13 @@ window.addEventListener("load", function ()
 
     function perror (response, status)
     {
-        // This reveals more to code-based API callers than the UI would. Consider changing?
-        error = {
-            type: "initialization",
-            value: status + ": " + response
-        };
         App.error.apply(this, arguments);
+
+        // This reveals more to code-based API callers than the UI would. Consider changing?
+        sendMessage(Messages.create(Messages.ERROR, {
+            type: "request",
+            value: status + ": " + response
+        }, true));
     }
 
     function initialized (station, stream, tracks)
@@ -192,27 +193,34 @@ window.addEventListener("load", function ()
                     }
                     else
                     {
-                        error = {
+                        App.error(error.value);
+
+                        sendMessage(Messages.create(Messages.ERROR, {
                             type: "initialization",
                             value: "Invalid stream ID."
-                        };
-                        App.error(error.value);
+                        }, true));
                     }
                 }, perror);
             }
             else
             {
-                error = {
+                App.error(error.value);
+
+                sendMessage(Messages.create(Messages.ERROR, {
                     type: "initialization",
                     value: "Invalid station ID."
-                };
-                App.error(error.value);
+                }, true));
             }
         });
     }
     else
     {
         App.error("No valid station, stream, or track specified.");
+
+        sendMessage(Messages.create(Messages.ERROR, {
+            type: "initialization",
+            value: "No valid station, stream, or track specified."
+        }, true));
     }
 
     // To be written as if we're initialized. It's not their job to check.
@@ -220,7 +228,17 @@ window.addEventListener("load", function ()
     events[Messages.PLAY] = function ()
     {
         // This and pause may not succeed (no player yet). If so, the outside has no idea.
-        Replayer.play();
+        var promise = Replayer.play();
+        if (promise)
+        {
+            promise.catch(function (err)
+            {
+                sendMessage(Messages.create(Messages.PLAY, {
+                    type: "permissions",
+                    value: err.message
+                }));
+            });
+        }
     };
     events[Messages.PAUSE] = function ()
     {

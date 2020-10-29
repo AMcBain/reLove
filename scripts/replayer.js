@@ -351,7 +351,7 @@ window.addEventListener("load", function ()
     {
         if (player)
         {
-            player.play();
+            return player.play();
         }
     };
 
